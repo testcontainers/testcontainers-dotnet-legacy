@@ -6,7 +6,7 @@ public class WindowsClientProviderStrategy : DockerClientProviderStrategy
     //private static final int PING_TIMEOUT_DEFAULT = 5;
     //private static final String PING_TIMEOUT_PROPERTY_NAME = "testcontainers.windowsprovider.timeout";
 
-    protected override DockerClientConfiguration Config =>
+    protected override DockerClientConfiguration Config { get; } =
         new DockerClientConfiguration(new Uri("tcp://localhost:2375"));
 
     protected override bool IsApplicable() => Utils.IsWindows();

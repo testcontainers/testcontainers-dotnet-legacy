@@ -71,13 +71,7 @@ namespace TestContainers
 	                FromImage = DockerImageName,
 	                Tag = DockerImageName.Split(':')[1]
                 },
-                new AuthConfig(),
-                // new AuthConfig
-                // {
-                //     Email = "gurpreet@gurpreetsohal.com",
-                //     Username = "swissarmykirpan",
-                //     Password = "sisko1212!"
-                // }, 
+                new AuthConfig(), 
                 progress,
                 CancellationToken.None);
 
