@@ -15,4 +15,4 @@ jobs:
       - run: dotnet restore
       - run: dotnet build
       - run: docker info
-      - run: dotnet test
+      - run: dotnet test --filter Category=LCOL

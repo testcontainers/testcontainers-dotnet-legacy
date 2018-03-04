@@ -3,7 +3,7 @@ using Xunit;
 using StackExchange.Redis;
 using System.Threading.Tasks;
 
-namespace TestContainers
+namespace TestContainers.Tests
 {
     public class RedisCacheFixture : IAsyncLifetime
     {
@@ -33,7 +33,7 @@ namespace TestContainers
         readonly IDatabase _cache;
         public RedisCacheTests(RedisCacheFixture fixture) => _cache = fixture.Cache;
         
-        [Fact]
+        [Fact, Trait("Category", "LCOL")]
         public async Task SimpleTest()
         {
             await _cache.StringSetAsync("myName", "Gurpreet");

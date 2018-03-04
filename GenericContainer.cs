@@ -4,6 +4,7 @@ using System.Threading;
 using System.Threading.Tasks;
 using Docker.DotNet;
 using Docker.DotNet.Models;
+using static DockerClientProviderStrategy;
 
 namespace TestContainers
 {
@@ -75,13 +76,15 @@ namespace TestContainers
                 progress,
                 CancellationToken.None);
 
+                var exposedPort = $"{ExposedPorts[0]}";
+
                 var cfg = new Config
                 {
                     Image = DockerImageName,
                     //Env = this.environmentVariables,
                     ExposedPorts = new Dictionary<string, EmptyStruct>
                     {
-                         ["6379"] = default(EmptyStruct),
+                         [exposedPort] = default(EmptyStruct),
                     },
                 };
 
@@ -89,14 +92,19 @@ namespace TestContainers
                 {
                     PortBindings = new Dictionary<string, IList<PortBinding>>
                     {
-                        ["6379"] = new[]
+                        [exposedPort] = new[]
                         {
-                            new PortBinding { HostPort = "6379", HostIP = "127.0.0.1" },
+                            new PortBinding { HostPort = exposedPort, HostIP = "0.0.0.0" },
                         },
                     },
                 };
 
-            var containerCreated = await _dockerClient.Containers.CreateContainerAsync(new CreateContainerParameters(cfg) { HostConfig = hostConfig });
+            var createContainerParams = new CreateContainerParameters(cfg);
+
+            if(!Utils.IsWindows()) 
+                createContainerParams.HostConfig = hostConfig;
+
+            var containerCreated = await _dockerClient.Containers.CreateContainerAsync(createContainerParams);
             await _dockerClient.Containers.StartContainerAsync(containerCreated.ID, new ContainerStartParameters());
 
             var inspectResult = await _dockerClient.Containers.InspectContainerAsync(containerCreated.ID);
