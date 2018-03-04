@@ -13,7 +13,7 @@ namespace TestContainers
         public RedisCacheFixture() =>
              _container = new ContainerBuilder()
                 .Begin()
-                .WithImage("redis:3.0.2")
+                .WithImage("redis:4.0.8")
                 .WithExposedPorts(6379)
                 .Build();   
         
