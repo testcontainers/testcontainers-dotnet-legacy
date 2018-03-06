@@ -12,7 +12,8 @@ jobs:
             sudo apt-get install apt-transport-https
             sudo apt-get update
             sudo apt-get install dotnet-sdk-2.1.4
-      - run: dotnet restore
-      - run: dotnet build
-      - run: docker info
-      - run: dotnet test --filter Category=LCOL
+      - run: 
+          command: |
+            dotnet test TestContainers.Tests --filter Category=LCOL
+            dotnet pack TestContainers -c Release
+            dotnet nuget push TestContainers/bin/Release/TestContainers.*.nupkg --source https://api.nuget.org/v3/index.json --api-key $nugetApiKey

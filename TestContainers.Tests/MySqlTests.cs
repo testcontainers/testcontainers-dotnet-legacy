@@ -2,6 +2,7 @@ using System;
 using Xunit;
 using System.Threading.Tasks;
 using MySql.Data.MySqlClient;
+using TestContainers;
 
 namespace TestContainers.Tests
 {

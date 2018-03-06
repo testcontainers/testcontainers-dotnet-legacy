@@ -1,0 +1,24 @@
+<Project Sdk="Microsoft.NET.Sdk">
+  <PropertyGroup>
+    <TargetFramework>netstandard2.0</TargetFramework>
+    <VersionPrefix>0.0.1</VersionPrefix>
+    <VersionSuffix>alpha</VersionSuffix>
+    <Company>testcontainers.org</Company>
+    <Authors>swissarmykirpan</Authors>
+    <Product>TestContainers</Product>
+    <ProjectUrl>https://testcontainers.org</ProjectUrl>
+    <LicenseUrl></LicenseUrl>
+    <IconUrl>https://avatars0.githubusercontent.com/u/13393021?s=200&amp;v=4</IconUrl>
+    <Summary></Summary>
+    <ReleaseNotes></ReleaseNotes>
+    <Language></Language>
+    <Tags></Tags>
+    <Description />
+    <Copyright>Copyright © 2018</Copyright>
+  </PropertyGroup>
+  <ItemGroup>
+    <PackageReference Include="docker.dotnet" Version="3.125.1" />
+    <PackageReference Include="Microsoft.Extensions.DependencyModel" Version="2.0.4" />
+    <PackageReference Include="Microsoft.Extensions.Options.ConfigurationExtensions" Version="2.0.0" />
+  </ItemGroup>
+</Project>

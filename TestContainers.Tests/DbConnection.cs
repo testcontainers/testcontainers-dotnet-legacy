@@ -1,5 +1,6 @@
 using MySql.Data;
 using MySql.Data.MySqlClient;
+using TestContainers;
 
 namespace TestContainers.Tests
 {

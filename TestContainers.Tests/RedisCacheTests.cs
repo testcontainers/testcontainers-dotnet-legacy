@@ -2,6 +2,7 @@ using System;
 using Xunit;
 using StackExchange.Redis;
 using System.Threading.Tasks;
+using TestContainers;
 
 namespace TestContainers.Tests
 {

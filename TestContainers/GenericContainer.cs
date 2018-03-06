@@ -4,7 +4,6 @@ using System.Threading;
 using System.Threading.Tasks;
 using Docker.DotNet;
 using Docker.DotNet.Models;
-using static DockerClientProviderStrategy;
 
 namespace TestContainers
 {
@@ -100,6 +99,7 @@ namespace TestContainers
                 };
 
             var createContainerParams = new CreateContainerParameters(cfg);
+
 
             if(!Utils.IsWindows()) 
                 createContainerParams.HostConfig = hostConfig;
