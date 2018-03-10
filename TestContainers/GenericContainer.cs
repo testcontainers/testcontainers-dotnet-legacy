@@ -1,5 +1,6 @@
 using System;
 using System.Collections.Generic;
+using System.Linq;
 using System.Threading;
 using System.Threading.Tasks;
 using Docker.DotNet;
@@ -34,9 +35,20 @@ namespace TestContainers
 
         public ContainerBuilder WithExposedPorts(params int[] ports)
         {
-            fn = FnUtils.Compose(fn, (container) => 
+            fn = FnUtils.Compose(fn, (container) =>
             {
                 container.ExposedPorts = ports;
+                return container;
+            });
+
+            return this;
+        }
+
+        public ContainerBuilder WithEnv(params (string key, string value)[] keyValuePairs)
+        {
+            fn = FnUtils.Compose(fn, (container) =>
+            {
+                container.EnvironmentVariables = keyValuePairs;
                 return container;
             });
 
@@ -53,14 +65,16 @@ namespace TestContainers
 
         public Container() =>
             _dockerClient = DockerClientFactory.Instance.Client();
-            
+
         public string DockerImageName { get; set; }
 
         public int[] ExposedPorts { get; set; }
 
-        public string IpAddress { get; private set;}
+        public string IpAddress { get; private set; }
 
-        public string ContainerId {get;set;}
+        public string ContainerId { get; set; }
+
+        public (string key, string value)[] EnvironmentVariables { get; set; }
 
         public async Task Start()
         {
@@ -68,46 +82,41 @@ namespace TestContainers
             await _dockerClient.Images.CreateImageAsync(
                 new ImagesCreateParameters
                 {
-	                FromImage = DockerImageName,
-	                Tag = DockerImageName.Split(':')[1]
+                    FromImage = DockerImageName,
+                    Tag = DockerImageName.Split(':')[1]
                 },
-                new AuthConfig(), 
+                new AuthConfig(),
                 progress,
                 CancellationToken.None);
 
-                var exposedPort = $"{ExposedPorts[0]}";
+            var exposedPorts = ExposedPorts?.ToList() ?? new List<int>();
 
-                var cfg = new Config
+            var cfg = new Config
+            {
+                Image = DockerImageName,
+                Env = EnvironmentVariables?.Select(ev => $"{ev.key}={ev.value}").ToList(),
+                ExposedPorts = exposedPorts.ToDictionary(e => $"{e}/tcp", e => default(EmptyStruct)),
+                Tty = true,
+            };
+
+            var portBindings = new Dictionary<string, IList<PortBinding>>();
+
+            exposedPorts.ForEach(e => portBindings.Add($"{e}/tcp", new[] { new PortBinding { HostPort = e.ToString(), HostIP = "" } }));
+
+            var createContainerParams = new CreateContainerParameters(cfg)
+            {
+                HostConfig = new HostConfig
                 {
-                    Image = DockerImageName,
-                    //Env = this.environmentVariables,
-                    ExposedPorts = new Dictionary<string, EmptyStruct>
-                    {
-                         [exposedPort] = default(EmptyStruct),
-                    },
-                };
-
-                var hostConfig = new HostConfig
-                {
-                    PortBindings = new Dictionary<string, IList<PortBinding>>
-                    {
-                        [exposedPort] = new[]
-                        {
-                            new PortBinding { HostPort = exposedPort, HostIP = "0.0.0.0" },
-                        },
-                    },
-                };
-
-            var createContainerParams = new CreateContainerParameters(cfg);
-
-
-            if(!Utils.IsWindows()) 
-                createContainerParams.HostConfig = hostConfig;
+                    PortBindings = portBindings
+                }
+            };
 
             var containerCreated = await _dockerClient.Containers.CreateContainerAsync(createContainerParams);
             await _dockerClient.Containers.StartContainerAsync(containerCreated.ID, new ContainerStartParameters());
 
             var inspectResult = await _dockerClient.Containers.InspectContainerAsync(containerCreated.ID);
+            if (!inspectResult.State.Running)
+                throw new Exception("Container is not running");
 
             IpAddress = inspectResult.NetworkSettings.IPAddress;
             ContainerId = inspectResult.ID;

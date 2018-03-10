@@ -1,0 +1,18 @@
+assembly-informational-format: '{NuGetVersion}'
+mode: ContinuousDeployment
+branches:
+  master:
+    tag: s
+  releases?[/-]:
+    tag: rc
+  features?[/-]:
+    tag: useBranchName
+    increment: Minor
+  (pull|pull\-requests|pr)[/-]:
+    tag: pr
+  hotfix(es)?[/-]:
+    tag: rc
+  support[/-]:
+    tag: s
+  dev(elop)?(ment)?$:
+    tag: b

@@ -10,15 +10,15 @@ namespace TestContainers.Tests
     {
         public IDatabase Cache { get; private set; }
         Container _container { get; }
-            
+
         public RedisCacheFixture() =>
              _container = new ContainerBuilder()
                 .Begin()
                 .WithImage("redis:4.0.8")
                 .WithExposedPorts(6379)
-                .Build();   
-        
-        public async Task InitializeAsync() 
+                .Build();
+
+        public async Task InitializeAsync()
         {
             await _container.Start();
             var connection = await ConnectionMultiplexer.ConnectAsync("localhost");
@@ -33,7 +33,7 @@ namespace TestContainers.Tests
     {
         readonly IDatabase _cache;
         public RedisCacheTests(RedisCacheFixture fixture) => _cache = fixture.Cache;
-        
+
         [Fact, Trait("Category", "LCOL")]
         public async Task SimpleTest()
         {

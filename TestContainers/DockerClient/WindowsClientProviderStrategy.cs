@@ -3,13 +3,15 @@ using Docker.DotNet;
 
 namespace TestContainers
 {
-    public class WindowsClientProviderStrategy : DockerClientProviderStrategy 
+    public class WindowsClientProviderStrategy : DockerClientProviderStrategy
     {
         //private static final int PING_TIMEOUT_DEFAULT = 5;
         //private static final String PING_TIMEOUT_PROPERTY_NAME = "testcontainers.windowsprovider.timeout";
 
         protected override DockerClientConfiguration Config { get; } =
-            new DockerClientConfiguration(new Uri("npipe://./pipe/docker_engine"));
+            new DockerClientConfiguration(new Uri("npipe://./pipe/docker_engine"
+                //"tcp://localhost:2375"
+                ));
 
         protected override bool IsApplicable() => Utils.IsWindows();
 

@@ -1,7 +1,5 @@
 using System;
 using Docker.DotNet;
-using Microsoft.Extensions.DependencyModel;
-using Microsoft.Extensions.Options;
 using System.Reflection;
 using System.Linq;
 using System.Runtime.InteropServices;
@@ -10,23 +8,18 @@ namespace TestContainers
 {
     public sealed class DockerClientFactory
     {
-        bool initialized = false;
         static volatile DockerClientFactory instance;
         static object syncRoot = new Object();
-
         DockerClientProviderStrategy strategy { get; } = DockerClientProviderStrategy.GetFirstValidStrategy();
-
-        public DockerClientFactory() { }
-
-        public static DockerClientFactory Instance 
+        public static DockerClientFactory Instance
         {
             get
             {
-                if(instance == null)
+                if (instance == null)
                 {
-                    lock(syncRoot)
+                    lock (syncRoot)
                     {
-                        if(instance == null)
+                        if (instance == null)
                             instance = new DockerClientFactory();
                     }
                 }

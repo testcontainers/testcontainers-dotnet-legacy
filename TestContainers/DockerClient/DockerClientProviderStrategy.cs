@@ -4,7 +4,9 @@ using System.Linq;
 using System.Reflection;
 using System.Runtime.InteropServices;
 using Docker.DotNet;
+#if NETSTANDARD2_0
 using Microsoft.Extensions.DependencyModel;
+#endif
 
 namespace TestContainers
 {
@@ -18,14 +20,24 @@ namespace TestContainers
 
         protected abstract void Test();
 
-        public static DockerClientProviderStrategy GetFirstValidStrategy() =>
-            DependencyContext.Default
+        public static DockerClientProviderStrategy GetFirstValidStrategy() 
+        {
+            #if NET45
+                var assemblies = AppDomain.CurrentDomain.GetAssemblies();
+            #else 
+                var assemblies = 
+                    DependencyContext.Default
                     .GetDefaultAssemblyNames()
-                    .Select(Assembly.Load)
-                    .SelectMany(t => t.GetTypes())
-                    .Where(p => p.GetTypeInfo().IsSubclassOf(typeof(DockerClientProviderStrategy)))
-                    .Select(type => (Activator.CreateInstance(type) as DockerClientProviderStrategy))
-                    .SingleOrDefault(strategy => strategy.IsApplicable());
+                    .Select(Assembly.Load);
+            #endif
+
+
+            return assemblies
+                .SelectMany(t => t.GetTypes())
+                .Where(p => p.GetTypeInfo().IsSubclassOf(typeof(DockerClientProviderStrategy)))
+                .Select(type => (Activator.CreateInstance(type) as DockerClientProviderStrategy))
+                .SingleOrDefault(strategy => strategy.IsApplicable());
+        }
                     
         public DockerClient GetClient() => Config.CreateClient();
 
@@ -48,13 +60,25 @@ namespace TestContainers
     public static class Utils
     {
         public static bool IsWindows() =>
+        #if NET45
+            true;
+        #else
             RuntimeInformation.IsOSPlatform(OSPlatform.Windows);
+        #endif
 
         public static bool IsOSX() =>
+        #if NET45
+            false;
+        #else
             RuntimeInformation.IsOSPlatform(OSPlatform.OSX); 
+        #endif
 
         public static bool IsLinux() =>
+        #if NET45
+            false;
+        #else
             RuntimeInformation.IsOSPlatform(OSPlatform.Linux); 
+        #endif
     }
 }
 
