@@ -18,8 +18,12 @@ build:
   verbosity: minimal
   
 test_script:
-  - ps: dotnet test TestContainers.Tests --filter Category=WCOW
-  - sh: dotnet test TestContainers.Tests --filter Category=LCOL
+  - ps: |
+      cd TestContainers.Tests
+      dotnet xunit -namespace "TestContainers.Tests.Windows"
+  - sh: |
+      cd TestContainers.Tests
+      dotnet xunit -namespace "TestContainers.Tests.Linux"
 
 # deploy:
 #   provider: NuGet
