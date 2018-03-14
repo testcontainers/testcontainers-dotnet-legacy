@@ -24,7 +24,7 @@ namespace TestContainers.Tests.Linux
 
         public Task DisposeAsync() => _container.Stop();
 
-        public string GetServerAddress() => _container.IpAddress;
+        public string GetServerAddress() => _container.ContainerInspectResponse.NetworkSettings.IPAddress;
     }
 
     public class MySqlTests : IClassFixture<MySqlFixture>

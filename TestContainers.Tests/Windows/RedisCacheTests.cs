@@ -30,7 +30,11 @@ namespace TestContainers.Tests.Windows
                     .WaitAndRetryForeverAsync(
                         iteration => TimeSpan.FromSeconds(10),
                         (exception, timespan) => Console.WriteLine(exception.Message)))
-                .ExecuteAndCaptureAsync(() => ConnectionMultiplexer.ConnectAsync(!string.IsNullOrEmpty(_container.IpAddress) ? _container.IpAddress : "localhost"));
+                .ExecuteAndCaptureAsync(() =>
+                {
+                    var ipAddress = _container.ContainerInspectResponse.NetworkSettings.IPAddress;
+                    return ConnectionMultiplexer.ConnectAsync(!string.IsNullOrEmpty(ipAddress) ? ipAddress : "localhost");
+                });
 
             if (policyResult.Outcome == OutcomeType.Failure)
                 throw new Exception(policyResult.FinalException.Message);

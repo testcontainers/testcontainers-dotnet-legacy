@@ -63,18 +63,14 @@ namespace TestContainers
     {
         readonly DockerClient _dockerClient;
 
-        public Container() =>
-            _dockerClient = DockerClientFactory.Instance.Client();
 
         public string DockerImageName { get; set; }
-
         public int[] ExposedPorts { get; set; }
-
-        public string IpAddress { get; private set; }
-
-        public string ContainerId { get; set; }
-
         public (string key, string value)[] EnvironmentVariables { get; set; }
+        public ContainerInspectResponse ContainerInspectResponse { get; set; }
+
+        public Container() =>
+            _dockerClient = DockerClientFactory.Instance.Client();
 
         public async Task Start()
         {
@@ -114,19 +110,14 @@ namespace TestContainers
             var containerCreated = await _dockerClient.Containers.CreateContainerAsync(createContainerParams);
             await _dockerClient.Containers.StartContainerAsync(containerCreated.ID, new ContainerStartParameters());
 
-            var inspectResult = await _dockerClient.Containers.InspectContainerAsync(containerCreated.ID);
-            if (!inspectResult.State.Running)
-                throw new Exception("Container is not running");
-
-            IpAddress = inspectResult.NetworkSettings.IPAddress;
-            ContainerId = inspectResult.ID;
+            ContainerInspectResponse = await _dockerClient.Containers.InspectContainerAsync(containerCreated.ID);
         }
 
         public async Task Stop()
         {
-            await _dockerClient.Containers.StopContainerAsync(ContainerId, new ContainerStopParameters());
+            await _dockerClient.Containers.StopContainerAsync(ContainerInspectResponse.ID, new ContainerStopParameters());
 
-            await _dockerClient.Containers.RemoveContainerAsync(ContainerId, new ContainerRemoveParameters());
+            //await _dockerClient.Containers.RemoveContainerAsync(ContainerInspectResponse.ID, new ContainerRemoveParameters());
         }
     }
 }

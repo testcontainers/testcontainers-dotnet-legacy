@@ -1,8 +1,8 @@
 version: 0.0.{build}
 skip_tags: true
 image: 
-  - Visual Studio 2017
   - Ubuntu
+  - Visual Studio 2017
 configuration: Release
 environment:
   DOTNET_CLI_TELEMETRY_OPTOUT: true
@@ -31,5 +31,5 @@ test_script:
 #     secure: QcVgtyv0PDmNw325lb+krjV9E5QYdFdk7/cAkt03VxlXDDysoGhv6pzLfF8HqQtS
 #   skip_symbols: false
 #   artifact: /.*\.nupkg/
-# on_finish:
-#  - ps: $blockRdp = $true; iex ((new-object net.webclient).DownloadString('https://raw.githubusercontent.com/appveyor/ci/master/scripts/enable-rdp.ps1'))
+on_finish:
+ - ps: $blockRdp = $true; iex ((new-object net.webclient).DownloadString('https://raw.githubusercontent.com/appveyor/ci/master/scripts/enable-rdp.ps1'))
