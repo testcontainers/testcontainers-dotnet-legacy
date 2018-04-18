@@ -5,14 +5,16 @@ using System.Threading;
 using System.Threading.Tasks;
 using Docker.DotNet;
 using Docker.DotNet.Models;
+using Polly;
 
-namespace TestContainers
+namespace TestContainers.Core.Containers
 {
     static class FnUtils
     {
         public static Func<A, C> Compose<A, B, C>(Func<A, B> f1, Func<B, C> f2) =>
             (a) => f2(f1(a));
     }
+
     public class ContainerBuilder
     {
         Func<Container, Container> fn = null;
@@ -62,8 +64,7 @@ namespace TestContainers
     public class Container
     {
         readonly DockerClient _dockerClient;
-
-
+        string _containerId { get; set; }
         public string DockerImageName { get; set; }
         public int[] ExposedPorts { get; set; }
         public (string key, string value)[] EnvironmentVariables { get; set; }
@@ -73,6 +74,33 @@ namespace TestContainers
             _dockerClient = DockerClientFactory.Instance.Client();
 
         public async Task Start()
+        {
+            _containerId = await Create();
+            var containerInspectResult = await TryStart();
+
+            ContainerInspectResponse = containerInspectResult;
+        }
+
+        async Task<ContainerInspectResponse> TryStart()
+        {
+            await _dockerClient.Containers.StartContainerAsync(_containerId, new ContainerStartParameters());
+
+            var retryUntilContainerStateIsRunning = Policy
+                    .HandleResult<ContainerInspectResponse>(c => !c.State.Running)
+                    .RetryForeverAsync();
+
+            var containerInspectPolicy = await Policy
+                .TimeoutAsync(TimeSpan.FromMinutes(1))
+                .WrapAsync(retryUntilContainerStateIsRunning)
+                .ExecuteAndCaptureAsync(() => _dockerClient.Containers.InspectContainerAsync(_containerId));
+
+            if (containerInspectPolicy.Outcome == OutcomeType.Failure)
+                throw new ContainerLaunchException("Container startup failed", containerInspectPolicy.FinalException);
+
+            return containerInspectPolicy.Result;
+        }
+
+        async Task<string> Create()
         {
             var progress = new Progress<JSONMessage>();
             await _dockerClient.Images.CreateImageAsync(
@@ -85,6 +113,13 @@ namespace TestContainers
                 progress,
                 CancellationToken.None);
 
+            var createContainersParams = ApplyConfiguration();
+            var containerCreated = await _dockerClient.Containers.CreateContainerAsync(createContainersParams);
+            return containerCreated.ID;
+        }
+
+        CreateContainerParameters ApplyConfiguration()
+        {
             var exposedPorts = ExposedPorts?.ToList() ?? new List<int>();
 
             var cfg = new Config
@@ -99,25 +134,21 @@ namespace TestContainers
 
             exposedPorts.ForEach(e => portBindings.Add($"{e}/tcp", new[] { new PortBinding { HostPort = e.ToString(), HostIP = "" } }));
 
-            var createContainerParams = new CreateContainerParameters(cfg)
+            return new CreateContainerParameters(cfg)
             {
                 HostConfig = new HostConfig
                 {
                     PortBindings = portBindings
                 }
             };
-
-            var containerCreated = await _dockerClient.Containers.CreateContainerAsync(createContainerParams);
-            await _dockerClient.Containers.StartContainerAsync(containerCreated.ID, new ContainerStartParameters());
-
-            ContainerInspectResponse = await _dockerClient.Containers.InspectContainerAsync(containerCreated.ID);
         }
 
         public async Task Stop()
         {
-            await _dockerClient.Containers.StopContainerAsync(ContainerInspectResponse.ID, new ContainerStopParameters());
+            if (string.IsNullOrWhiteSpace(_containerId)) return;
 
-            //await _dockerClient.Containers.RemoveContainerAsync(ContainerInspectResponse.ID, new ContainerRemoveParameters());
+            await _dockerClient.Containers.StopContainerAsync(ContainerInspectResponse.ID, new ContainerStopParameters());
+            await _dockerClient.Containers.RemoveContainerAsync(ContainerInspectResponse.ID, new ContainerRemoveParameters());
         }
     }
 }

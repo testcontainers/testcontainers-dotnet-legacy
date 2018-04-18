@@ -4,6 +4,8 @@ using StackExchange.Redis;
 using System.Threading.Tasks;
 using TestContainers;
 using Polly;
+using TestContainers.Core.Containers;
+using System.Linq;
 
 namespace TestContainers.Tests.Windows
 {
@@ -32,8 +34,8 @@ namespace TestContainers.Tests.Windows
                         (exception, timespan) => Console.WriteLine(exception.Message)))
                 .ExecuteAndCaptureAsync(() =>
                 {
-                    var ipAddress = _container.ContainerInspectResponse.NetworkSettings.IPAddress;
-                    return ConnectionMultiplexer.ConnectAsync(!string.IsNullOrEmpty(ipAddress) ? ipAddress : "localhost");
+                    var ipAddress = _container.ContainerInspectResponse.NetworkSettings.Networks.First().Value.IPAddress;
+                    return ConnectionMultiplexer.ConnectAsync(ipAddress);
                 });
 
             if (policyResult.Outcome == OutcomeType.Failure)

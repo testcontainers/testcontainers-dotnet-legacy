@@ -5,11 +5,14 @@ using MySql.Data.MySqlClient;
 using TestContainers;
 using System.Threading;
 using Polly;
+using TestContainers.Core.Containers;
+using System.Linq;
 
 namespace TestContainers.Tests.Linux
 {
     public class MySqlFixture : IAsyncLifetime
     {
+        public MySqlConnection Connection { get; private set; }
         Container _container { get; }
 
         public MySqlFixture() =>
@@ -20,39 +23,42 @@ namespace TestContainers.Tests.Linux
                 .WithEnv(("MYSQL_ROOT_PASSWORD", "Password123"))
                 .Build();
 
-        public Task InitializeAsync() => _container.Start();
+        public async Task InitializeAsync()
+        {
+            await _container.Start();
+            var connectionString = $"Server={GetServerAddress()};UID=root;pwd=Password123;Connect Timeout=30";
+            Connection = new MySqlConnection(connectionString);
 
-        public Task DisposeAsync() => _container.Stop();
+            await Policy
+                  .TimeoutAsync(TimeSpan.FromMinutes(2))
+                  .WrapAsync(Policy
+                      .Handle<MySqlException>()
+                      .WaitAndRetryForeverAsync(
+                          iteration => TimeSpan.FromSeconds(10)))
+                  .ExecuteAsync(() => Connection.OpenAsync());
+        }
 
-        public string GetServerAddress() => _container.ContainerInspectResponse.NetworkSettings.IPAddress;
+        public async Task DisposeAsync()
+        {
+            await Connection.CloseAsync();
+            await _container.Stop();
+        }
+
+        string GetServerAddress() => _container.ContainerInspectResponse.NetworkSettings.Networks.First().Value.IPAddress;
     }
 
     public class MySqlTests : IClassFixture<MySqlFixture>
     {
-        string _serverAddress;
-        public MySqlTests(MySqlFixture fixture) =>
-            _serverAddress = fixture.GetServerAddress();
+        MySqlConnection _connection { get; }
+        public MySqlTests(MySqlFixture fixture) => _connection = fixture.Connection;
 
         [Fact]
         public async Task SimpleTest()
         {
-            var connectionString = $"Server=localhost;UID=root;pwd=Password123;Connect Timeout=30";
-            using (var connection = new MySqlConnection(connectionString))
-            {
-                await Policy
-                    .TimeoutAsync(TimeSpan.FromMinutes(2))
-                    .WrapAsync(Policy
-                        .Handle<MySqlException>()
-                        .WaitAndRetryForeverAsync(
-                            iteration => TimeSpan.FromSeconds(10),
-                            (exception, timespan) => Console.WriteLine(exception.Message)))
-                    .ExecuteAsync(() => connection.OpenAsync());
-
-                string query = "SELECT 1;";
-                var cmd = new MySqlCommand(query, connection);
-                var reader = (await cmd.ExecuteScalarAsync());
-                Assert.Equal((long)1, reader);
-            }
+            string query = "SELECT 1;";
+            var cmd = new MySqlCommand(query, _connection);
+            var reader = (await cmd.ExecuteScalarAsync());
+            Assert.Equal((long)1, reader);
         }
     }
 }

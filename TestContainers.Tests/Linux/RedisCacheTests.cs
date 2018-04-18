@@ -5,6 +5,8 @@ using System.Threading.Tasks;
 using TestContainers;
 using Polly;
 using Newtonsoft.Json;
+using TestContainers.Core.Containers;
+using System.Linq;
 
 namespace TestContainers.Tests.Linux
 {
@@ -24,19 +26,15 @@ namespace TestContainers.Tests.Linux
         {
             await _container.Start();
 
-            Console.WriteLine(JsonConvert.SerializeObject(_container.ContainerInspectResponse));
-
             var policyResult = await Policy
                 .TimeoutAsync(TimeSpan.FromMinutes(2))
                 .WrapAsync(Policy
                     .Handle<RedisConnectionException>()
-                    .WaitAndRetryForeverAsync(
-                        iteration => TimeSpan.FromSeconds(10),
-                        (exception, timespan) => Console.WriteLine(exception.Message)))
+                    .WaitAndRetryForeverAsync(iteration => TimeSpan.FromSeconds(10)))
                 .ExecuteAndCaptureAsync(() =>
                 {
-                    var ipAddress = _container.ContainerInspectResponse.NetworkSettings.IPAddress;
-                    return ConnectionMultiplexer.ConnectAsync(!string.IsNullOrEmpty(ipAddress) ? ipAddress : "localhost");
+                    var ipAddress = _container.ContainerInspectResponse.NetworkSettings.Networks.First().Value.IPAddress;
+                    return ConnectionMultiplexer.ConnectAsync(ipAddress);
                 });
 
             if (policyResult.Outcome == OutcomeType.Failure)
