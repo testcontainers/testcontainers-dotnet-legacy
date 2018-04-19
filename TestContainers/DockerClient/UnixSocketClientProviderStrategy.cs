@@ -9,14 +9,8 @@ namespace TestContainers
         protected override DockerClientConfiguration Config { get; } =
             new DockerClientConfiguration(new Uri("unix:///var/run/docker.sock"));
 
-        protected override bool IsApplicable() => Utils.IsOSX() || Utils.IsLinux();
+        protected override bool IsApplicable() => EnvironmentHelper.IsOSX() || EnvironmentHelper.IsLinux();
 
-        protected override string GetDescription() =>
-            "Docker for windows (via TCP port 2375";
-
-        protected override void Test()
-        {
-
-        }
+        protected override string GetDescription() => "Docker for Linux/Mac (via socket)";
     }
 }
