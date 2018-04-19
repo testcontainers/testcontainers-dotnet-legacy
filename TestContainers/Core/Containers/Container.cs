@@ -9,58 +9,6 @@ using Polly;
 
 namespace TestContainers.Core.Containers
 {
-    static class FnUtils
-    {
-        public static Func<A, C> Compose<A, B, C>(Func<A, B> f1, Func<B, C> f2) =>
-            (a) => f2(f1(a));
-    }
-
-    public class ContainerBuilder
-    {
-        Func<Container, Container> fn = null;
-        public ContainerBuilder Begin()
-        {
-            fn = (ignored) => new Container();
-            return this;
-        }
-
-        public ContainerBuilder WithImage(string dockerImageName)
-        {
-            fn = FnUtils.Compose(fn, (container) =>
-            {
-                container.DockerImageName = dockerImageName;
-                return container;
-            });
-
-            return this;
-        }
-
-        public ContainerBuilder WithExposedPorts(params int[] ports)
-        {
-            fn = FnUtils.Compose(fn, (container) =>
-            {
-                container.ExposedPorts = ports;
-                return container;
-            });
-
-            return this;
-        }
-
-        public ContainerBuilder WithEnv(params (string key, string value)[] keyValuePairs)
-        {
-            fn = FnUtils.Compose(fn, (container) =>
-            {
-                container.EnvironmentVariables = keyValuePairs;
-                return container;
-            });
-
-            return this;
-        }
-
-        public Container Build() =>
-            fn(null);
-    }
-
     public class Container
     {
         readonly DockerClient _dockerClient;

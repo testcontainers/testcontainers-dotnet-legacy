@@ -7,6 +7,7 @@ using Polly;
 using Newtonsoft.Json;
 using TestContainers.Core.Containers;
 using System.Linq;
+using TestContainers.Core.Builders;
 
 namespace TestContainers.Tests.Linux
 {
@@ -16,7 +17,7 @@ namespace TestContainers.Tests.Linux
         Container _container { get; }
 
         public RedisCacheFixture() =>
-             _container = new ContainerBuilder()
+             _container = new GenericContainerBuilder()
                 .Begin()
                 .WithImage("redis:4.0.8")
                 .WithExposedPorts(6379)
@@ -34,7 +35,7 @@ namespace TestContainers.Tests.Linux
                 .ExecuteAndCaptureAsync(() =>
                 {
                     var ipAddress = _container.ContainerInspectResponse.NetworkSettings.Networks.First().Value.IPAddress;
-                    return ConnectionMultiplexer.ConnectAsync(ipAddress);
+                    return ConnectionMultiplexer.ConnectAsync("localhost");
                 });
 
             if (policyResult.Outcome == OutcomeType.Failure)

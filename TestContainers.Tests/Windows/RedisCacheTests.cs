@@ -6,6 +6,7 @@ using TestContainers;
 using Polly;
 using TestContainers.Core.Containers;
 using System.Linq;
+using TestContainers.Core.Builders;
 
 namespace TestContainers.Tests.Windows
 {
@@ -15,7 +16,7 @@ namespace TestContainers.Tests.Windows
         Container _container { get; }
 
         public RedisCacheFixture() =>
-             _container = new ContainerBuilder()
+             _container = new GenericContainerBuilder()
                 .Begin()
                 .WithImage("alexellis2/redis-windows:latest")
                 .WithExposedPorts(6379)

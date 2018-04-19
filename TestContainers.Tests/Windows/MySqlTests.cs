@@ -8,6 +8,7 @@ using Polly;
 using Newtonsoft.Json;
 using TestContainers.Core.Containers;
 using System.Linq;
+using TestContainers.Core.Builders;
 
 namespace TestContainers.Tests.Windows
 {
@@ -17,7 +18,7 @@ namespace TestContainers.Tests.Windows
         Container _container { get; }
 
         public MySqlFixture() =>
-             _container = new ContainerBuilder()
+             _container = new GenericContainerBuilder()
                 .Begin()
                 .WithImage("nanoserver/mysql:latest")
                 .WithExposedPorts(3306)

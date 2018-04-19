@@ -7,6 +7,7 @@ using System.Threading;
 using Polly;
 using TestContainers.Core.Containers;
 using System.Linq;
+using TestContainers.Core.Builders;
 
 namespace TestContainers.Tests.Linux
 {
@@ -16,7 +17,7 @@ namespace TestContainers.Tests.Linux
         Container _container { get; }
 
         public MySqlFixture() =>
-             _container = new ContainerBuilder()
+             _container = new GenericContainerBuilder()
                 .Begin()
                 .WithImage("mysql:latest")
                 .WithExposedPorts(3306)
@@ -44,7 +45,8 @@ namespace TestContainers.Tests.Linux
             await _container.Stop();
         }
 
-        string GetServerAddress() => _container.ContainerInspectResponse.NetworkSettings.Networks.First().Value.IPAddress;
+        string GetServerAddress() => "localhost";
+        //_container.ContainerInspectResponse.NetworkSettings.Networks.First().Value.IPAddress;
     }
 
     public class MySqlTests : IClassFixture<MySqlFixture>
