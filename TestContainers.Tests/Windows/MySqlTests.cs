@@ -15,20 +15,21 @@ namespace TestContainers.Tests.Windows
     public class MySqlFixture : IAsyncLifetime
     {
         public MySqlConnection Connection { get; private set; }
-        Container _container { get; }
+        MySqlContainer _container { get; }
 
         public MySqlFixture() =>
-             _container = new GenericContainerBuilder()
+             _container = new MySqlContainerBuilder()
                 .Begin()
                 .WithImage("nanoserver/mysql:latest")
                 .WithExposedPorts(3306)
+                .WithUserName("usuario")
+                .WithPassword("Password123")
                 .Build();
 
         public async Task InitializeAsync()
         {
             await _container.Start();
-            var connectionString = $"Server={GetServerAddress()};UID=usuario;pwd=Password123;Connect Timeout=30";
-            Connection = new MySqlConnection(connectionString);
+            Connection = new MySqlConnection(_container.ConnectionString);
 
             await Policy
                   .TimeoutAsync(TimeSpan.FromMinutes(2))

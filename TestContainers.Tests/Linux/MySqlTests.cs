@@ -14,10 +14,10 @@ namespace TestContainers.Tests.Linux
     public class MySqlFixture : IAsyncLifetime
     {
         public MySqlConnection Connection { get; private set; }
-        Container _container { get; }
+        MySqlContainer _container { get; }
 
         public MySqlFixture() =>
-             _container = new GenericContainerBuilder()
+             _container = new MySqlContainerBuilder()
                 .Begin()
                 .WithImage("mysql:latest")
                 .WithExposedPorts(3306)
@@ -27,8 +27,7 @@ namespace TestContainers.Tests.Linux
         public async Task InitializeAsync()
         {
             await _container.Start();
-            var connectionString = $"Server={GetServerAddress()};UID=root;pwd=Password123;Connect Timeout=30";
-            Connection = new MySqlConnection(connectionString);
+            Connection = new MySqlConnection(_container.ConnectionString);
 
             await Policy
                   .TimeoutAsync(TimeSpan.FromMinutes(2))
@@ -45,8 +44,6 @@ namespace TestContainers.Tests.Linux
             await _container.Stop();
         }
 
-        string GetServerAddress() => "localhost";
-        //_container.ContainerInspectResponse.NetworkSettings.Networks.First().Value.IPAddress;
     }
 
     public class MySqlTests : IClassFixture<MySqlFixture>
