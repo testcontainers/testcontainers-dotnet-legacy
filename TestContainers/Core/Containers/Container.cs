@@ -24,28 +24,29 @@ namespace TestContainers.Core.Containers
         public async Task Start()
         {
             _containerId = await Create();
-            var containerInspectResult = await TryStart();
-
-            ContainerInspectResponse = containerInspectResult;
+            await TryStart();
         }
 
-        async Task<ContainerInspectResponse> TryStart()
+        async Task TryStart()
         {
             await _dockerClient.Containers.StartContainerAsync(_containerId, new ContainerStartParameters());
 
+            await WaitUntilContainerStarted();
+        }
+
+        protected virtual async Task WaitUntilContainerStarted()
+        {
             var retryUntilContainerStateIsRunning = Policy
-                    .HandleResult<ContainerInspectResponse>(c => !c.State.Running)
-                    .RetryForeverAsync();
+                                .HandleResult<ContainerInspectResponse>(c => !c.State.Running)
+                                .RetryForeverAsync();
 
             var containerInspectPolicy = await Policy
                 .TimeoutAsync(TimeSpan.FromMinutes(1))
                 .WrapAsync(retryUntilContainerStateIsRunning)
-                .ExecuteAndCaptureAsync(() => _dockerClient.Containers.InspectContainerAsync(_containerId));
+                .ExecuteAndCaptureAsync(async () => ContainerInspectResponse = await _dockerClient.Containers.InspectContainerAsync(_containerId));
 
             if (containerInspectPolicy.Outcome == OutcomeType.Failure)
                 throw new ContainerLaunchException("Container startup failed", containerInspectPolicy.FinalException);
-
-            return containerInspectPolicy.Result;
         }
 
         async Task<string> Create()
@@ -97,6 +98,25 @@ namespace TestContainers.Core.Containers
 
             await _dockerClient.Containers.StopContainerAsync(ContainerInspectResponse.ID, new ContainerStopParameters());
             await _dockerClient.Containers.RemoveContainerAsync(ContainerInspectResponse.ID, new ContainerRemoveParameters());
+        }
+
+        public string GetDockerHostIpAddress()
+        {
+            var dockerHostUri = _dockerClient.Configuration.EndpointBaseUri;
+
+            switch (dockerHostUri.Scheme)
+            {
+                case "http":
+                case "https":
+                case "tcp":
+                    return dockerHostUri.Host;
+                case "npipe": //will have to revisit this for LCOW/WCOW
+                    return ContainerInspectResponse.NetworkSettings.Networks.First().Value.IPAddress;
+                case "unix":
+                    return "localhost";
+                default:
+                    return null;
+            }
         }
     }
 }

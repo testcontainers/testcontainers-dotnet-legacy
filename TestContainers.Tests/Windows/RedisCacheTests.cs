@@ -34,10 +34,7 @@ namespace TestContainers.Tests.Windows
                         iteration => TimeSpan.FromSeconds(10),
                         (exception, timespan) => Console.WriteLine(exception.Message)))
                 .ExecuteAndCaptureAsync(() =>
-                {
-                    var ipAddress = _container.ContainerInspectResponse.NetworkSettings.Networks.First().Value.IPAddress;
-                    return ConnectionMultiplexer.ConnectAsync(ipAddress);
-                });
+                    ConnectionMultiplexer.ConnectAsync(_container.GetDockerHostIpAddress()));
 
             if (policyResult.Outcome == OutcomeType.Failure)
                 throw new Exception(policyResult.FinalException.Message);
