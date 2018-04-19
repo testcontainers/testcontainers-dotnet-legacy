@@ -33,10 +33,7 @@ namespace TestContainers.Tests.Linux
                     .Handle<RedisConnectionException>()
                     .WaitAndRetryForeverAsync(iteration => TimeSpan.FromSeconds(10)))
                 .ExecuteAndCaptureAsync(() =>
-                {
-                    var ipAddress = _container.ContainerInspectResponse.NetworkSettings.Networks.First().Value.IPAddress;
-                    return ConnectionMultiplexer.ConnectAsync("localhost");
-                });
+                    ConnectionMultiplexer.ConnectAsync(_container.GetDockerHostIpAddress()));
 
             if (policyResult.Outcome == OutcomeType.Failure)
                 throw new Exception(policyResult.FinalException.Message);

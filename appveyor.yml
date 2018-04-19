@@ -31,5 +31,5 @@ test_script:
 #     secure: QcVgtyv0PDmNw325lb+krjV9E5QYdFdk7/cAkt03VxlXDDysoGhv6pzLfF8HqQtS
 #   skip_symbols: false
 #   artifact: /.*\.nupkg/
-on_finish:
- - ps: $blockRdp = $true; iex ((new-object net.webclient).DownloadString('https://raw.githubusercontent.com/appveyor/ci/master/scripts/enable-rdp.ps1'))
+# on_finish:
+#  - ps: $blockRdp = $true; iex ((new-object net.webclient).DownloadString('https://raw.githubusercontent.com/appveyor/ci/master/scripts/enable-rdp.ps1'))

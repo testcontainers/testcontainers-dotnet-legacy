@@ -1,6 +1,6 @@
 <Project Sdk="Microsoft.NET.Sdk">
   <PropertyGroup>
-    <TargetFrameworks>netcoreapp2.0</TargetFrameworks> 
+    <TargetFramework>netcoreapp2.0</TargetFramework> 
     <!-- <TargetFrameworks Condition="'$(OS)' == 'Windows_NT'">net452;$(TargetFrameworks)</TargetFrameworks> -->
     <RuntimeFrameworkVersion Condition=" '$(TargetFramework)' == 'netcoreapp2.0' ">2.0.5</RuntimeFrameworkVersion>
     <PreserveCompilationContext>true</PreserveCompilationContext>

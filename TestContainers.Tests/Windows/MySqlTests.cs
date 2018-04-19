@@ -14,11 +14,10 @@ namespace TestContainers.Tests.Windows
 {
     public class MySqlFixture : IAsyncLifetime
     {
-        public MySqlConnection Connection { get; private set; }
-        MySqlContainer _container { get; }
+        public MySqlContainer Container { get; }
 
         public MySqlFixture() =>
-             _container = new MySqlContainerBuilder()
+             Container = new MySqlContainerBuilder()
                 .Begin()
                 .WithImage("nanoserver/mysql:latest")
                 .WithExposedPorts(3306)
@@ -26,41 +25,26 @@ namespace TestContainers.Tests.Windows
                 .WithPassword("Password123")
                 .Build();
 
-        public async Task InitializeAsync()
-        {
-            await _container.Start();
-            Connection = new MySqlConnection(_container.ConnectionString);
+        public Task InitializeAsync() => Container.Start();
 
-            await Policy
-                  .TimeoutAsync(TimeSpan.FromMinutes(2))
-                  .WrapAsync(Policy
-                      .Handle<MySqlException>()
-                      .WaitAndRetryForeverAsync(
-                          iteration => TimeSpan.FromSeconds(10)))
-                  .ExecuteAsync(() => Connection.OpenAsync());
-        }
-
-        public async Task DisposeAsync()
-        {
-            await Connection.CloseAsync();
-            await _container.Stop();
-        }
-
-        string GetServerAddress() => _container.ContainerInspectResponse.NetworkSettings.Networks.First().Value.IPAddress;
+        public Task DisposeAsync() => Container.Stop();
     }
 
     public class MySqlTests : IClassFixture<MySqlFixture>
     {
         MySqlConnection _connection { get; }
-        public MySqlTests(MySqlFixture fixture) => _connection = fixture.Connection;
+        public MySqlTests(MySqlFixture fixture) => _connection = new MySqlConnection(fixture.Container.ConnectionString);
 
         [Fact]
         public async Task SimpleTest()
         {
             string query = "SELECT 1;";
+            await _connection.OpenAsync();
             var cmd = new MySqlCommand(query, _connection);
             var reader = (await cmd.ExecuteScalarAsync());
             Assert.Equal((long)1, reader);
+
+            await _connection.CloseAsync();
         }
     }
 }
