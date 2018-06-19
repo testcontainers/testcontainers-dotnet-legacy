@@ -56,7 +56,7 @@ namespace TestContainers.Core.Containers
                 new ImagesCreateParameters
                 {
                     FromImage = DockerImageName,
-                    Tag = DockerImageName.Split(':')[1]
+                    Tag = DockerImageName.Split(':').Last()
                 },
                 new AuthConfig(),
                 progress,
@@ -111,7 +111,7 @@ namespace TestContainers.Core.Containers
                 case "tcp":
                     return dockerHostUri.Host;
                 case "npipe": //will have to revisit this for LCOW/WCOW
-                    return ContainerInspectResponse.NetworkSettings.Networks.First().Value.IPAddress;
+                    return "localhost";
                 case "unix":
                     return "localhost";
                 default:
