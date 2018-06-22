@@ -1,2 +1,2 @@
 # Testcontainers
-[![Build status](https://ci.appveyor.com/api/projects/status/ub3955ymqxj7xg1n?svg=true)](https://ci.appveyor.com/project/swissarmykirpan/testcontainers-dotnet)(https://circleci.com/gh/testcontainers/testcontainers-dotnet)
+[![Build status](https://ci.appveyor.com/api/projects/status/ky4t5cdftlmxlck6/branch/master?svg=true)](https://ci.appveyor.com/project/swissarmykirpan/testcontainers-dotnet/branch/master)
