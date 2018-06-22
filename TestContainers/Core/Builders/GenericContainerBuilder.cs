@@ -2,8 +2,8 @@ using TestContainers.Core.Containers;
 
 namespace TestContainers.Core.Builders
 {
-    public class GenericContainerBuilder : ContainerBuilder<Container, GenericContainerBuilder>
+    public class GenericContainerBuilder<TContainer> : ContainerBuilder<TContainer, GenericContainerBuilder<TContainer>> where TContainer : Container ,new()
     {
-
+        
     }
 }

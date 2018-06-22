@@ -1,28 +1,22 @@
-using System;
 using Xunit;
 using System.Threading.Tasks;
 using MySql.Data.MySqlClient;
-using TestContainers;
-using System.Threading;
-using Polly;
-using Newtonsoft.Json;
 using TestContainers.Core.Containers;
-using System.Linq;
 using TestContainers.Core.Builders;
 
-namespace TestContainers.Tests.Windows
+namespace TestContainers.Tests.ContainerTests
 {
     public class MySqlFixture : IAsyncLifetime
     {
-        public MySqlContainer Container { get; }
+        public string ConnectionString => Container.ConnectionString;
+        MySqlContainer Container { get; }
 
         public MySqlFixture() =>
-             Container = new MySqlContainerBuilder()
+             Container = new DatabaseContainerBuilder<MySqlContainer>()
                 .Begin()
-                .WithImage("nanoserver/mysql:latest")
+                .WithImage("mysql:5.7")
                 .WithExposedPorts(3306)
-                .WithUserName("usuario")
-                .WithPassword("Password123")
+                .WithEnv(("MYSQL_ROOT_PASSWORD", "Password123"))
                 .Build();
 
         public Task InitializeAsync() => Container.Start();
@@ -32,8 +26,8 @@ namespace TestContainers.Tests.Windows
 
     public class MySqlTests : IClassFixture<MySqlFixture>
     {
-        MySqlConnection _connection { get; }
-        public MySqlTests(MySqlFixture fixture) => _connection = new MySqlConnection(fixture.Container.ConnectionString);
+        readonly MySqlConnection _connection;
+        public MySqlTests(MySqlFixture fixture) => _connection = new MySqlConnection(fixture.ConnectionString);
 
         [Fact]
         public async Task SimpleTest()

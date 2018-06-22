@@ -1,9 +1,6 @@
 using System;
-using System.Linq;
 using System.Threading.Tasks;
-using Docker.DotNet.Models;
 using MySql.Data.MySqlClient;
-using Newtonsoft.Json;
 using Polly;
 
 namespace TestContainers.Core.Containers

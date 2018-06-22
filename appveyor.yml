@@ -1,8 +1,10 @@
 version: 0.0.{build}
 skip_tags: true
+branches:
+  only:
+   - master
 image: 
   - Ubuntu
-  - Visual Studio 2017
 configuration: Release
 environment:
   DOTNET_CLI_TELEMETRY_OPTOUT: true
@@ -18,18 +20,5 @@ build:
   verbosity: minimal
   
 test_script:
-  - ps: |
-      cd TestContainers.Tests
-      dotnet xunit -namespace "TestContainers.Tests.Windows"
-  - sh: |
-      cd TestContainers.Tests
-      dotnet xunit -namespace "TestContainers.Tests.Linux"
-
-# deploy:
-#   provider: NuGet
-#   api_key:
-#     secure: QcVgtyv0PDmNw325lb+krjV9E5QYdFdk7/cAkt03VxlXDDysoGhv6pzLfF8HqQtS
-#   skip_symbols: false
-#   artifact: /.*\.nupkg/
-# on_finish:
-#  - ps: $blockRdp = $true; iex ((new-object net.webclient).DownloadString('https://raw.githubusercontent.com/appveyor/ci/master/scripts/enable-rdp.ps1'))
+   - cd TestContainers.Tests
+   - dotnet xunit -namespace "TestContainers.Tests"
