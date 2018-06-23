@@ -55,6 +55,17 @@ namespace TestContainers.Core.Builders
             return (TBuilder)this;
         }
 
+        public TBuilder WithLabel(params (string key, string value)[] keyValuePairs)
+        {
+            fn = FnUtils.Compose(fn, (container) =>
+            {
+                container.Labels = keyValuePairs;
+                return container;
+            });
+
+            return (TBuilder)this;
+        }
+
         public virtual TContainer Build() =>
             fn(null);
     }
