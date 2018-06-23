@@ -10,6 +10,8 @@ environment:
   DOTNET_CLI_TELEMETRY_OPTOUT: true
   DOTNET_SKIP_FIRST_TIME_EXPERIENCE: true
   APPVEYOR_YML_DISABLE_PS_LINUX: true
+  COVERALLS_REPO_TOKEN: 
+    secure: HdrF4+rczLt9R+JM75fBQblUggN/pXHyjKZ0A3wuolttaKgo6wlPdlZ38F0giSl3
 
 before_build:
   - dotnet restore
@@ -19,6 +21,10 @@ build:
   publish_nuget: true
   verbosity: minimal
   
-test_script:
-   - cd TestContainers.Tests
-   - dotnet xunit -namespace "TestContainers.Tests"
+test_script: 
+ - dotnet test TestContainers.Tests/TestContainers.Tests.csproj /p:CollectCoverage=true /p:CoverletOutputFormat=lcov /p:CoverletOutput=./lcov
+
+after_test: 
+ - dotnet tool install -g coveralls.net --version 1.0.0
+ - echo $COVERALLS_REPO_TOKEN
+ - csmacnz.Coveralls --lcov -i TestContainers.Tests/lcov.info --useRelativePaths --repoToken $COVERALLS_REPO_TOKEN

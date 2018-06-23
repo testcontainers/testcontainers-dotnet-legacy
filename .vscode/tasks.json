@@ -12,12 +12,15 @@
             "problemMatcher": "$msCompile"
         },
         {
-            "label": "build",
+            "label": "test with coverage",
             "command": "dotnet",
             "type": "process",
             "args": [
-                "build",
-                "${workspaceFolder}/TestContainers.csproj"
+                "test",
+                "/p:CollectCoverage=true",
+                "/p:CoverletOutputFormat=lcov",
+                "/p:CoverletOutput=./lcov",
+                "${workspaceFolder}/TestContainers.Tests/TestContainers.Tests.csproj"
             ],
             "problemMatcher": "$msCompile"
         }
