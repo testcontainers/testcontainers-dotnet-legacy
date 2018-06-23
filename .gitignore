@@ -3,3 +3,6 @@ obj/
 
 tools/**
 !tools/packages.config
+.vs
+*ncrunch*
+*.info

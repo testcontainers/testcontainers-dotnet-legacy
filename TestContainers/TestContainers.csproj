@@ -1,7 +1,7 @@
-<Project Sdk="Microsoft.NET.Sdk">
+﻿<Project Sdk="Microsoft.NET.Sdk">
   <PropertyGroup>
-    <TargetFrameworks>netstandard2.0</TargetFrameworks>
-    <TargetFrameworks Condition="'$(OS)' == 'Windows_NT'">net45;$(TargetFrameworks)</TargetFrameworks>
+    <TargetFramework>netcoreapp2.1</TargetFramework>
+    <TargetFrameworks Condition="'$(OS)' == 'Windows_NT'">net452;$(TargetFramework)</TargetFrameworks>
     <VersionPrefix>0.0.2</VersionPrefix>
     <VersionSuffix>alpha</VersionSuffix>
     <Company>testcontainers.org</Company>
@@ -19,11 +19,11 @@
   </PropertyGroup>
   <ItemGroup>
     <PackageReference Include="Docker.Dotnet" Version="3.125.2" />
-    <PackageReference Include="Newtonsoft.Json" Version="11.0.1" />
-    <PackageReference Include="Polly" Version="5.8.0" />
+    <PackageReference Include="Newtonsoft.Json" Version="11.0.2" />
+    <PackageReference Include="Polly" Version="6.0.1" />
     <PackageReference Include="StackExchange.Redis" Version="1.2.6" />
   </ItemGroup>
-  <ItemGroup Condition=" '$(TargetFramework)' == 'netstandard2.0' ">
+  <ItemGroup Condition=" '$(TargetFramework)' == 'netcoreapp2.1' ">
     <PackageReference Include="MySql.Data" Version="6.10.6" />
   </ItemGroup>
   <ItemGroup Condition=" '$(TargetFramework)' == 'net45' ">

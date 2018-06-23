@@ -15,8 +15,8 @@ namespace TestContainers
         protected abstract string GetDescription();
 
         public static DockerClientProviderStrategy GetFirstValidStrategy() =>
-             AppDomain.CurrentDomain.GetAssemblies()
-                .SelectMany(t => t.GetTypes())
+            Assembly.Load("TestContainers")
+                .GetTypes()
                 .Where(p => p.GetTypeInfo().IsSubclassOf(typeof(DockerClientProviderStrategy)))
                 .Select(type => (Activator.CreateInstance(type) as DockerClientProviderStrategy))
                 .SingleOrDefault(strategy => strategy.IsApplicable());
