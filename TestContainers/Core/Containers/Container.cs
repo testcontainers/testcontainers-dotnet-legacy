@@ -16,6 +16,7 @@ namespace TestContainers.Core.Containers
         public string DockerImageName { get; set; }
         public int[] ExposedPorts { get; set; }
         public (string key, string value)[] EnvironmentVariables { get; set; }
+        public (string key, string value)[] Labels { get; set; }
         public ContainerInspectResponse ContainerInspectResponse { get; set; }
 
         public Container() =>
@@ -76,6 +77,7 @@ namespace TestContainers.Core.Containers
                 Image = DockerImageName,
                 Env = EnvironmentVariables?.Select(ev => $"{ev.key}={ev.value}").ToList(),
                 ExposedPorts = exposedPorts.ToDictionary(e => $"{e}/tcp", e => default(EmptyStruct)),
+                Labels = Labels?.ToDictionary(l => l.key, l => l.value),
                 Tty = true,
             };
 
