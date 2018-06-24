@@ -1,5 +1,6 @@
-version: 0.0.{build}
-skip_tags: true
+version: 0.0.2
+pull_requests:
+  do_not_increment_build_number: true
 branches:
   only:
    - master
@@ -10,8 +11,6 @@ environment:
   DOTNET_CLI_TELEMETRY_OPTOUT: true
   DOTNET_SKIP_FIRST_TIME_EXPERIENCE: true
   APPVEYOR_YML_DISABLE_PS_LINUX: true
-  COVERALLS_REPO_TOKEN: 
-    secure: HdrF4+rczLt9R+JM75fBQblUggN/pXHyjKZ0A3wuolttaKgo6wlPdlZ38F0giSl3
 
 before_build:
   - dotnet restore
@@ -19,12 +18,44 @@ before_build:
 build:
   project: TestContainers/TestContainers.csproj
   publish_nuget: true
-  verbosity: minimal
+  publish_nuget_symbols: true
+  verbosity: normal
   
 test_script: 
  - dotnet test TestContainers.Tests/TestContainers.Tests.csproj /p:CollectCoverage=true /p:CoverletOutputFormat=lcov /p:CoverletOutput=./lcov
 
 after_test: 
- - dotnet tool install -g coveralls.net --version 1.0.0
- - echo $COVERALLS_REPO_TOKEN
- - csmacnz.Coveralls --lcov -i TestContainers.Tests/lcov.info --useRelativePaths --repoToken $COVERALLS_REPO_TOKEN
+  - dotnet tool install -g coveralls.net --version 1.0.0
+  - csmacnz.Coveralls --lcov -i TestContainers.Tests/lcov.info --useRelativePaths --repoToken $COVERALLS_REPO_TOKEN
+
+dotnet_csproj:
+  patch: true
+  file: '**\*.csproj'
+  version: '{version}'
+  package_version: '{version}'
+  assembly_version: '{version}'
+  file_version: '{version}'
+  informational_version: '{version}'
+
+nuget: 
+  disable_publish_on_pr: false
+
+deploy:
+  - provider: NuGet
+    server: https://www.myget.org/F/testcontainers-dotnet/api/v2
+    api_key:
+      secure: WiR/QSyrLpScLC5KC0QQMBJE9ulskPG7UB6TPSrQ3ZRivHEUTSr70WlWHNA/J41u
+    skip_symbols: false
+    symbol_server: https://www.myget.org/F/testcontainers-dotnet/symbols/api/v2/package
+    on:
+      branch: master
+
+  - provider: NuGet
+    name: production  
+    api_key:
+      secure: 5zQzvnn+PrBF/J2mzSncavipOTj9+nqsZwiKmks//kQvgGfG3wbGeeSsuZRPTwJ5
+    skip_symbols: false
+    on:
+      branch: master
+      APPVEYOR_REPO_TAG: true
+
