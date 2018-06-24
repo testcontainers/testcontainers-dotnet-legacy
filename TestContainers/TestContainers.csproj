@@ -2,20 +2,23 @@
   <PropertyGroup>
     <TargetFramework>netcoreapp2.1</TargetFramework>
     <TargetFrameworks Condition="'$(OS)' == 'Windows_NT'">net452;$(TargetFramework)</TargetFrameworks>
-    <VersionPrefix>0.0.2</VersionPrefix>
-    <VersionSuffix>alpha</VersionSuffix>
+    <Version>0.0.2-alpha</Version>
     <Company>testcontainers.org</Company>
     <Authors>swissarmykirpan</Authors>
     <Product>TestContainers</Product>
+    <PackageId>TestContainers</PackageId>
+    <AssemblyName>TestContainers</AssemblyName>
     <ProjectUrl>https://testcontainers.org</ProjectUrl>
-    <LicenseUrl></LicenseUrl>
-    <IconUrl>https://avatars0.githubusercontent.com/u/13393021?s=200&amp;v=4</IconUrl>
+    <PackageLicenseUrl>https://raw.githubusercontent.com/testcontainers/testcontainers-dotnet/master/LICENSE</PackageLicenseUrl>
+    <PackageIconUrl>https://avatars0.githubusercontent.com/u/13393021?s=200&amp;v=4</PackageIconUrl>
     <Summary></Summary>
     <ReleaseNotes></ReleaseNotes>
     <Language></Language>
-    <Tags></Tags>
+    <PackageTags>testcontainers</PackageTags>
     <Description />
     <Copyright>Copyright © 2018</Copyright>
+    <RepositoryUrl>https://github.com/testcontainers/testcontainers-dotnet</RepositoryUrl>
+    <RepositoryType>git</RepositoryType>
   </PropertyGroup>
   <ItemGroup>
     <PackageReference Include="Docker.Dotnet" Version="3.125.2" />
