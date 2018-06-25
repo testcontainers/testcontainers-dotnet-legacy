@@ -1,7 +1,6 @@
 ﻿<Project Sdk="Microsoft.NET.Sdk">
   <PropertyGroup>
     <TargetFramework>netcoreapp2.1</TargetFramework>
-    <TargetFrameworks Condition="'$(OS)' == 'Windows_NT'">net452;$(TargetFramework)</TargetFrameworks>
     <Version>0.0.2</Version>
     <Company>testcontainers.org</Company>
     <Authors>swissarmykirpan</Authors>
