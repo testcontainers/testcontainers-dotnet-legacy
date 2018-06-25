@@ -1,4 +1,6 @@
 using System;
+using System.Collections.Generic;
+using System.Linq;
 using TestContainers.Core.Containers;
 
 namespace TestContainers.Core.Builders
@@ -48,7 +50,10 @@ namespace TestContainers.Core.Builders
         {
             fn = FnUtils.Compose(fn, (container) =>
             {
-                container.EnvironmentVariables = keyValuePairs;
+                var environmentVariables = container.EnvironmentVariables?.ToList() ?? new List<(string key, string value)>();
+                environmentVariables.AddRange(keyValuePairs);
+
+                container.EnvironmentVariables = environmentVariables.ToArray();
                 return container;
             });
 

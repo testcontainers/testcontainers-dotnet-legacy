@@ -11,15 +11,9 @@ namespace TestContainers.Core.Containers
         public const string IMAGE = "mysql";
         public const int MYSQL_PORT = 3306;
 
-        public override string DatabaseName => base.DatabaseName ?? _databaseName;
-
-        public override string UserName => base.UserName ?? _userName;
-
-        public override string Password => base.Password ?? _password;
-
-        string _databaseName = "test";
-        string _userName = "root";
-        string _password = "Password123";
+        // string _databaseName = "test";
+        // string _userName = "root";
+        // string _password = "Password123";
 
         public MySqlContainer() : base()
         {

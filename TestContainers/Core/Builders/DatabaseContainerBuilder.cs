@@ -2,40 +2,13 @@ using TestContainers.Core.Containers;
 
 namespace TestContainers.Core.Builders
 {
-    public class DatabaseContainerBuilder<TDatabaseContainer> : ContainerBuilder<TDatabaseContainer, DatabaseContainerBuilder<TDatabaseContainer>>
+    public abstract class DatabaseContainerBuilder<TDatabaseContainer, TDatabaseContainerBuilder> : ContainerBuilder<TDatabaseContainer, TDatabaseContainerBuilder>
     where TDatabaseContainer : DatabaseContainer, new()
+    where TDatabaseContainerBuilder : ContainerBuilder<TDatabaseContainer, TDatabaseContainerBuilder>, new()
+
     {
-        public DatabaseContainerBuilder<TDatabaseContainer> WithUserName(string userName)
-        {
-            fn = FnUtils.Compose(fn, (container) =>
-            {
-                container.UserName = userName;
-                return container;
-            });
-
-            return this;
-        }
-
-        public DatabaseContainerBuilder<TDatabaseContainer> WithPassword(string password)
-        {
-            fn = FnUtils.Compose(fn, (container) =>
-            {
-                container.Password = password;
-                return container;
-            });
-
-            return this;
-        }
-
-        public DatabaseContainerBuilder<TDatabaseContainer> WithDatabaseName(string databaseName)
-        {
-            fn = FnUtils.Compose(fn, (container) =>
-            {
-                container.DatabaseName = databaseName;
-                return container;
-            });
-
-            return this;
-        }
+        public abstract DatabaseContainerBuilder<TDatabaseContainer, TDatabaseContainerBuilder> WithUserName(string userName);
+        public abstract DatabaseContainerBuilder<TDatabaseContainer, TDatabaseContainerBuilder> WithPassword(string password);
+        public abstract DatabaseContainerBuilder<TDatabaseContainer, TDatabaseContainerBuilder> WithDatabaseName(string databaseName);
     }
 }
