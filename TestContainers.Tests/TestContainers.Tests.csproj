@@ -1,8 +1,7 @@
 ﻿<Project Sdk="Microsoft.NET.Sdk">
   <PropertyGroup>
-    <TargetFramework>netcoreapp2.1</TargetFramework> 
-    <TargetFrameworks Condition="'$(OS)' == 'Windows_NT'">net452;$(TargetFramework)</TargetFrameworks>
-    <RuntimeFrameworkVersion Condition=" '$(TargetFramework)' == 'netcoreapp2.0' ">2.0.5</RuntimeFrameworkVersion>
+    <TargetFrameworks Condition="'$(OS)' == 'Windows_NT'">net462;netcoreapp2.0;netcoreapp2.0;netcoreapp2.1</TargetFrameworks>
+    <TargetFrameworks Condition="'$(OS)' != 'Windows_NT'">netcoreapp2.0;netcoreapp2.1</TargetFrameworks>
     <PreserveCompilationContext>true</PreserveCompilationContext>
   </PropertyGroup>
   <ItemGroup>
@@ -11,13 +10,8 @@
     <PackageReference Include="xunit" Version="2.3.1" />
     <PackageReference Include="xunit.runner.visualstudio" Version="2.3.1" />
     <DotNetCliToolReference Include="dotnet-xunit" Version="2.3.1" />
+    <PackageReference Include="MySql.Data" Version="6.10.6" />
   </ItemGroup>
-  <ItemGroup Condition=" '$(TargetFramework)' == 'netcoreapp2.0' ">
-      <PackageReference Include="MySql.Data" Version="6.10.6" />
-  </ItemGroup>
-  <ItemGroup Condition=" '$(TargetFramework)' == 'net452' ">
-      <PackageReference Include="MySql.Data" Version="6.9.11" />
-    </ItemGroup>
   <ItemGroup>
     <ProjectReference Include="..\TestContainers\TestContainers.csproj" />
   </ItemGroup>
