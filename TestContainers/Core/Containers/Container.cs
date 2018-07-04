@@ -1,5 +1,6 @@
 using System;
 using System.Collections.Generic;
+using System.IO;
 using System.Linq;
 using System.Threading;
 using System.Threading.Tasks;
@@ -113,9 +114,10 @@ namespace TestContainers.Core.Containers
                 case "tcp":
                     return dockerHostUri.Host;
                 case "npipe": //will have to revisit this for LCOW/WCOW
-                    return "localhost";
                 case "unix":
-                    return "localhost";
+                    return File.Exists("/.dockerenv") 
+                        ? ContainerInspectResponse.NetworkSettings.Gateway
+                        : "localhost";
                 default:
                     return null;
             }
