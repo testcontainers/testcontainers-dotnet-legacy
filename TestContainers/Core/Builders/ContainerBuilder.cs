@@ -1,5 +1,6 @@
 using System;
 using TestContainers.Core.Containers;
+using Docker.DotNet;
 
 namespace TestContainers.Core.Builders
 {
@@ -44,6 +45,17 @@ namespace TestContainers.Core.Builders
             return (TBuilder)this;
         }
 
+        public TBuilder WithPortBindings(params (int ExposedPort, int PortBinding)[] portBindings)
+        {
+            fn = FnUtils.Compose(fn, (container) =>
+            {
+                container.PortBindings = portBindings;
+                return container;
+            });
+
+            return (TBuilder)this;
+        }
+
         public TBuilder WithEnv(params (string key, string value)[] keyValuePairs)
         {
             fn = FnUtils.Compose(fn, (container) =>
@@ -60,6 +72,28 @@ namespace TestContainers.Core.Builders
             fn = FnUtils.Compose(fn, (container) =>
             {
                 container.Labels = keyValuePairs;
+                return container;
+            });
+
+            return (TBuilder)this;
+        }
+
+        public TBuilder WithMountPoints(params (string sourcePath, string targetPath, string type)[] mounts)
+        {
+            fn = FnUtils.Compose(fn, (container) =>
+            {
+                container.Mounts = mounts;
+                return container;
+            });
+
+            return (TBuilder)this;
+        }
+
+        public TBuilder WithCmd(params string[] commands)
+        {
+            fn = FnUtils.Compose(fn, (container) =>
+            {
+                container.Commands = commands;
                 return container;
             });
 

@@ -1,22 +1,28 @@
-using Xunit;
-using StackExchange.Redis;
+﻿using StackExchange.Redis;
+using System;
+using System.Collections.Generic;
+using System.IO;
+using System.Linq;
+using System.Text;
 using System.Threading.Tasks;
-using TestContainers.Core.Containers;
 using TestContainers.Core.Builders;
+using TestContainers.Core.Containers;
+using Xunit;
 
 namespace TestContainers.Tests.ContainerTests
 {
-    public class RedisCacheFixture : IAsyncLifetime
+    public class RedisWithConfigFixture : IAsyncLifetime
     {
         public string ConnectionString => Container.ConnectionString;
         RedisContainer Container { get; }
 
-        public RedisCacheFixture() =>
+        public RedisWithConfigFixture() =>
                 Container = new GenericContainerBuilder<RedisContainer>()
                 .Begin()
                 .WithImage("redis:4.0.8")
                 .WithExposedPorts(6379)
-                .WithPortBindings((6379, 6380))
+                .WithMountPoints((Directory.GetCurrentDirectory() + "/ContainerTests/Basic/master-6379.conf", "/usr/local/etc/redis/redis.conf", "bind"))
+                .WithCmd("/usr/local/etc/redis/redis.conf")
                 .Build();
 
         public Task InitializeAsync() => Container.Start();
@@ -24,11 +30,10 @@ namespace TestContainers.Tests.ContainerTests
         public Task DisposeAsync() => Container.Stop();
     }
 
-
-    public class RedisTests : IClassFixture<RedisCacheFixture>
+    public class RedisWithConfigFixtureTests : IClassFixture<RedisWithConfigFixture>
     {
         readonly IDatabase _cache;
-        public RedisTests(RedisCacheFixture fixture) => _cache = ConnectionMultiplexer.Connect(fixture.ConnectionString).GetDatabase();
+        public RedisWithConfigFixtureTests(RedisWithConfigFixture fixture) => _cache = ConnectionMultiplexer.Connect(fixture.ConnectionString).GetDatabase();
 
         [Fact]
         public async Task SimpleTest()
@@ -41,5 +46,3 @@ namespace TestContainers.Tests.ContainerTests
         }
     }
 }
-
-

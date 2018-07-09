@@ -2,7 +2,9 @@
   <PropertyGroup>
     <TargetFrameworks Condition="'$(OS)' == 'Windows_NT'">net462;netcoreapp2.0;netcoreapp2.0;netcoreapp2.1</TargetFrameworks>
     <TargetFrameworks Condition="'$(OS)' != 'Windows_NT'">netcoreapp2.0;netcoreapp2.1</TargetFrameworks>
-    <PreserveCompilationContext>true</PreserveCompilationContext>
+    <GenerateRuntimeConfigurationFiles>true</GenerateRuntimeConfigurationFiles>
+    <GenerateDocumentationFile>false</GenerateDocumentationFile>
+    <DebugType>full</DebugType>
   </PropertyGroup>
   <ItemGroup>
     <PackageReference Include="coverlet.msbuild" Version="2.0.1" />
@@ -14,5 +16,10 @@
   </ItemGroup>
   <ItemGroup>
     <ProjectReference Include="..\TestContainers\TestContainers.csproj" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Update="ContainerTests\Basic\master-6379.conf">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </None>
   </ItemGroup>
 </Project>

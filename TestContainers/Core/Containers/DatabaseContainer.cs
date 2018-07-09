@@ -1,10 +1,6 @@
-using System;
-using System.Threading.Tasks;
-using Polly;
-
 namespace TestContainers.Core.Containers
 {
-    public class DatabaseContainer : Container
+    public abstract class DatabaseContainer : Container
     {
         protected int GetStartupTimeoutSeconds => 120;
 
@@ -16,7 +12,7 @@ namespace TestContainers.Core.Containers
         }
 
         public virtual string DatabaseName { get; set; }
-        public virtual string ConnectionString { get; set; }
+        public virtual string ConnectionString { get; }
 
         public virtual string UserName { get; set; }
 
