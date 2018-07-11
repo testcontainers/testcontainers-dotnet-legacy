@@ -17,9 +17,7 @@
   <ItemGroup>
     <ProjectReference Include="..\TestContainers\TestContainers.csproj" />
   </ItemGroup>
-  <ItemGroup>
-    <None Update="ContainerTests\Basic\master-6379.conf">
-      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
-    </None>
-  </ItemGroup>
+  <Target Name="CopyRedisConfig" AfterTargets="AfterBuild">
+    <Copy SourceFiles="../RedisConfigs/master-6379.conf" DestinationFolder="$(Outdir)" />
+  </Target>
 </Project>

@@ -16,12 +16,16 @@ namespace TestContainers.Tests.ContainerTests
         public string ConnectionString => Container.ConnectionString;
         RedisContainer Container { get; }
 
+        bool RunningInCI { get; } = Environment.GetEnvironmentVariable("APPVEYOR") != null && EnvironmentHelper.IsWindows();
+
+        string BaseDirectory => RunningInCI ? "X:/host/RedisConfigs" : AppContext.BaseDirectory;
+
         public RedisWithConfigFixture() =>
                 Container = new GenericContainerBuilder<RedisContainer>()
                 .Begin()
                 .WithImage("redis:4.0.8")
                 .WithExposedPorts(6379)
-                .WithMountPoints((Directory.GetCurrentDirectory() + "/ContainerTests/Basic/master-6379.conf", "/usr/local/etc/redis/redis.conf", "bind"))
+                .WithMountPoints(($"{BaseDirectory}/master-6379.conf", "/usr/local/etc/redis/redis.conf", "bind"))
                 .WithCmd("/usr/local/etc/redis/redis.conf")
                 .Build();
 
