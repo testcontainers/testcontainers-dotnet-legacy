@@ -1,5 +1,6 @@
 using System;
 using System.Collections.Generic;
+using System.Diagnostics;
 using System.IO;
 using System.Linq;
 using System.Threading;
@@ -16,9 +17,12 @@ namespace TestContainers.Core.Containers
         string _containerId { get; set; }
         public string DockerImageName { get; set; }
         public int[] ExposedPorts { get; set; }
+        public (int ExposedPort, int PortBinding)[] PortBindings { get; set; }
         public (string key, string value)[] EnvironmentVariables { get; set; }
         public (string key, string value)[] Labels { get; set; }
         public ContainerInspectResponse ContainerInspectResponse { get; set; }
+        public (string SourcePath, string TargetPath, string Type)[] Mounts { get; set; }
+        public string[] Commands { get; set; }
 
         public Container() =>
             _dockerClient = DockerClientFactory.Instance.Client();
@@ -31,9 +35,32 @@ namespace TestContainers.Core.Containers
 
         async Task TryStart()
         {
-            await _dockerClient.Containers.StartContainerAsync(_containerId, new ContainerStartParameters());
+            var progress = new Progress<string>(m =>
+            {
+                Debug.WriteLine(m);
+
+                // Debug.WriteLineIf(m.Error != null, m.ErrorMessage);
+            });
+
+            var started = await _dockerClient.Containers.StartContainerAsync(_containerId, new ContainerStartParameters());
+
+            if(started)
+            {
+#pragma warning disable CS0618 // Type or member is obsolete
+                await _dockerClient.Containers.GetContainerLogsAsync(_containerId, new ContainerLogsParameters
+                {
+                    ShowStderr = true,
+                    ShowStdout = true,
+                }, default(CancellationToken), progress: progress);
+#pragma warning restore CS0618 // Type or member is obsolete
+            }
 
             await WaitUntilContainerStarted();
+        }
+
+        private void Progress_ProgressChanged(object sender, JSONMessage e)
+        {
+            throw new NotImplementedException();
         }
 
         protected virtual async Task WaitUntilContainerStarted()
@@ -53,12 +80,19 @@ namespace TestContainers.Core.Containers
 
         async Task<string> Create()
         {
-            var progress = new Progress<JSONMessage>();
+            var progress = new Progress<JSONMessage>(async (m) =>
+            {
+                Console.WriteLine(m.Status);
+                if (m.Error != null)
+                    await Console.Error.WriteLineAsync(m.ErrorMessage);
+
+            });
+
             await _dockerClient.Images.CreateImageAsync(
                 new ImagesCreateParameters
                 {
                     FromImage = DockerImageName,
-                    Tag = DockerImageName.Split(':').Last()
+                    Tag = DockerImageName.Split(':').Last(),
                 },
                 new AuthConfig(),
                 progress,
@@ -66,6 +100,7 @@ namespace TestContainers.Core.Containers
 
             var createContainersParams = ApplyConfiguration();
             var containerCreated = await _dockerClient.Containers.CreateContainerAsync(createContainersParams);
+
             return containerCreated.ID;
         }
 
@@ -80,17 +115,30 @@ namespace TestContainers.Core.Containers
                 ExposedPorts = exposedPorts.ToDictionary(e => $"{e}/tcp", e => default(EmptyStruct)),
                 Labels = Labels?.ToDictionary(l => l.key, l => l.value),
                 Tty = true,
+                Cmd = Commands,
+                AttachStderr = true,
+                AttachStdout= true,
             };
 
+            var bindings = PortBindings?.ToDictionary(p => p.ExposedPort, p => p.PortBinding) ?? exposedPorts.ToDictionary(e => e, e => e);
+                
             var portBindings = new Dictionary<string, IList<PortBinding>>();
-
-            exposedPorts.ForEach(e => portBindings.Add($"{e}/tcp", new[] { new PortBinding { HostPort = e.ToString(), HostIP = "" } }));
+            foreach(var binding in bindings)
+            {
+                portBindings.Add($"{binding.Key}/tcp", new[] { new PortBinding { HostPort = binding.Value.ToString() } });
+            }
 
             return new CreateContainerParameters(cfg)
             {
                 HostConfig = new HostConfig
                 {
-                    PortBindings = portBindings
+                    PortBindings = portBindings,
+                    Mounts = Mounts?.Select(m => new Mount
+                    {
+                        Source = m.SourcePath,
+                        Target = m.TargetPath,
+                        Type = m.Type,
+                    }).ToList(),                
                 }
             };
         }
@@ -101,6 +149,21 @@ namespace TestContainers.Core.Containers
 
             await _dockerClient.Containers.StopContainerAsync(ContainerInspectResponse.ID, new ContainerStopParameters());
             await _dockerClient.Containers.RemoveContainerAsync(ContainerInspectResponse.ID, new ContainerRemoveParameters());
+        }
+
+
+        public async Task ExecuteCommand(params string[] command)
+        {
+            var containerExecCreateParams = new ContainerExecCreateParameters
+            {
+                AttachStderr = true,
+                AttachStdout = true,
+                Cmd = command,
+            };
+
+            var response = await _dockerClient.Containers.ExecCreateContainerAsync(_containerId, containerExecCreateParams);
+
+            await _dockerClient.Containers.StartContainerExecAsync(_containerId);
         }
 
         public string GetDockerHostIpAddress()

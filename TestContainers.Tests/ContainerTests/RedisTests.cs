@@ -16,6 +16,7 @@ namespace TestContainers.Tests.ContainerTests
                 .Begin()
                 .WithImage("redis:4.0.8")
                 .WithExposedPorts(6379)
+                .WithPortBindings((6379, 6380))
                 .Build();
 
         public Task InitializeAsync() => Container.Start();

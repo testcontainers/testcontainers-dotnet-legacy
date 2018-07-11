@@ -6,6 +6,11 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "TestContainers", "TestConta
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "TestContainers.Tests", "TestContainers.Tests\TestContainers.Tests.csproj", "{C4449BD8-4483-438D-B9F2-C548F361012D}"
 EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "RedisConfigs", "RedisConfigs", "{4C100A84-CE31-41D0-9191-4FBE6FE1FBB3}"
+	ProjectSection(SolutionItems) = preProject
+		RedisConfigs\master-6379.conf = RedisConfigs\master-6379.conf
+	EndProjectSection
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU

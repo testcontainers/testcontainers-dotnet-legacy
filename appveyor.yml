@@ -21,6 +21,9 @@ build:
   publish_nuget: true
   publish_nuget_symbols: true
   verbosity: normal
+
+before_test:
+ - ps: Copy-Item -Path .\RedisConfigs\ -Destination X:\host\RedisConfigs -recurse -Force
   
 test_script: 
   - sh: |
@@ -67,4 +70,3 @@ deploy:
     on:
       branch: master
       APPVEYOR_REPO_TAG: true
-

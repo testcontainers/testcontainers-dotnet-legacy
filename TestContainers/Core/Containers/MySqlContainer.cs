@@ -5,7 +5,7 @@ using Polly;
 
 namespace TestContainers.Core.Containers
 {
-    public class MySqlContainer : DatabaseContainer
+    public sealed class MySqlContainer : DatabaseContainer
     {
         public const string NAME = "mysql";
         public const string IMAGE = "mysql";
