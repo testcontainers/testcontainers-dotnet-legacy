@@ -24,6 +24,7 @@
     <PackageReference Include="Docker.Dotnet" Version="3.125.2" />
     <PackageReference Include="Newtonsoft.Json" Version="11.0.2" />
     <PackageReference Include="Polly" Version="6.0.1" />
+    <PackageReference Include="Selenium.WebDriver" Version="3.14.0" />
     <PackageReference Include="StackExchange.Redis" Version="1.2.6" />
   </ItemGroup>
   <ItemGroup Condition=" '$(TargetFramework)' == 'net45' OR '$(TargetFramework)' == 'net46' ">

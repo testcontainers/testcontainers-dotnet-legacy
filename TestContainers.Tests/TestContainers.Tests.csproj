@@ -17,7 +17,10 @@
   <ItemGroup>
     <ProjectReference Include="..\TestContainers\TestContainers.csproj" />
   </ItemGroup>
+  <ItemGroup>
+    <_CopyItems Include="..\RedisConfigs\*.*" />
+  </ItemGroup>
   <Target Name="CopyRedisConfig" AfterTargets="AfterBuild">
-    <Copy SourceFiles="../RedisConfigs/master-6379.conf" DestinationFolder="$(Outdir)" />
+    <Copy SourceFiles="@(_CopyItems)" DestinationFolder="$(Outdir)" />
   </Target>
 </Project>
