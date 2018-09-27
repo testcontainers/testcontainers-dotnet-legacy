@@ -3,10 +3,10 @@ pull_requests:
   do_not_increment_build_number: true
 branches:
   only:
-   - master
-image: 
+    - master
+image:
   - Ubuntu
-  - Visual Studio 2017
+  # - Visual Studio 2017
 configuration: Release
 environment:
   DOTNET_CLI_TELEMETRY_OPTOUT: true
@@ -23,33 +23,33 @@ build:
   verbosity: normal
 
 before_test:
- - ps: Copy-Item -Path .\RedisConfigs\ -Destination X:\host\RedisConfigs -recurse -Force
-  
-test_script: 
-  - sh: |
-        dotnet test TestContainers.Tests/TestContainers.Tests.csproj /p:CollectCoverage=true /p:CoverletOutputFormat=lcov /p:CoverletOutput=./lcov --framework netcoreapp2.0
-        dotnet test TestContainers.Tests/TestContainers.Tests.csproj --framework netcoreapp2.1
-  - ps: |
-        Switch-DockerLinux
-        dotnet test TestContainers.Tests/TestContainers.Tests.csproj --framework net462
-        dotnet test TestContainers.Tests/TestContainers.Tests.csproj --framework netcoreapp2.0
-        dotnet test TestContainers.Tests/TestContainers.Tests.csproj --framework netcoreapp2.1
+  - ps: Copy-Item -Path .\RedisConfigs\ -Destination X:\host\RedisConfigs -recurse -Force
 
-after_test: 
-  - sh: | 
-        dotnet tool install -g coveralls.net --version 1.0.0
-        csmacnz.Coveralls --lcov -i TestContainers.Tests/lcov.info --useRelativePaths --repoToken $COVERALLS_REPO_TOKEN
+test_script:
+  - sh: |
+      dotnet test TestContainers.Tests/TestContainers.Tests.csproj /p:CollectCoverage=true /p:CoverletOutputFormat=lcov /p:CoverletOutput=./lcov --framework netcoreapp2.0
+      dotnet test TestContainers.Tests/TestContainers.Tests.csproj --framework netcoreapp2.1
+  # - ps: |
+  #       Switch-DockerLinux
+  #       dotnet test TestContainers.Tests/TestContainers.Tests.csproj --framework net462
+  #       dotnet test TestContainers.Tests/TestContainers.Tests.csproj --framework netcoreapp2.0
+  #       dotnet test TestContainers.Tests/TestContainers.Tests.csproj --framework netcoreapp2.1
+
+after_test:
+  - sh: |
+      dotnet tool install -g coveralls.net --version 1.0.0
+      csmacnz.Coveralls --lcov -i TestContainers.Tests/lcov.info --useRelativePaths --repoToken $COVERALLS_REPO_TOKEN
 
 dotnet_csproj:
   patch: true
   file: '**\*.csproj'
-  version: '{version}'
-  package_version: '{version}'
-  assembly_version: '{version}'
-  file_version: '{version}'
-  informational_version: '{version}'
+  version: "{version}"
+  package_version: "{version}"
+  assembly_version: "{version}"
+  file_version: "{version}"
+  informational_version: "{version}"
 
-nuget: 
+nuget:
   disable_publish_on_pr: false
 
 deploy:
@@ -63,7 +63,7 @@ deploy:
       branch: master
 
   - provider: NuGet
-    name: production  
+    name: production
     api_key:
       secure: 5zQzvnn+PrBF/J2mzSncavipOTj9+nqsZwiKmks//kQvgGfG3wbGeeSsuZRPTwJ5
     skip_symbols: false
