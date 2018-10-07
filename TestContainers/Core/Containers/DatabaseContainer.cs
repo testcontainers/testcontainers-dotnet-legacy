@@ -1,23 +1,19 @@
 namespace TestContainers.Core.Containers
 {
-    public abstract class DatabaseContainer : Container
+    public abstract class DatabaseContainer : GenericContainer
     {
-        protected int GetStartupTimeoutSeconds => 120;
+        protected string DatabaseName = "test";
+        protected string UserName = "test";
+        protected string Password = "test";
 
-        protected int GetConnectTImeoutSeconds => 120;
+        protected DatabaseContainer(string dockerImageName) : base(dockerImageName) { }
 
-        public DatabaseContainer() : base()
-        {
+        public void SetDatabaseName(string databaseName) => DatabaseName = databaseName;
+        public void SetUserName(string userName) => UserName = userName;
+        public void SetPassword(string password) => Password = password;
 
-        }
+        protected abstract string GetTestQueryString();
 
-        public virtual string DatabaseName { get; set; }
-        public virtual string ConnectionString { get; }
-
-        public virtual string UserName { get; set; }
-
-        public virtual string Password { get; set; }
-
-        protected virtual string TestQueryString { get; }
+        public abstract string GetConnectionString();
     }
 }

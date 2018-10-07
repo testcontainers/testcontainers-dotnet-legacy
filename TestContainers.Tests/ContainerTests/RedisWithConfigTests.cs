@@ -1,9 +1,5 @@
 ﻿using StackExchange.Redis;
 using System;
-using System.Collections.Generic;
-using System.IO;
-using System.Linq;
-using System.Text;
 using System.Threading.Tasks;
 using TestContainers.Core.Builders;
 using TestContainers.Core.Containers;
@@ -13,7 +9,7 @@ namespace TestContainers.Tests.ContainerTests
 {
     public class RedisWithConfigFixture : IAsyncLifetime
     {
-        public string ConnectionString => Container.ConnectionString;
+        public string ConnectionString => Container.GetConnectionString();
         RedisContainer Container { get; }
 
         bool RunningInCI { get; } = Environment.GetEnvironmentVariable("APPVEYOR") != null && EnvironmentHelper.IsWindows();
@@ -22,21 +18,20 @@ namespace TestContainers.Tests.ContainerTests
 
         public RedisWithConfigFixture() =>
                 Container = new GenericContainerBuilder<RedisContainer>()
-                .Begin()
                 .WithImage("redis:4.0.8")
-                .WithExposedPorts(6379)
-                .WithMountPoints(($"{BaseDirectory}/master-6379.conf", "/usr/local/etc/redis/redis.conf", "bind"))
-                .WithCmd("/usr/local/etc/redis/redis.conf")
+                .WithMountPoint($"{BaseDirectory}/master-6379.conf", "/usr/local/etc/redis/redis.conf", "bind")
+                .WithCommand("/usr/local/etc/redis/redis.conf")
                 .Build();
 
-        public Task InitializeAsync() => Container.Start();
+        public Task InitializeAsync() => Container.StartAsync();
 
-        public Task DisposeAsync() => Container.Stop();
+        public Task DisposeAsync() => Container.StopAsync();
     }
 
     public class RedisWithConfigFixtureTests : IClassFixture<RedisWithConfigFixture>
     {
-        readonly IDatabase _cache;
+        private readonly IDatabase _cache;
+
         public RedisWithConfigFixtureTests(RedisWithConfigFixture fixture) => _cache = ConnectionMultiplexer.Connect(fixture.ConnectionString).GetDatabase();
 
         [Fact]

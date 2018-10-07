@@ -8,26 +8,23 @@ namespace TestContainers.Tests.ContainerTests
 {
     public class RedisCacheFixture : IAsyncLifetime
     {
-        public string ConnectionString => Container.ConnectionString;
+        public string ConnectionString => Container.GetConnectionString();
         RedisContainer Container { get; }
 
         public RedisCacheFixture() =>
                 Container = new GenericContainerBuilder<RedisContainer>()
-                .Begin()
                 .WithImage("redis:4.0.8")
-                .WithExposedPorts(6379)
-                .WithPortBindings((6379, 6380))
                 .Build();
 
-        public Task InitializeAsync() => Container.Start();
+        public Task InitializeAsync() => Container.StartAsync();
 
-        public Task DisposeAsync() => Container.Stop();
+        public Task DisposeAsync() => Container.StopAsync();
     }
-
 
     public class RedisTests : IClassFixture<RedisCacheFixture>
     {
         readonly IDatabase _cache;
+
         public RedisTests(RedisCacheFixture fixture) => _cache = ConnectionMultiplexer.Connect(fixture.ConnectionString).GetDatabase();
 
         [Fact]
@@ -41,5 +38,3 @@ namespace TestContainers.Tests.ContainerTests
         }
     }
 }
-
-

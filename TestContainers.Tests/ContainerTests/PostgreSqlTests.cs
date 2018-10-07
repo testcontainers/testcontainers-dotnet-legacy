@@ -8,25 +8,23 @@ namespace TestContainers.Tests.ContainerTests
 {
     public class PostgreSqlFixture : IAsyncLifetime
     {
-        public string ConnectionString => Container.ConnectionString;
-        PostgreSqlContainer Container { get; }
+        public string ConnectionString => Container.GetConnectionString();
+        private PostgreSqlContainer Container { get; }
 
         public PostgreSqlFixture() =>
              Container = new DatabaseContainerBuilder<PostgreSqlContainer>()
-                .Begin()
-                .WithImage($"{PostgreSqlContainer.IMAGE}:{PostgreSqlContainer.DEFAULT_TAG}")
-                .WithExposedPorts(PostgreSqlContainer.POSTGRESQL_PORT)
-                .WithEnv(("POSTGRES_PASSWORD", "Password123"))
+                .WithPassword("Password123")
                 .Build();
 
-        public Task InitializeAsync() => Container.Start();
+        public Task InitializeAsync() => Container.StartAsync();
 
-        public Task DisposeAsync() => Container.Stop();
+        public Task DisposeAsync() => Container.StopAsync();
     }
 
     public class PostgreSqlTests : IClassFixture<PostgreSqlFixture>
     {
-        readonly NpgsqlConnection _connection;
+        private readonly NpgsqlConnection _connection;
+
         public PostgreSqlTests(PostgreSqlFixture fixture) => _connection = new NpgsqlConnection(fixture.ConnectionString);
 
         [Fact]

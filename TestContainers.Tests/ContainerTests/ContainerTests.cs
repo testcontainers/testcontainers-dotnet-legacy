@@ -9,24 +9,23 @@ namespace TestContainers.Tests.ContainerTests
 {
     public class GenericContainerFixture : IAsyncLifetime
     {
-        public ContainerInspectResponse ContainerInfo => _container.ContainerInspectResponse;
-        readonly Container _container;
+        public ContainerInspectResponse ContainerInfo => _container.ContainerInfo;
+        private readonly GenericContainer _container;
 
-        public GenericContainerFixture() => _container = new GenericContainerBuilder<Container>()
-            .Begin()
+        public GenericContainerFixture() => _container = new GenericContainerBuilder()
             .WithImage("alpine:latest")
-            .WithLabel(("your.custom", "label"))
+            .WithLabel("your.custom", "label")
             .Build();
 
-        public Task InitializeAsync() => _container.Start();
+        public Task InitializeAsync() => _container.StartAsync();
 
-        public Task DisposeAsync() => _container.Stop();
-
+        public Task DisposeAsync() => _container.StopAsync();
     }
 
     public class GenericContainerTests : IClassFixture<GenericContainerFixture>
     {
         readonly ContainerInspectResponse _containerInfo;
+
         public GenericContainerTests(GenericContainerFixture fixture) => _containerInfo = fixture.ContainerInfo;
         
         [Fact]

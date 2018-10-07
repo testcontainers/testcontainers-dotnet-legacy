@@ -8,20 +8,17 @@ namespace TestContainers.Tests.ContainerTests
 {
     public class MySqlFixture : IAsyncLifetime
     {
-        public string ConnectionString => Container.ConnectionString;
+        public string ConnectionString => Container.GetConnectionString();
         MySqlContainer Container { get; }
 
         public MySqlFixture() =>
              Container = new DatabaseContainerBuilder<MySqlContainer>()
-                .Begin()
                 .WithImage("mysql:5.7")
-                .WithExposedPorts(3306)
-                .WithEnv(("MYSQL_ROOT_PASSWORD", "Password123"))
                 .Build();
 
-        public Task InitializeAsync() => Container.Start();
+        public Task InitializeAsync() => Container.StartAsync();
 
-        public Task DisposeAsync() => Container.Stop();
+        public Task DisposeAsync() => Container.StopAsync();
     }
 
     public class MySqlTests : IClassFixture<MySqlFixture>
@@ -35,7 +32,7 @@ namespace TestContainers.Tests.ContainerTests
             string query = "SELECT 1;";
             await _connection.OpenAsync();
             var cmd = new MySqlCommand(query, _connection);
-            var reader = (await cmd.ExecuteScalarAsync());
+            var reader = await cmd.ExecuteScalarAsync();
             Assert.Equal((long)1, reader);
 
             await _connection.CloseAsync();

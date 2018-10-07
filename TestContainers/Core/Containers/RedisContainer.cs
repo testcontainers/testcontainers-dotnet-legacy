@@ -2,23 +2,21 @@
 using System;
 using System.Threading.Tasks;
 using StackExchange.Redis;
-using System.Linq;
 
 namespace TestContainers.Core.Containers
 {
     public sealed class RedisContainer : DatabaseContainer
     {
-        public override string ConnectionString
-        {
-            get
-            {
-                var portBindings = PortBindings?.SingleOrDefault(p => p.ExposedPort == ExposedPorts.First());
+        public const string Image = "redis";
+        public const string DefaultTag = "4.0.8";
+        public const int RedisPort = 6379;
 
-                var port = portBindings?.PortBinding ?? ExposedPorts.First();
+        public RedisContainer(string tag) : base($"{Image}:{tag}") { }
+        public RedisContainer() : this(DefaultTag) { }
 
-                return $"{GetDockerHostIpAddress()}:{port}";
-            }
-        }
+        public override string GetConnectionString() => $"{GetDockerHostIpAddress()}:{GetMappedPort(RedisPort)}";
+
+        protected override string GetTestQueryString() => "blank";
 
         protected override async Task WaitUntilContainerStarted()
         {
@@ -26,13 +24,11 @@ namespace TestContainers.Core.Containers
 
             var policyResult = await Policy
                .TimeoutAsync(TimeSpan.FromMinutes(2))
-               .WrapAsync(Policy
-                   .Handle<RedisConnectionException>()
+               .WrapAsync(Policy.Handle<RedisConnectionException>()
                    .WaitAndRetryForeverAsync(
-                       iteration => TimeSpan.FromSeconds(10),
+                        iteration => TimeSpan.FromSeconds(10),
                        (exception, timespan) => Console.WriteLine(exception.Message)))
-               .ExecuteAndCaptureAsync(() =>
-                   ConnectionMultiplexer.ConnectAsync(ConnectionString));
+               .ExecuteAndCaptureAsync(() => ConnectionMultiplexer.ConnectAsync(GetConnectionString()));
 
             if (policyResult.Outcome == OutcomeType.Failure)
                 throw new Exception(policyResult.FinalException.Message);

@@ -1,41 +1,39 @@
-using TestContainers.Core.Containers;
+﻿using TestContainers.Core.Containers;
 
 namespace TestContainers.Core.Builders
 {
-    public class DatabaseContainerBuilder<TDatabaseContainer> : ContainerBuilder<TDatabaseContainer, DatabaseContainerBuilder<TDatabaseContainer>>
-    where TDatabaseContainer : DatabaseContainer, new()
+    public abstract class DatabaseContainerBuilder<TBuilder, TContainer> : GenericContainerBuilder<TBuilder, TContainer>
+        where TBuilder : DatabaseContainerBuilder<TBuilder, TContainer>
+        where TContainer : DatabaseContainer, new()
     {
-        public DatabaseContainerBuilder<TDatabaseContainer> WithUserName(string userName)
-        {
-            fn = FnUtils.Compose(fn, (container) =>
-            {
-                container.UserName = userName;
-                return container;
-            });
+        protected DatabaseContainerBuilder() { }
 
-            return this;
+        protected DatabaseContainerBuilder(string image) : base(image) { }
+
+        public TBuilder WithDatabaseName(string databaseName)
+        {
+            Container.SetDatabaseName(databaseName);
+            return Self;
         }
 
-        public DatabaseContainerBuilder<TDatabaseContainer> WithPassword(string password)
+        public TBuilder WithUserName(string userName)
         {
-            fn = FnUtils.Compose(fn, (container) =>
-            {
-                container.Password = password;
-                return container;
-            });
-
-            return this;
+            Container.SetUserName(userName);
+            return Self;
         }
 
-        public DatabaseContainerBuilder<TDatabaseContainer> WithDatabaseName(string databaseName)
+        public TBuilder WithPassword(string password)
         {
-            fn = FnUtils.Compose(fn, (container) =>
-            {
-                container.DatabaseName = databaseName;
-                return container;
-            });
-
-            return this;
+            Container.SetPassword(password);
+            return Self;
         }
+    }
+
+    public class DatabaseContainerBuilder<TContainer> : DatabaseContainerBuilder<DatabaseContainerBuilder<TContainer>, TContainer>
+        where TContainer : DatabaseContainer, new()
+    {
+        public DatabaseContainerBuilder() { }
+
+        public DatabaseContainerBuilder(string image) : base(image) { }
     }
 }
