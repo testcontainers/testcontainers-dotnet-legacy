@@ -25,7 +25,7 @@ namespace TestContainers.Tests.ContainerTests
 
     public class RabbitMQTests : IClassFixture<RabbitMQFixture>
     {
-        private RabbitMQFixture _fixture;
+        RabbitMQFixture _fixture;
 
         public RabbitMQTests(RabbitMQFixture fixture) => _fixture = fixture;
         

@@ -16,20 +16,20 @@ namespace TestContainers.Core.Containers
         public string VirtualHost { get; set; } = "/";
         public IConnection Connection { get; private set; }
 
-        private IConnectionFactory GetConnectionFactory()
+        IConnectionFactory _connectionFactory;
+
+        IConnectionFactory ConnectionFactory => 
+            _connectionFactory ?? (_connectionFactory = new ConnectionFactory
         {
-            return new ConnectionFactory
-            {
-                HostName = GetDockerHostIpAddress(),
-                Port = GetMappedPort(Port),
-                VirtualHost = VirtualHost,
-                UserName = UserName,
-                Password = Password,
-                Protocol = Protocols.DefaultProtocol,
-                RequestedHeartbeat = DefaultRequestedHeartbeatInSec
-            };
-            
-        }
+            HostName = GetDockerHostIpAddress(),
+            Port = GetMappedPort(Port),
+            VirtualHost = VirtualHost,
+            UserName = UserName,
+            Password = Password,
+            Protocol = Protocols.DefaultProtocol,
+            RequestedHeartbeat = DefaultRequestedHeartbeatInSec
+        });
+
         int GetMappedPort(int port) => port;
 
         protected override async Task WaitUntilContainerStarted()
@@ -44,7 +44,7 @@ namespace TestContainers.Core.Containers
                         iteration => TimeSpan.FromSeconds(10)))
                 .ExecuteAndCaptureAsync(async () =>
                 {
-                    Connection = GetConnectionFactory().CreateConnection();
+                    Connection = ConnectionFactory.CreateConnection();
                     if (!Connection.IsOpen)
                     {
                         throw new Exception("Connection not open");
