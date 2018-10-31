@@ -58,10 +58,7 @@ namespace TestContainers.Core.Containers
             await WaitUntilContainerStarted();
         }
 
-        private void Progress_ProgressChanged(object sender, JSONMessage e)
-        {
-            throw new NotImplementedException();
-        }
+        
 
         protected virtual async Task WaitUntilContainerStarted()
         {
@@ -88,12 +85,14 @@ namespace TestContainers.Core.Containers
 
             });
 
+            var tag = DockerImageName.Split(':').Last();
+            var imagesCreateParameters = new ImagesCreateParameters
+            {
+                FromImage = DockerImageName,
+                Tag = tag,
+            };
             await _dockerClient.Images.CreateImageAsync(
-                new ImagesCreateParameters
-                {
-                    FromImage = DockerImageName,
-                    Tag = DockerImageName.Split(':').Last(),
-                },
+                imagesCreateParameters,
                 new AuthConfig(),
                 progress,
                 CancellationToken.None);
