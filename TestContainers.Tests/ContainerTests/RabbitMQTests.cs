@@ -1,38 +1,37 @@
 using System.Threading.Tasks;
+using Xunit;
 using RabbitMQ.Client;
 using TestContainers.Core.Builders;
 using TestContainers.Core.Containers;
-using Xunit;
 
 namespace TestContainers.Tests.ContainerTests
 {
-    public class RabbitMQFixture : IAsyncLifetime
+    public class RabbitMqFixture : IAsyncLifetime
     {
         public IConnection Connection => Container.Connection;
-        RabbitMQContainer Container { get; }
+        private RabbitMqContainer Container { get; }
 
-        public RabbitMQFixture() =>
-            Container = new GenericContainerBuilder<RabbitMQContainer>()
-                .Begin()
-                .WithImage(RabbitMQContainer.IMAGE)
-                .WithExposedPorts(RabbitMQContainer.Port)
+        public RabbitMqFixture() =>
+            Container = new RabbitMqContainerBuilder()
+                .WithUser("admin")
+                .WithPassword("admin")
                 .Build();
 
-        public Task InitializeAsync() => Container.Start();
+        public Task InitializeAsync() => Container.StartAsync();
 
-        public Task DisposeAsync() => Container.Stop();
+        public Task DisposeAsync() => Container.StopAsync();
     }
 
-    public class RabbitMQTests : IClassFixture<RabbitMQFixture>
+    public class RabbitMqTests : IClassFixture<RabbitMqFixture>
     {
-        RabbitMQFixture _fixture;
+        private readonly IConnection _connection;
 
-        public RabbitMQTests(RabbitMQFixture fixture) => _fixture = fixture;
+        public RabbitMqTests(RabbitMqFixture fixture) => _connection = fixture.Connection;
         
         [Fact]
         public void OpenModelTest()
         {
-            var model = _fixture.Connection.CreateModel();
+            var model = _connection.CreateModel();
             
             Assert.True(model.IsOpen);
         }

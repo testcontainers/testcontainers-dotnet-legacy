@@ -5,32 +5,52 @@ using RabbitMQ.Client;
 
 namespace TestContainers.Core.Containers
 {
-    public class RabbitMQContainer : Container
+    public class RabbitMqContainer : GenericContainer
     {
-        public const string IMAGE = "rabbitmq:3.7-alpine";
-        public const int Port = 5672;
-        public const int DefaultRequestedHeartbeatInSec = 60;
+        public const string Image = "rabbitmq";
+        public const string DefaultTag = "3.7-alpine";
+        public const int RabbitMqPort = 5672;
+        private const int DefaultRequestedHeartbeatInSec = 60;
 
-        public string UserName { get; set; } = "guest";
-        public string Password { get; set; } = "guest";
-        public string VirtualHost { get; set; } = "/";
+        private string _userName;
+        private string _password;
+        private string _virtualHost;
+
         public IConnection Connection { get; private set; }
 
-        IConnectionFactory _connectionFactory;
-
-        IConnectionFactory ConnectionFactory => 
+        private IConnectionFactory _connectionFactory;
+        public IConnectionFactory ConnectionFactory => 
             _connectionFactory ?? (_connectionFactory = new ConnectionFactory
         {
             HostName = GetDockerHostIpAddress(),
-            Port = GetMappedPort(Port),
-            VirtualHost = VirtualHost,
-            UserName = UserName,
-            Password = Password,
+            Port = GetMappedPort(RabbitMqPort),
+            VirtualHost = _virtualHost,
+            UserName = _userName,
+            Password = _password,
             Protocol = Protocols.DefaultProtocol,
             RequestedHeartbeat = DefaultRequestedHeartbeatInSec
         });
 
-        int GetMappedPort(int port) => port;
+        public RabbitMqContainer(string tag) : base($"{Image}:{tag}")
+        {
+            _userName = "guest";
+            _password = "guest";
+            _virtualHost = "/";
+        }
+
+        public RabbitMqContainer() : this(DefaultTag) { }
+
+        public void SetUserName(string userName) => _userName = userName;
+        public void SetPassword(string password) => _password = password;
+        public void SetVirtualHost(string virtualHost) => _virtualHost = virtualHost;
+
+        protected override void Configure()
+        {
+            AddExposedPort(RabbitMqPort);
+            AddEnv("RABBITMQ_DEFAULT_USER", _userName);
+            AddEnv("RABBITMQ_DEFAULT_PASS", _password);
+            AddEnv("RABBITMQ_DEFAULT_VHOST", _virtualHost);
+        }
 
         protected override async Task WaitUntilContainerStarted()
         {
