@@ -12,9 +12,11 @@ namespace TestContainers.Core.Containers
         public const int RabbitMqPort = 5672;
         private const int DefaultRequestedHeartbeatInSec = 60;
 
-        private string _userName;
-        private string _password;
-        private string _virtualHost;
+        public string UserName { get; set; } = "guest";
+        public string Password { get; set; } = "guest";
+        public string VirtualHost { get; set; } = "/";
+
+        public string RabbitMqUrl => $"amqp://{GetDockerHostIpAddress()}:{GetMappedPort(RabbitMqPort)}";
 
         public IConnection Connection { get; private set; }
 
@@ -24,32 +26,22 @@ namespace TestContainers.Core.Containers
         {
             HostName = GetDockerHostIpAddress(),
             Port = GetMappedPort(RabbitMqPort),
-            VirtualHost = _virtualHost,
-            UserName = _userName,
-            Password = _password,
+            VirtualHost = VirtualHost,
+            UserName = UserName,
+            Password = Password,
             Protocol = Protocols.DefaultProtocol,
             RequestedHeartbeat = DefaultRequestedHeartbeatInSec
         });
 
-        public RabbitMqContainer(string tag) : base($"{Image}:{tag}")
-        {
-            _userName = "guest";
-            _password = "guest";
-            _virtualHost = "/";
-        }
-
+        public RabbitMqContainer(string tag) : base($"{Image}:{tag}") { }
         public RabbitMqContainer() : this(DefaultTag) { }
-
-        public void SetUserName(string userName) => _userName = userName;
-        public void SetPassword(string password) => _password = password;
-        public void SetVirtualHost(string virtualHost) => _virtualHost = virtualHost;
 
         protected override void Configure()
         {
             AddExposedPort(RabbitMqPort);
-            AddEnv("RABBITMQ_DEFAULT_USER", _userName);
-            AddEnv("RABBITMQ_DEFAULT_PASS", _password);
-            AddEnv("RABBITMQ_DEFAULT_VHOST", _virtualHost);
+            AddEnv("RABBITMQ_DEFAULT_USER", UserName);
+            AddEnv("RABBITMQ_DEFAULT_PASS", Password);
+            AddEnv("RABBITMQ_DEFAULT_VHOST", VirtualHost);
         }
 
         protected override async Task WaitUntilContainerStarted()

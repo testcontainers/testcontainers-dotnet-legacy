@@ -12,19 +12,19 @@ namespace TestContainers.Core.Builders
 
         public TBuilder WithUser(string userName)
         {
-            Container.SetUserName(userName);
+            Container.UserName = userName;
             return Self;
         }
 
         public TBuilder WithPassword(string password)
         {
-            Container.SetPassword(password);
+            Container.Password = password;
             return Self;
         }
 
         public TBuilder WithVirtualHost(string virtualHost)
         {
-            Container.SetVirtualHost(virtualHost);
+            Container.VirtualHost = virtualHost;
             return Self;
         }
     }

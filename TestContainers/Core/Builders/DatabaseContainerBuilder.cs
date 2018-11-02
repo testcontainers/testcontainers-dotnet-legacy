@@ -12,19 +12,19 @@ namespace TestContainers.Core.Builders
 
         public TBuilder WithDatabaseName(string databaseName)
         {
-            Container.SetDatabaseName(databaseName);
+            Container.DatabaseName = databaseName;
             return Self;
         }
 
         public TBuilder WithUserName(string userName)
         {
-            Container.SetUserName(userName);
+            Container.UserName = userName;
             return Self;
         }
 
         public TBuilder WithPassword(string password)
         {
-            Container.SetPassword(password);
+            Container.Password = password;
             return Self;
         }
     }
