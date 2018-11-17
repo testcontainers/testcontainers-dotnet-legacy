@@ -16,9 +16,9 @@ namespace TestContainers.Tests.ContainerTests
                 .WithPassword("Password123")
                 .Build();
 
-        public Task InitializeAsync() => Container.StartAsync();
+        public Task InitializeAsync() => Container.Start();
 
-        public Task DisposeAsync() => Container.StopAsync();
+        public Task DisposeAsync() => Container.Stop();
     }
 
     public class PostgreSqlTests : IClassFixture<PostgreSqlFixture>

@@ -23,9 +23,9 @@ namespace TestContainers.Tests.ContainerTests
                 .WithCommand("/usr/local/etc/redis/redis.conf")
                 .Build();
 
-        public Task InitializeAsync() => Container.StartAsync();
+        public Task InitializeAsync() => Container.Start();
 
-        public Task DisposeAsync() => Container.StopAsync();
+        public Task DisposeAsync() => Container.Stop();
     }
 
     public class RedisWithConfigFixtureTests : IClassFixture<RedisWithConfigFixture>

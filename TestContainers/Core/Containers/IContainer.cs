@@ -20,8 +20,8 @@ namespace TestContainers.Core.Containers
 
         int GetMappedPort(int originalPort);
 
-        Task StartAsync();
+        Task Start();
 
-        Task StopAsync();
+        Task Stop();
     }
 }

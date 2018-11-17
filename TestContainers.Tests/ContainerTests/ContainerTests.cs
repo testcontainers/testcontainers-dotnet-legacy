@@ -17,9 +17,9 @@ namespace TestContainers.Tests.ContainerTests
             .WithLabel("your.custom", "label")
             .Build();
 
-        public Task InitializeAsync() => _container.StartAsync();
+        public Task InitializeAsync() => _container.Start();
 
-        public Task DisposeAsync() => _container.StopAsync();
+        public Task DisposeAsync() => _container.Stop();
     }
 
     public class GenericContainerTests : IClassFixture<GenericContainerFixture>

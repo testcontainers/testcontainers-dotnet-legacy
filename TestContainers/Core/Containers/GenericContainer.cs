@@ -142,13 +142,13 @@ namespace TestContainers.Core.Containers
             CommandParts = cmds;
         }
 
-        public async Task StartAsync()
+        public async Task Start()
         {
             _containerId = await Create();
             await TryStart();
         }
 
-        public async Task StopAsync()
+        public async Task Stop()
         {
             if (_containerId == null) return;
 

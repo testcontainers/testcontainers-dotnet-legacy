@@ -17,9 +17,9 @@ namespace TestContainers.Tests.ContainerTests
                 .WithPassword("admin")
                 .Build();
 
-        public Task InitializeAsync() => Container.StartAsync();
+        public Task InitializeAsync() => Container.Start();
 
-        public Task DisposeAsync() => Container.StopAsync();
+        public Task DisposeAsync() => Container.Stop();
     }
 
     public class RabbitMqTests : IClassFixture<RabbitMqFixture>
