@@ -64,6 +64,14 @@ namespace TestContainers.Core.Containers
             }
         }
 
+        public void AddPortBindings(params (int hostPort, int containerPort)[] portBindings)
+        {
+            foreach (var (hostPort, containerPort) in portBindings)
+            {
+                AddPortBinding(hostPort, containerPort);
+            }
+        }
+
         public void AddEnv(string key, string value)
         {
             EnvironmentVariables[key] = value;
@@ -74,6 +82,14 @@ namespace TestContainers.Core.Containers
             foreach (var env in envs)
             {
                 AddEnv(env.Key, env.Value);
+            }
+        }
+
+        public void AddEnvs(params (string key, string value)[] envs)
+        {
+            foreach (var (key, value) in envs)
+            {
+                AddEnv(key, value);
             }
         }
 
@@ -89,7 +105,15 @@ namespace TestContainers.Core.Containers
                 AddLabel(label.Key, label.Value);
             }
         }
-        
+
+        public void AddLabels(params (string key, string value)[] labels)
+        {
+            foreach (var (key, value) in labels)
+            {
+                AddLabel(key, value);
+            }
+        }
+
         public void AddMountPoint(Mount mount)
         {
             Mounts.Add(mount);

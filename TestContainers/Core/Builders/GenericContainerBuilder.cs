@@ -56,7 +56,7 @@ namespace TestContainers.Core.Builders
 
         public TBuilder WithPortBindings(params (int hostPort, int containerPort)[] portBindings)
         {
-            Container.AddPortBindings(portBindings.ToDictionary(pb => pb.hostPort, pb => pb.containerPort));
+            Container.AddPortBindings(portBindings);
             return Self;
         }
 
@@ -74,7 +74,7 @@ namespace TestContainers.Core.Builders
 
         public TBuilder WithEnvs(params (string key, string value)[] envs)
         {
-            Container.AddEnvs(envs.ToDictionary(e => e.key, e => e.value));
+            Container.AddEnvs(envs);
             return Self;
         }
 
@@ -92,7 +92,7 @@ namespace TestContainers.Core.Builders
 
         public TBuilder WithLabels(params (string key, string value)[] labels)
         {
-            Container.AddLabels(labels.ToDictionary(l => l.key, l => l.value));
+            Container.AddLabels(labels);
             return Self;
         }
 
