@@ -21,7 +21,7 @@ namespace TestContainers.Core.Containers
         protected readonly Dictionary<int, int> PortBindings = new Dictionary<int, int>();
         protected readonly Dictionary<string, string> EnvironmentVariables = new Dictionary<string, string>();
         protected readonly Dictionary<string, string> Labels = new Dictionary<string, string>();
-        protected readonly List<(string SourcePath, string TargetPath, string Type)> Mounts = new List<(string SourcePath, string TargetPath, string Type)>();
+        protected readonly List<Mount> Mounts = new List<Mount>();
         protected string[] CommandParts;
 
         protected DockerClient DockerClient = DockerClientFactory.Instance.Client();
@@ -43,9 +43,25 @@ namespace TestContainers.Core.Containers
             ExposedPorts.Add(port);
         }
 
+        public void AddExposedPorts(params int[] ports)
+        {
+            foreach (var port in ports)
+            {
+                AddExposedPort(port);
+            }
+        }
+
         public void AddPortBinding(int hostPort, int containerPort)
         {
             PortBindings[hostPort] = containerPort;
+        }
+
+        public void AddPortBindings(IEnumerable<KeyValuePair<int, int>> portBindings)
+        {
+            foreach (var portBinding in portBindings)
+            {
+                AddPortBinding(portBinding.Key, portBinding.Value);
+            }
         }
 
         public void AddEnv(string key, string value)
@@ -53,19 +69,53 @@ namespace TestContainers.Core.Containers
             EnvironmentVariables[key] = value;
         }
 
+        public void AddEnvs(IEnumerable<KeyValuePair<string, string>> envs)
+        {
+            foreach (var env in envs)
+            {
+                AddEnv(env.Key, env.Value);
+            }
+        }
+
         public void AddLabel(string key, string value)
         {
             Labels[key] = value;
         }
 
+        public void AddLabels(IEnumerable<KeyValuePair<string, string>> labels)
+        {
+            foreach (var label in labels)
+            {
+                AddLabel(label.Key, label.Value);
+            }
+        }
+        
+        public void AddMountPoint(Mount mount)
+        {
+            Mounts.Add(mount);
+        }
+
         public void AddMountPoint(string sourcePath, string targetPath, string type)
         {
-            Mounts.Add((SourcePath: sourcePath, TargetPath: targetPath, Type: type));
+            AddMountPoint(new Mount(sourcePath, targetPath, type));
+        }
+
+        public void AddMountPoint(params Mount[] mounts)
+        {
+            foreach (var mount in mounts)
+            {
+                AddMountPoint(mount);
+            }
         }
 
         public void SetCommand(string cmd)
         {
             CommandParts = cmd.Split(' ');
+        }
+
+        public void SetCommands(params string[] cmds)
+        {
+            CommandParts = cmds;
         }
 
         public async Task StartAsync()
@@ -88,7 +138,7 @@ namespace TestContainers.Core.Containers
             {
                 AttachStderr = true,
                 AttachStdout = true,
-                Cmd = command,
+                Cmd = command
             };
 
             await DockerClient.Containers.ExecCreateContainerAsync(_containerId, containerExecCreateParams);
@@ -203,7 +253,7 @@ namespace TestContainers.Core.Containers
                 {
                     PortBindings = portBindings,
                     Mounts = Mounts
-                        .Select(m => new Mount
+                        .Select(m => new Docker.DotNet.Models.Mount
                             {
                                 Source = m.SourcePath,
                                 Target = m.TargetPath,
