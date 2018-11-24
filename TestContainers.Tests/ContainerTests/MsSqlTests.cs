@@ -11,12 +11,15 @@ namespace TestContainers.Tests.ContainerTests
         public string ConnectionString => Container.ConnectionString;
         MsSqlContainer Container { get; }
 
-        public MsSqlFixture() =>
-             Container = new DatabaseContainerBuilder<MsSqlContainer>()
+        public MsSqlFixture()
+        {
+            LicenseAcceptance.AcceptLicense("mcr.microsoft.com/mssql/server");
+            Container = new DatabaseContainerBuilder<MsSqlContainer>()
                 .Begin()
                 .WithImage($"{MsSqlContainer.IMAGE}:{MsSqlContainer.DEFAULT_TAG}")
                 .WithExposedPorts(MsSqlContainer.MSSQL_PORT)
                 .Build();
+        }
 
         public Task InitializeAsync() => Container.Start();
 

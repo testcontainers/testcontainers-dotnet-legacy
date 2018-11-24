@@ -37,7 +37,7 @@ namespace TestContainers.Core.Containers
 
         public MsSqlContainer() : base()
         {
-            // TODO port LicenseAcceptance.assertLicenseAccepted(this.getDockerImageName());
+            LicenseAcceptance.AssertLicenseAccepted(IMAGE);
             EnvironmentVariables = PrepareEnvironmentVariables().ToArray();
         }
 
