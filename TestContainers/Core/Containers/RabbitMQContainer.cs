@@ -42,13 +42,15 @@ namespace TestContainers.Core.Containers
                     .Handle<Exception>()
                     .WaitAndRetryForeverAsync(
                         iteration => TimeSpan.FromSeconds(10)))
-                .ExecuteAndCaptureAsync(async () =>
+                .ExecuteAndCaptureAsync( () =>
                 {
                     Connection = ConnectionFactory.CreateConnection();
                     if (!Connection.IsOpen)
                     {
                         throw new Exception("Connection not open");
                     }
+
+                    return Task.CompletedTask;
                 });
 
             if (result.Outcome == OutcomeType.Failure)
