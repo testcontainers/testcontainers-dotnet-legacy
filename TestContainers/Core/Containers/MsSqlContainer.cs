@@ -12,6 +12,21 @@ namespace TestContainers.Core.Containers
         public const string IMAGE = "mcr.microsoft.com/mssql/server";
         public const string DEFAULT_TAG = "2017-latest-ubuntu";
         
+        /// <summary>This will run the container using the Developer Edition (this is the default if no MSSQL_PID environment variable is supplied)</summary>
+        public const string EDITION_DEVELOPER = "Developer";
+
+        /// <summary>This will run the container using the Express Edition</summary>
+        public const string EDITION_EXPRESS = "Express";
+
+        /// <summary>This will run the container using the Standard Edition</summary>
+        public const string EDITION_STANDARD = "Standard";
+
+        /// <summary>This will run the container using the Enterprise Edition</summary>
+        public const string EDITION_ENTERPRISE = "Enterprise";
+
+        /// <summary>This will run the container using the Enterprise Edition Core</summary>
+        public const string EDITION_ENTERPRISECORE = "EnterpriseCore";
+
         public const int MSSQL_PORT = 1433;
 
         protected override int GetStartupTimeoutSeconds => 240;
@@ -31,6 +46,8 @@ namespace TestContainers.Core.Containers
             }
         }
 
+        public string ProductEdition { get; set; }
+
         string _databaseName = "test";
         string _userName = "SA";
         string _password = "A_Str0ng_Required_Password";
@@ -43,11 +60,17 @@ namespace TestContainers.Core.Containers
 
         public List<(string key, string value)> PrepareEnvironmentVariables()
         {
-            return new List<(string key, string value)>(3)
+            var environmentVariables = new List<(string key, string value)>(3)
             {
                 ("ACCEPT_EULA", "Y"),
                 ("SA_PASSWORD", Password)
             };
+            if (!string.IsNullOrWhiteSpace(ProductEdition))
+            {
+                environmentVariables.Add(("MSSQL_PID", ProductEdition));
+            }
+
+            return environmentVariables;
         }
 
         int GetMappedPort(int portNo) => portNo;
