@@ -23,6 +23,7 @@ namespace TestContainers.Core.Containers
         public ContainerInspectResponse ContainerInspectResponse { get; set; }
         public (string SourcePath, string TargetPath, string Type)[] Mounts { get; set; }
         public string[] Commands { get; set; }
+        protected virtual int GetStartupTimeoutSeconds => 60;
 
         public Container() =>
             _dockerClient = DockerClientFactory.Instance.Client();
@@ -67,7 +68,7 @@ namespace TestContainers.Core.Containers
                                 .RetryForeverAsync();
 
             var containerInspectPolicy = await Policy
-                .TimeoutAsync(TimeSpan.FromMinutes(1))
+                .TimeoutAsync(TimeSpan.FromSeconds(GetStartupTimeoutSeconds))
                 .WrapAsync(retryUntilContainerStateIsRunning)
                 .ExecuteAndCaptureAsync(async () => ContainerInspectResponse = await _dockerClient.Containers.InspectContainerAsync(_containerId));
 
