@@ -26,6 +26,7 @@ build:
   verbosity: normal
 
 before_test:
+  - docker info
   - ps: Copy-Item -Path .\RedisConfigs\ -Destination X:\host\RedisConfigs -recurse -Force
 
 test_script:
