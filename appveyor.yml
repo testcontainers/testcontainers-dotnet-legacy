@@ -13,6 +13,9 @@ environment:
   DOTNET_SKIP_FIRST_TIME_EXPERIENCE: true
   APPVEYOR_YML_DISABLE_PS_LINUX: true
 
+services:
+  - docker
+
 before_build:
   - dotnet restore
 
