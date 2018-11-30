@@ -16,6 +16,10 @@
   </ItemGroup>
   <ItemGroup>
     <ProjectReference Include="..\TestContainers\TestContainers.csproj" />
+    <ProjectReference Include="..\TestContainers.MySql\TestContainers.MySql.csproj" />
+    <ProjectReference Include="..\TestContainers.PostgreSql\TestContainers.PostgreSql.csproj" />
+    <ProjectReference Include="..\TestContainers.RabbitMQ\TestContainers.RabbitMQ.csproj" />
+    <ProjectReference Include="..\TestContainers.Redis\TestContainers.Redis.csproj" />
   </ItemGroup>
   <Target Name="CopyRedisConfig" AfterTargets="AfterBuild">
     <Copy SourceFiles="../RedisConfigs/master-6379.conf" DestinationFolder="$(Outdir)" />
