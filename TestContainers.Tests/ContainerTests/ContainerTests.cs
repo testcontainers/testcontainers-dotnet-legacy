@@ -36,6 +36,22 @@ namespace TestContainers.Tests.ContainerTests
             Assert.Equal("your.custom", label.Key);
             Assert.Equal("label", label.Value);
         }
+
+        [Theory]
+        [InlineData("alpine:latest", "alpine:latest")]
+        [InlineData("alpine", "alpine:latest")]
+        [InlineData("alpine:hello", "alpine:hello")]
+        [InlineData("test.de:55/alpine:latest", "test.de:55/alpine:latest")]
+        [InlineData("test.de:55/alpine", "test.de:55/alpine:latest")]
+        public void WithImage_ExtractFromImageAndTag(string path, string tag)
+        {
+            var container = new GenericContainerBuilder<Container>()
+                .Begin()
+                .WithImage(path)
+                .Build();
+            
+            Assert.Equal(tag, container.DockerImageName);
+        }
     }
 
 }
