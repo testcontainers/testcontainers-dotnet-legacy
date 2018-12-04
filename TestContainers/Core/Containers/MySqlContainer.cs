@@ -1,6 +1,7 @@
 using System;
+using System.Data.Common;
+using System.Reflection;
 using System.Threading.Tasks;
-using MySql.Data.MySqlClient;
 using Polly;
 
 namespace TestContainers.Core.Containers
@@ -10,6 +11,9 @@ namespace TestContainers.Core.Containers
         public const string NAME = "mysql";
         public const string IMAGE = "mysql";
         public const int MYSQL_PORT = 3306;
+        private readonly Type _mySqlConnection;
+        private readonly Type _mySqlCommand;
+        private readonly Type _mySqlException;
 
         public override string DatabaseName => base.DatabaseName ?? _databaseName;
 
@@ -23,7 +27,10 @@ namespace TestContainers.Core.Containers
 
         public MySqlContainer() : base()
         {
-
+            var assembly = Assembly.Load("MySql.Data");
+            _mySqlConnection = assembly.GetType("MySql.Data.MySqlClient.MySqlConnection", true);
+            _mySqlCommand = assembly.GetType("MySql.Data.MySqlClient.MySqlCommand", true);
+            _mySqlException = assembly.GetType("MySql.Data.MySqlClient.MySqlException", true);
         }
 
         int GetMappedPort(int portNo) => portNo;
@@ -37,20 +44,20 @@ namespace TestContainers.Core.Containers
         {
             await base.WaitUntilContainerStarted();
 
-            var connection = new MySqlConnection(ConnectionString);
+            var connection = (DbConnection) Activator.CreateInstance(_mySqlConnection, ConnectionString);
 
             var result = await Policy
                 .TimeoutAsync(TimeSpan.FromMinutes(2))
                 .WrapAsync(Policy
-                    .Handle<MySqlException>()
+                    .Handle<Exception>(e => _mySqlException.IsInstanceOfType(e))
                     .WaitAndRetryForeverAsync(
                         iteration => TimeSpan.FromSeconds(10)))
                 .ExecuteAndCaptureAsync(async () =>
                 {
                     await connection.OpenAsync();
 
-                    var cmd = new MySqlCommand(TestQueryString, connection);
-                    var reader = (await cmd.ExecuteScalarAsync());
+                    var cmd = (DbCommand) Activator.CreateInstance(_mySqlCommand, TestQueryString, connection);
+                    await cmd.ExecuteScalarAsync();
                 });
 
             if (result.Outcome == OutcomeType.Failure)
