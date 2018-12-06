@@ -4,7 +4,7 @@ namespace TestContainers.Core.Containers
     {
         protected int GetStartupTimeoutSeconds => 120;
 
-        protected int GetConnectTImeoutSeconds => 120;
+        protected int GetConnectTimeoutSeconds => 10;
 
         public DatabaseContainer() : base()
         {
@@ -12,12 +12,10 @@ namespace TestContainers.Core.Containers
         }
 
         public virtual string DatabaseName { get; set; }
-        public virtual string ConnectionString { get; }
+        public abstract string ConnectionString { get; }
 
         public virtual string UserName { get; set; }
 
         public virtual string Password { get; set; }
-
-        protected virtual string TestQueryString { get; }
     }
 }
