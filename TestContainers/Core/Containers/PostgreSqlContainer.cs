@@ -1,4 +1,5 @@
 using System;
+using System.Net.Sockets;
 using System.Threading.Tasks;
 using Npgsql;
 using Polly;
@@ -35,6 +36,7 @@ namespace TestContainers.Core.Containers
                 .TimeoutAsync(TimeSpan.FromMinutes(2))
                 .WrapAsync(Policy
                     .Handle<NpgsqlException>()
+                    .Or<SocketException>()
                     .WaitAndRetryForeverAsync(
                         iteration => TimeSpan.FromSeconds(10)))
                 .ExecuteAndCaptureAsync(async () =>
