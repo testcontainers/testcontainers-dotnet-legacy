@@ -50,7 +50,7 @@ namespace TestContainers.Core.Containers
             if (result.Outcome == OutcomeType.Failure)
             {
                 connection.Dispose();
-                throw new Exception(result.FinalException.Message);
+                throw new Exception(result.FinalException.Message, result.FinalException);
             }
             
         }
