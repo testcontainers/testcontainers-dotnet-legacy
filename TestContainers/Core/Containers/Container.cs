@@ -15,7 +15,29 @@ namespace TestContainers.Core.Containers
     {
         readonly DockerClient _dockerClient;
         string _containerId { get; set; }
-        public string DockerImageName { get; set; }
+
+        private string _dockerImageName;
+
+        public string DockerImageName
+        {
+            get
+            {
+                return this._dockerImageName;
+            }
+
+            set
+            {
+                var tag = value.Split(':').Last();
+
+                if (tag.Equals(value) || tag.Contains('/'))
+                {
+                    value = $"{value}:latest";
+                }
+
+                this._dockerImageName = value;
+            }
+        }
+
         public int[] ExposedPorts { get; set; }
         public (int ExposedPort, int PortBinding)[] PortBindings { get; set; }
         public (string key, string value)[] EnvironmentVariables { get; set; }
@@ -91,11 +113,13 @@ namespace TestContainers.Core.Containers
                 FromImage = DockerImageName,
                 Tag = tag,
             };
-            await _dockerClient.Images.CreateImageAsync(
-                imagesCreateParameters,
-                new AuthConfig(),
-                progress,
-                CancellationToken.None);
+
+            var images = await this._dockerClient.Images.ListImagesAsync(new ImagesListParameters { MatchName = this.DockerImageName });
+
+            if (!images.Any())
+            {
+                await this._dockerClient.Images.CreateImageAsync(imagesCreateParameters, new AuthConfig(), progress, CancellationToken.None);
+            }
 
             var createContainersParams = ApplyConfiguration();
             var containerCreated = await _dockerClient.Containers.CreateContainerAsync(createContainersParams);
