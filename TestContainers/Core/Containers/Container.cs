@@ -14,7 +14,7 @@ namespace TestContainers.Core.Containers
 {
     public class Container
     {
-        private static readonly UTF8Encoding Utf8EncodingWithoutBom = new UTF8Encoding(false);
+        static readonly UTF8Encoding Utf8EncodingWithoutBom = new UTF8Encoding(false);
         readonly DockerClient _dockerClient;
         string _containerId { get; set; }
         public string DockerImageName { get; set; }
