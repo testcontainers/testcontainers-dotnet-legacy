@@ -11,26 +11,17 @@ namespace TestContainers.Core.Containers
         public const string NAME = "mssqlserver";
         public const string IMAGE = "mcr.microsoft.com/mssql/server";
         public const string DEFAULT_TAG = "2017-latest-ubuntu";
-        
-        /// <summary>This will run the container using the Developer Edition (this is the default if no MSSQL_PID environment variable is supplied)</summary>
+
         public const string EDITION_DEVELOPER = "Developer";
-
-        /// <summary>This will run the container using the Express Edition</summary>
         public const string EDITION_EXPRESS = "Express";
-
-        /// <summary>This will run the container using the Standard Edition</summary>
         public const string EDITION_STANDARD = "Standard";
-
-        /// <summary>This will run the container using the Enterprise Edition</summary>
         public const string EDITION_ENTERPRISE = "Enterprise";
-
-        /// <summary>This will run the container using the Enterprise Edition Core</summary>
         public const string EDITION_ENTERPRISECORE = "EnterpriseCore";
 
         public const int MSSQL_PORT = 1433;
 
-        protected override int GetStartupTimeoutSeconds => 240;
-        protected override int GetConnectTimeoutSeconds => 240;
+        protected override TimeSpan GetStartupTimeout => TimeSpan.FromSeconds(240);
+        protected override TimeSpan GetConnectTimeout => TimeSpan.FromSeconds(240);
 
         public override string DatabaseName => base.DatabaseName ?? _databaseName;
 
@@ -75,7 +66,6 @@ namespace TestContainers.Core.Containers
 
         int GetMappedPort(int portNo) => portNo;
 
-
         public override string ConnectionString => new SqlConnectionStringBuilder()
         {
             DataSource = GetDockerHostIpAddress(),
@@ -93,7 +83,7 @@ namespace TestContainers.Core.Containers
             var connection = new SqlConnection(ConnectionString);
 
             var result = await Policy
-                .TimeoutAsync(TimeSpan.FromSeconds(GetConnectTimeoutSeconds))
+                .TimeoutAsync(GetConnectTimeout)
                 .WrapAsync(Policy
                     .Handle<SqlException>()
                     .WaitAndRetryForeverAsync(

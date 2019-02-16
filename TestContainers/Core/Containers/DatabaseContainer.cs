@@ -1,8 +1,10 @@
+using System;
+
 namespace TestContainers.Core.Containers
 {
     public abstract class DatabaseContainer : Container
     {
-        protected virtual int GetConnectTimeoutSeconds => 120;
+        protected virtual TimeSpan GetConnectTimeout => TimeSpan.FromSeconds(120);
 
         public DatabaseContainer() : base()
         {
