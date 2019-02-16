@@ -48,15 +48,12 @@ namespace TestContainers.Core.Containers
                         ShowStdout = true,
                     }, default(CancellationToken)))
                 {
-                    using (logs)
+                    using (var reader = new StreamReader(logs, Utf8EncodingWithoutBom))
                     {
-                        using (var reader = new StreamReader(logs, Utf8EncodingWithoutBom))
+                        string nextLine;
+                        while ((nextLine = await reader.ReadLineAsync()) != null)
                         {
-                            string nextLine;
-                            while ((nextLine = await reader.ReadLineAsync()) != null)
-                            {
-                                Debug.WriteLine(nextLine);
-                            }
+                            Debug.WriteLine(nextLine);
                         }
                     }
                 }
