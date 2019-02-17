@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Diagnostics;
 using System.IO;
 using System.Linq;
+using System.Text;
 using System.Threading;
 using System.Threading.Tasks;
 using Docker.DotNet;
@@ -13,6 +14,7 @@ namespace TestContainers.Core.Containers
 {
     public class Container
     {
+        static readonly UTF8Encoding Utf8EncodingWithoutBom = new UTF8Encoding(false);
         readonly DockerClient _dockerClient;
         string _containerId { get; set; }
         public string DockerImageName { get; set; }
@@ -35,24 +37,26 @@ namespace TestContainers.Core.Containers
 
         async Task TryStart()
         {
-            var progress = new Progress<string>(m =>
-            {
-                Debug.WriteLine(m);
-
-                // Debug.WriteLineIf(m.Error != null, m.ErrorMessage);
-            });
-
             var started = await _dockerClient.Containers.StartContainerAsync(_containerId, new ContainerStartParameters());
 
             if(started)
             {
-#pragma warning disable CS0618 // Type or member is obsolete
-                await _dockerClient.Containers.GetContainerLogsAsync(_containerId, new ContainerLogsParameters
+                using (var logs = await _dockerClient.Containers.GetContainerLogsAsync(_containerId,
+                    new ContainerLogsParameters
+                    {
+                        ShowStderr = true,
+                        ShowStdout = true,
+                    }, default(CancellationToken)))
                 {
-                    ShowStderr = true,
-                    ShowStdout = true,
-                }, default(CancellationToken), progress: progress);
-#pragma warning restore CS0618 // Type or member is obsolete
+                    using (var reader = new StreamReader(logs, Utf8EncodingWithoutBom))
+                    {
+                        string nextLine;
+                        while ((nextLine = await reader.ReadLineAsync()) != null)
+                        {
+                            Debug.WriteLine(nextLine);
+                        }
+                    }
+                }
             }
 
             await WaitUntilContainerStarted();
