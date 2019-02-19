@@ -62,8 +62,6 @@ namespace TestContainers.Core.Containers
             await WaitUntilContainerStarted();
         }
 
-        
-
         protected virtual async Task WaitUntilContainerStarted()
         {
             var retryUntilContainerStateIsRunning = Policy
@@ -95,11 +93,13 @@ namespace TestContainers.Core.Containers
                 FromImage = DockerImageName,
                 Tag = tag,
             };
-            await _dockerClient.Images.CreateImageAsync(
-                imagesCreateParameters,
-                new AuthConfig(),
-                progress,
-                CancellationToken.None);
+
+            var images = await this._dockerClient.Images.ListImagesAsync(new ImagesListParameters { MatchName = DockerImageName });
+
+            if (!images.Any())
+            {
+                await this._dockerClient.Images.CreateImageAsync(imagesCreateParameters, new AuthConfig(), progress, CancellationToken.None);
+            }
 
             var createContainersParams = ApplyConfiguration();
             var containerCreated = await _dockerClient.Containers.CreateContainerAsync(createContainersParams);
