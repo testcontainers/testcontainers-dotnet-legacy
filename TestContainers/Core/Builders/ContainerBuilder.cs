@@ -28,6 +28,11 @@ namespace TestContainers.Core.Builders
         {
             fn = FnUtils.Compose(fn, (container) =>
             {
+                var tag = dockerImageName.Split(':').Last();
+                if (dockerImageName == tag || tag.Contains("/"))
+                {
+                    dockerImageName = $"{dockerImageName}:latest";
+                }
                 container.DockerImageName = dockerImageName;
                 return container;
             });
