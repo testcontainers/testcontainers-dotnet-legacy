@@ -53,5 +53,4 @@ namespace TestContainers.Tests.ContainerTests
             Assert.Equal(tag, container.DockerImageName);
         }
     }
-
 }
