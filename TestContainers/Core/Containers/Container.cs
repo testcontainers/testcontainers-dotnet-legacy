@@ -39,7 +39,7 @@ namespace TestContainers.Core.Containers
         {
             var started = await _dockerClient.Containers.StartContainerAsync(_containerId, new ContainerStartParameters());
 
-            if(started)
+            if (started)
             {
                 using (var logs = await _dockerClient.Containers.GetContainerLogsAsync(_containerId,
                     new ContainerLogsParameters
@@ -120,13 +120,13 @@ namespace TestContainers.Core.Containers
                 Tty = true,
                 Cmd = Commands,
                 AttachStderr = true,
-                AttachStdout= true,
+                AttachStdout = true,
             };
 
             var bindings = PortBindings?.ToDictionary(p => p.ExposedPort, p => p.PortBinding) ?? exposedPorts.ToDictionary(e => e, e => e);
-                
+
             var portBindings = new Dictionary<string, IList<PortBinding>>();
-            foreach(var binding in bindings)
+            foreach (var binding in bindings)
             {
                 portBindings.Add($"{binding.Key}/tcp", new[] { new PortBinding { HostPort = binding.Value.ToString() } });
             }
@@ -141,7 +141,7 @@ namespace TestContainers.Core.Containers
                         Source = m.SourcePath,
                         Target = m.TargetPath,
                         Type = m.Type,
-                    }).ToList(),                
+                    }).ToList(),
                 }
             };
         }
@@ -181,7 +181,7 @@ namespace TestContainers.Core.Containers
                     return dockerHostUri.Host;
                 case "npipe": //will have to revisit this for LCOW/WCOW
                 case "unix":
-                    return File.Exists("/.dockerenv") 
+                    return File.Exists("/.dockerenv")
                         ? ContainerInspectResponse.NetworkSettings.Gateway
                         : "localhost";
                 default:

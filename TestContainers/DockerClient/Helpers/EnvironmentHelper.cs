@@ -15,14 +15,14 @@ namespace TestContainers
 #if NET45
             false;
 #else
-            RuntimeInformation.IsOSPlatform(OSPlatform.OSX); 
+            RuntimeInformation.IsOSPlatform(OSPlatform.OSX);
 #endif
 
         public static bool IsLinux() =>
 #if NET45
             false;
 #else
-            RuntimeInformation.IsOSPlatform(OSPlatform.Linux); 
+            RuntimeInformation.IsOSPlatform(OSPlatform.Linux);
 #endif
     }
 }
