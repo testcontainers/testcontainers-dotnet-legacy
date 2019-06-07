@@ -1,0 +1,29 @@
+<Project>
+  <PropertyGroup>
+    <PackageId>$(AssemblyName)</PackageId>
+    <Version>0.0.2</Version>
+    <Copyright>Copyright © 2018</Copyright>
+    <Authors>swissarmykirpan</Authors>
+    <Company>testcontainers.org</Company>
+    <Description />
+    <Summary />
+    <PackageLicenseExpression>MIT</PackageLicenseExpression>
+    <PackageIconUrl>https://avatars0.githubusercontent.com/u/13393021?s=200&amp;v=4</PackageIconUrl>
+    <PackageLicenseUrl>https://raw.githubusercontent.com/testcontainers/testcontainers-dotnet/master/LICENSE</PackageLicenseUrl>
+    <PackageProjectUrl>https://testcontainers.org</PackageProjectUrl>
+    <PackageTags>.NET;Docker;Container;Test;Testcontainers</PackageTags>
+    <RepositoryType>git</RepositoryType>
+    <RepositoryUrl>https://github.com/testcontainers/testcontainers-dotnet</RepositoryUrl>
+  </PropertyGroup>
+  <PropertyGroup Condition="'$(BuildingInsideVisualStudio)' != 'true'">
+    <TreatWarningsAsErrors>false</TreatWarningsAsErrors> <!-- Set this to true as soon as all warnings are fixed. -->
+  </PropertyGroup>
+  <PropertyGroup Condition="'$(Configuration)' == 'Debug'">
+    <DebugType>full</DebugType>
+    <DebugSymbols>true</DebugSymbols>
+  </PropertyGroup>
+  <PropertyGroup Condition="'$(Configuration)' == 'Release'">
+    <DebugType>pdbonly</DebugType>
+    <DebugSymbols>true</DebugSymbols>
+  </PropertyGroup>
+</Project>
