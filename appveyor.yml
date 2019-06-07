@@ -6,7 +6,6 @@ branches:
     - master
 image:
   - Ubuntu
-  # - Visual Studio 2017
 configuration: Release
 environment:
   DOTNET_CLI_TELEMETRY_OPTOUT: true
@@ -16,28 +15,17 @@ stack: docker
 services:
   - docker
 before_build:
-  - dotnet restore
-build:
-  project: TestContainers/TestContainers.csproj
-  publish_nuget: true
-  publish_nuget_symbols: true
-  verbosity: normal
+  - ps: build.ps1 --target=Restore-NuGet-Packages
+build_script:
+  - ps: build.ps1 --target=Build
 before_test:
-  - docker info
-  - ps: Copy-Item -Path .\RedisConfigs\ -Destination X:\host\RedisConfigs -recurse -Force
+  - ps: Copy-Item -Path ./test/RedisConfigs/ -Destination X:/host/RedisConfigs -recurse -Force
 test_script:
-  - sh: |
-      dotnet test TestContainers.Tests/TestContainers.Tests.csproj /p:CollectCoverage=true /p:CoverletOutputFormat=lcov /p:CoverletOutput=./lcov --framework netcoreapp2.0
-      dotnet test TestContainers.Tests/TestContainers.Tests.csproj --framework netcoreapp2.1
-  # - ps: |
-  #       Switch-DockerLinux
-  #       dotnet test TestContainers.Tests/TestContainers.Tests.csproj --framework net462
-  #       dotnet test TestContainers.Tests/TestContainers.Tests.csproj --framework netcoreapp2.0
-  #       dotnet test TestContainers.Tests/TestContainers.Tests.csproj --framework netcoreapp2.1
+  - ps: build.ps1 --target=Test
 after_test:
   - sh: |
       dotnet tool install -g coveralls.net --version 1.0.0
-      csmacnz.Coveralls --lcov -i TestContainers.Tests/lcov.info --useRelativePaths --repoToken $COVERALLS_REPO_TOKEN
+      csmacnz.Coveralls --opencover -i test-coverage/coverage.opencover.xml --useRelativePaths --repoToken $COVERALLS_REPO_TOKEN
 
 dotnet_csproj:
   patch: true
@@ -58,7 +46,6 @@ deploy:
     symbol_server: https://www.myget.org/F/testcontainers-dotnet/symbols/api/v2/package
     on:
       branch: master
-
   - provider: NuGet
     name: production
     api_key:
