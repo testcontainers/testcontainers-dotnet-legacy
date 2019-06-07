@@ -4,15 +4,19 @@ root = true
 # Default settings:
 # A newline ending every file
 # Use 4 spaces as indentation
+# Use linux line feed
 [*]
 charset = utf-8
-insert_final_newline = true
+end_of_line = lf
 indent_style = space
 indent_size = 4
+insert_final_newline = true
 trim_trailing_whitespace = true
 
 # C# files
 [*.cs]
+max_line_length = 120
+
 # New line preferences
 csharp_new_line_before_open_brace = all
 csharp_new_line_before_else = true
@@ -179,5 +183,4 @@ indent_size = 2
 indent_size = 2
 
 [{*.yml, *.yaml}]
-indent_style = space
 indent_size = 2
