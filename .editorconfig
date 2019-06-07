@@ -4,15 +4,19 @@ root = true
 # Default settings:
 # A newline ending every file
 # Use 4 spaces as indentation
+# Use linux line feed
 [*]
 charset = utf-8
-insert_final_newline = true
+end_of_line = lf
 indent_style = space
 indent_size = 4
+insert_final_newline = true
 trim_trailing_whitespace = true
 
 # C# files
 [*.cs]
+max_line_length = 120
+
 # New line preferences
 csharp_new_line_before_open_brace = all
 csharp_new_line_before_else = true
@@ -47,6 +51,7 @@ dotnet_style_predefined_type_for_member_access = true:suggestion
 # Modifier preferences
 dotnet_style_require_accessibility_modifiers = for_non_interface_members:hint
 csharp_preferred_modifier_order = public, private, protected, internal, new, abstract, virtual, sealed, override, static, readonly, extern, unsafe, volatile, async:suggestion
+dotnet_style_readonly_field = true:suggesting
 
 # name all constant fields using PascalCase
 dotnet_naming_rule.constant_fields_should_be_pascal_case.severity = suggestion
@@ -103,13 +108,16 @@ dotnet_naming_symbols.everything_else.applicable_accessibilities = *
 
 # Code style defaults
 dotnet_sort_system_directives_first = true
-csharp_preserve_single_line_blocks = false
-csharp_preserve_single_line_statements = false
+csharp_preserve_single_line_blocks = true
+csharp_preserve_single_line_statements = true
 
 # Expression-level preferences
 dotnet_style_object_initializer = true:suggestion
 dotnet_style_collection_initializer = true:suggestion
 dotnet_style_explicit_tuple_names = true:suggestion
+dotnet_style_prefer_auto_properties = true:suggestion
+dotnet_style_prefer_conditional_expression_over_assignment = true:suggestion
+dotnet_style_prefer_conditional_expression_over_return = true:suggestion
 dotnet_style_coalesce_expression = true:suggestion
 dotnet_style_null_propagation = true:suggestion
 
@@ -175,5 +183,4 @@ indent_size = 2
 indent_size = 2
 
 [{*.yml, *.yaml}]
-indent_style = space
 indent_size = 2

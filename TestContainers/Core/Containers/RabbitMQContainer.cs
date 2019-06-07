@@ -18,40 +18,40 @@ namespace TestContainers.Core.Containers
 
         IConnectionFactory _connectionFactory;
 
-        IConnectionFactory ConnectionFactory => 
+        IConnectionFactory ConnectionFactory =>
             _connectionFactory ?? (_connectionFactory = new ConnectionFactory
-        {
-            HostName = GetDockerHostIpAddress(),
-            Port = GetMappedPort(Port),
-            VirtualHost = VirtualHost,
-            UserName = UserName,
-            Password = Password,
-            Protocol = Protocols.DefaultProtocol,
-            RequestedHeartbeat = DefaultRequestedHeartbeatInSec
-        });
+            {
+                HostName = GetDockerHostIpAddress(),
+                Port = GetMappedPort(Port),
+                VirtualHost = VirtualHost,
+                UserName = UserName,
+                Password = Password,
+                Protocol = Protocols.DefaultProtocol,
+                RequestedHeartbeat = DefaultRequestedHeartbeatInSec
+            });
 
         int GetMappedPort(int port) => port;
 
         protected override async Task WaitUntilContainerStarted()
         {
             await base.WaitUntilContainerStarted();
-            
+
             var result = await Policy
                 .TimeoutAsync(TimeSpan.FromMinutes(2))
                 .WrapAsync(Policy
                     .Handle<Exception>()
                     .WaitAndRetryForeverAsync(
                         iteration => TimeSpan.FromSeconds(10)))
-                .ExecuteAndCaptureAsync( () =>
-                {
-                    Connection = ConnectionFactory.CreateConnection();
-                    if (!Connection.IsOpen)
-                    {
-                        throw new Exception("Connection not open");
-                    }
+                .ExecuteAndCaptureAsync(() =>
+               {
+                   Connection = ConnectionFactory.CreateConnection();
+                   if (!Connection.IsOpen)
+                   {
+                       throw new Exception("Connection not open");
+                   }
 
-                    return Task.CompletedTask;
-                });
+                   return Task.CompletedTask;
+               });
 
             if (result.Outcome == OutcomeType.Failure)
             {

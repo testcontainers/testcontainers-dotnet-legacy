@@ -28,7 +28,7 @@ namespace TestContainers.Tests.ContainerTests
     {
         readonly ContainerInspectResponse _containerInfo;
         public GenericContainerTests(GenericContainerFixture fixture) => _containerInfo = fixture.ContainerInfo;
-        
+
         [Fact]
         public void CustomLabelTest()
         {
@@ -49,7 +49,7 @@ namespace TestContainers.Tests.ContainerTests
                 .Begin()
                 .WithImage(path)
                 .Build();
-            
+
             Assert.Equal(tag, container.DockerImageName);
         }
     }
