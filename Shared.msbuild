@@ -9,14 +9,22 @@
     <Summary />
     <PackageLicenseExpression>MIT</PackageLicenseExpression>
     <PackageIconUrl>https://avatars0.githubusercontent.com/u/13393021?s=200&amp;v=4</PackageIconUrl>
-    <PackageLicenseUrl>https://raw.githubusercontent.com/testcontainers/testcontainers-dotnet/master/LICENSE</PackageLicenseUrl>
     <PackageProjectUrl>https://testcontainers.org</PackageProjectUrl>
     <PackageTags>.NET;Docker;Container;Test;Testcontainers</PackageTags>
     <RepositoryType>git</RepositoryType>
     <RepositoryUrl>https://github.com/testcontainers/testcontainers-dotnet</RepositoryUrl>
   </PropertyGroup>
+ <PropertyGroup>
+    <GenerateAssemblyTitleAttribute>false</GenerateAssemblyTitleAttribute>
+    <GenerateAssemblyDescriptionAttribute>false</GenerateAssemblyDescriptionAttribute>
+    <GenerateAssemblyProductAttribute>false</GenerateAssemblyProductAttribute>
+    <GenerateAssemblyVersionAttribute>false</GenerateAssemblyVersionAttribute>
+    <GenerateAssemblyFileVersionAttribute>false</GenerateAssemblyFileVersionAttribute>
+    <GenerateAssemblyInformationalVersionAttribute>false</GenerateAssemblyInformationalVersionAttribute>
+    <GenerateAssemblyCopyrightAttribute>false</GenerateAssemblyCopyrightAttribute>
+  </PropertyGroup>
   <PropertyGroup Condition="'$(BuildingInsideVisualStudio)' != 'true'">
-    <TreatWarningsAsErrors>false</TreatWarningsAsErrors> <!-- Set this to true as soon as all warnings are fixed. -->
+    <TreatWarningsAsErrors>false</TreatWarningsAsErrors>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)' == 'Debug'">
     <DebugType>full</DebugType>
@@ -26,4 +34,10 @@
     <DebugType>pdbonly</DebugType>
     <DebugSymbols>true</DebugSymbols>
   </PropertyGroup>
+  <ItemGroup>
+    <None Include="$(MSBuildThisFileDirectory)LICENSE.md" Pack="true" PackagePath="$(PackageLicenseFile)" />
+  </ItemGroup>
+  <ItemGroup>
+    <Compile Include="$(MSBuildThisFileDirectory)SolutionInfo.cs" />
+  </ItemGroup>
 </Project>

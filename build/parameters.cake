@@ -1,5 +1,7 @@
+#load "./credentials.cake"
 #load "./paths.cake"
 #load "./projects.cake"
+#load "./version.cake"
 
 internal class BuildParameters
 {
@@ -12,24 +14,32 @@ internal class BuildParameters
   public string Configuration { get; private set; }
   public string Version { get; private set; }
   public string Branch { get; private set; }
+  public bool ShouldPublish { get; private set; }
   public DotNetCoreVerbosity Verbosity { get; private set; }
+  public NuGetCredentials NuGetCredentials { get; private set; }
   public BuildProjects Projects { get; private set; }
   public BuildPaths Paths { get; private set; }
 
   public static BuildParameters Instance(ICakeContext context, string solution)
   {
-    var version = "0.0.2";
+    var buildVersion = BuildVersion.Instance(context);
 
-    var branch = "develop";
+    var version = buildVersion.Version;
+
+    var branch = buildVersion.Branch;
+
+    var isLocalBuild = context.BuildSystem().IsLocalBuild;
 
     return new BuildParameters
     {
       Solution = context.MakeAbsolute(new DirectoryPath($"{solution}.sln")).FullPath,
       Target = context.Argument("target", "Default"),
-      Configuration = context.Argument("configuration", "Debug"),
+      Configuration = context.Argument("configuration", "master".Equals(branch) ? "Release" : "Debug"),
       Version = version,
       Branch = branch,
+      ShouldPublish = "master".Equals(branch),
       Verbosity = DotNetCoreVerbosity.Quiet,
+      NuGetCredentials = NuGetCredentials.GetNuGetCredentials(context),
       Projects = BuildProjects.Instance(context, solution),
       Paths = BuildPaths.Instance(context, version)
     };
