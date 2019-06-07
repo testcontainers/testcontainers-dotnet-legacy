@@ -36,7 +36,7 @@ namespace TestContainers.Tests.ContainerTests
             await _connection.OpenAsync();
             var cmd = new MySqlCommand(query, _connection);
             var reader = (await cmd.ExecuteScalarAsync());
-            Assert.Equal((long)1, reader);
+            Assert.Equal((long) 1, reader);
 
             await _connection.CloseAsync();
         }

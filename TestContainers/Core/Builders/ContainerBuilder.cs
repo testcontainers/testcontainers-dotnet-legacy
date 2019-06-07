@@ -21,7 +21,7 @@ namespace TestContainers.Core.Builders
         public virtual TBuilder Begin()
         {
             fn = (ignored) => new TContainer();
-            return (TBuilder)this;
+            return (TBuilder) this;
         }
 
         public TBuilder WithImage(string dockerImageName)
@@ -37,7 +37,7 @@ namespace TestContainers.Core.Builders
                 return container;
             });
 
-            return (TBuilder)this;
+            return (TBuilder) this;
         }
 
         public TBuilder WithExposedPorts(params int[] ports)
@@ -48,7 +48,7 @@ namespace TestContainers.Core.Builders
                 return container;
             });
 
-            return (TBuilder)this;
+            return (TBuilder) this;
         }
 
         public TBuilder WithPortBindings(params (int ExposedPort, int PortBinding)[] portBindings)
@@ -59,7 +59,7 @@ namespace TestContainers.Core.Builders
                 return container;
             });
 
-            return (TBuilder)this;
+            return (TBuilder) this;
         }
 
         public TBuilder WithEnv(params (string key, string value)[] keyValuePairs)
@@ -70,7 +70,7 @@ namespace TestContainers.Core.Builders
                 return container;
             });
 
-            return (TBuilder)this;
+            return (TBuilder) this;
         }
 
         public TBuilder WithLabel(params (string key, string value)[] keyValuePairs)
@@ -81,7 +81,7 @@ namespace TestContainers.Core.Builders
                 return container;
             });
 
-            return (TBuilder)this;
+            return (TBuilder) this;
         }
 
         public TBuilder WithMountPoints(params (string sourcePath, string targetPath, string type)[] mounts)
@@ -92,7 +92,7 @@ namespace TestContainers.Core.Builders
                 return container;
             });
 
-            return (TBuilder)this;
+            return (TBuilder) this;
         }
 
         public TBuilder WithCmd(params string[] commands)
@@ -103,7 +103,7 @@ namespace TestContainers.Core.Builders
                 return container;
             });
 
-            return (TBuilder)this;
+            return (TBuilder) this;
         }
 
         public virtual TContainer Build() =>

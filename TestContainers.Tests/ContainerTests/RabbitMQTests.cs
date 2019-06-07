@@ -28,12 +28,12 @@ namespace TestContainers.Tests.ContainerTests
         RabbitMQFixture _fixture;
 
         public RabbitMQTests(RabbitMQFixture fixture) => _fixture = fixture;
-        
+
         [Fact]
         public void OpenModelTest()
         {
             var model = _fixture.Connection.CreateModel();
-            
+
             Assert.True(model.IsOpen);
         }
     }

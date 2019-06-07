@@ -52,7 +52,7 @@ namespace TestContainers.Core.Containers
                 connection.Dispose();
                 throw new Exception(result.FinalException.Message, result.FinalException);
             }
-            
+
         }
     }
 }
