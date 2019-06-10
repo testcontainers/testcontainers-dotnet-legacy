@@ -25,9 +25,6 @@ for:
     - sh: ./build.sh --target=Create-NuGet-Packages
   deploy_script:
     - sh: ./build.sh --target=Publish-NuGet-Packages
-  environment:
-    NUGET_SOURCE: "" # Set secure environment variables in AppVeyor.
-    NUGET_APIKEY: ""
 
 -
   branches:
