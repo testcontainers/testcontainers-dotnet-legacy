@@ -27,7 +27,7 @@ namespace TestContainers.Core.Containers
         {
             get
             {
-                if (PortBindings.Any())
+                if (PortBindings != null && PortBindings.Any())
                 {
                     (int _, int portBinding) = PortBindings.First();
 
