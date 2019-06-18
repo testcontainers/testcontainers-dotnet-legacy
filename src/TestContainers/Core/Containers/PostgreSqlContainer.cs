@@ -3,6 +3,7 @@ using System.Net.Sockets;
 using System.Threading.Tasks;
 using Npgsql;
 using Polly;
+using System.Linq;
 
 namespace TestContainers.Core.Containers
 {
@@ -22,7 +23,20 @@ namespace TestContainers.Core.Containers
         string _userName = "postgres";
         string _password = "Password123";
 
-        public override string ConnectionString => $"Host={GetDockerHostIpAddress()};Username={UserName};pwd={Password}";
+        public override string ConnectionString
+        {
+            get
+            {
+                if (PortBindings.Any())
+                {
+                    (int _, int portBinding) = PortBindings.First();
+
+                    return $"Host={GetDockerHostIpAddress()};Port={portBinding};Username={UserName};pwd={Password}";
+                }
+
+                return $"Host={GetDockerHostIpAddress()};Username={UserName};pwd={Password}";
+            }
+        }
 
         protected override string TestQueryString => "SELECT 1";
 
@@ -52,7 +66,6 @@ namespace TestContainers.Core.Containers
                 connection.Dispose();
                 throw new Exception(result.FinalException.Message, result.FinalException);
             }
-
         }
     }
 }
