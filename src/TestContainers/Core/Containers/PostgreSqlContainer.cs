@@ -3,7 +3,6 @@ using System.Net.Sockets;
 using System.Threading.Tasks;
 using Npgsql;
 using Polly;
-using System.Linq;
 
 namespace TestContainers.Core.Containers
 {
