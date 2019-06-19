@@ -27,11 +27,9 @@ namespace TestContainers.Core.Containers
         {
             get
             {
-                if (PortBindings != null && PortBindings.Any())
+                if (Port.HasValue)
                 {
-                    (int _, int portBinding) = PortBindings.First();
-
-                    return $"Host={GetDockerHostIpAddress()};Port={portBinding};Username={UserName};pwd={Password}";
+                    return $"Host={GetDockerHostIpAddress()};Port={Port.Value};Username={UserName};pwd={Password}";
                 }
 
                 return $"Host={GetDockerHostIpAddress()};Username={UserName};pwd={Password}";

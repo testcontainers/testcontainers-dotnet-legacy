@@ -15,6 +15,7 @@ namespace TestContainers.Core.Containers
         public virtual string ConnectionString { get; }
 
         public virtual string UserName { get; set; }
+        public virtual int? Port { get; set; }
 
         public virtual string Password { get; set; }
 

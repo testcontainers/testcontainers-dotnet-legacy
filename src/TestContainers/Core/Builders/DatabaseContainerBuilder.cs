@@ -27,6 +27,17 @@ namespace TestContainers.Core.Builders
             return this;
         }
 
+        public DatabaseContainerBuilder<TDatabaseContainer> WithPort(int port)
+        {
+            fn = FnUtils.Compose(fn, (container) =>
+            {
+                container.Port = port;
+                return container;
+            });
+
+            return this;
+        }
+
         public DatabaseContainerBuilder<TDatabaseContainer> WithDatabaseName(string databaseName)
         {
             fn = FnUtils.Compose(fn, (container) =>
