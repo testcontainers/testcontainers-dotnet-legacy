@@ -3,8 +3,7 @@ using System.Threading.Tasks;
 using Npgsql;
 using TestContainers.Core.Containers;
 using TestContainers.Core.Builders;
-using System.Net;
-using System.Net.Sockets;
+using TestContainers.Tests.Utilities;
 
 namespace TestContainers.Tests.ContainerTests
 {
@@ -15,7 +14,7 @@ namespace TestContainers.Tests.ContainerTests
         
         public PostgreSqlFixture()
         {
-            var hostPort = FreeTcpPort();
+            var hostPort = PortAllocator.AllocatePortNumber();
             
             Container = new DatabaseContainerBuilder<PostgreSqlContainer>()
                 .Begin()
@@ -35,16 +34,6 @@ namespace TestContainers.Tests.ContainerTests
         public Task DisposeAsync()
         {
             return Container.Stop();
-        }
-
-        private static int FreeTcpPort()
-        {
-            var l = new TcpListener(IPAddress.Loopback, 0);
-            l.Start();
-            var port = ((IPEndPoint) l.LocalEndpoint).Port;
-            l.Stop();
-
-            return port;
         }
     }
 
