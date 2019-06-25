@@ -132,7 +132,7 @@ This project is licensed under the MIT License - see the [LICENSE.md](LICENSE.md
 
 ## Acknowledgements
 
-* Hat tip to anyone whose code was used
-* Inspiration
-* etc
+* https://github.com/microsoft/Docker.DotNet
+* https://github.com/testcontainers/testcontainers-java
+* https://testcontainers.org/
 
