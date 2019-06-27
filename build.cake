@@ -1,3 +1,5 @@
+#addin nuget:?package=Cake.Git&version=0.19.0
+
 #load "./build/parameters.cake"
 
 readonly var param = BuildParameters.Instance(Context, "TestContainers");
@@ -83,6 +85,37 @@ Task("Test")
         .Append("/p:CollectCoverage=true")
         .Append("/p:CoverletOutputFormat=opencover")
         .Append($"/p:CoverletOutput=\"{MakeAbsolute(param.Paths.Directories.TestCoverage)}/\"")
+    });
+  }
+});
+
+Task("Create-NuGet-Packages")
+  .Does(() =>
+{
+  DotNetCorePack(param.Projects.Testcontainers.Path.FullPath, new DotNetCorePackSettings
+  {
+    Configuration = param.Configuration,
+    Verbosity = param.Verbosity,
+    NoRestore = true,
+    NoBuild = true,
+    IncludeSymbols = true,
+    OutputDirectory = param.Paths.Directories.NugetRoot,
+    ArgumentCustomization = args => args
+      .Append($"/p:Version={param.Version}")
+      .Append("/p:SymbolPackageFormat=snupkg")
+  });
+});
+
+Task("Publish-NuGet-Packages")
+  .WithCriteria(() => param.ShouldPublish)
+  .Does(() =>
+{
+  foreach(var package in GetFiles($"{param.Paths.Directories.NugetRoot}/*.(nupkg|snupkgs)"))
+  {
+    NuGetPush(package, new NuGetPushSettings
+    {
+      Source = param.NuGetCredentials.Source,
+      ApiKey = param.NuGetCredentials.ApiKey
     });
   }
 });
