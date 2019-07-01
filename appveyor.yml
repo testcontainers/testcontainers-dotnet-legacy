@@ -5,22 +5,22 @@ environment:
   DOTNET_CLI_TELEMETRY_OPTOUT: true
   DOTNET_SKIP_FIRST_TIME_EXPERIENCE: true
 
-before_build:
+install:
   - sh: ./build.sh --target=Restore-NuGet-Packages
+before_build:
+  - sh: ./build.sh --target=Sonar-Begin
 build_script:
   - sh: ./build.sh --target=Build
 test_script:
   - sh: ./build.sh --target=Test
+after_test:
+  - sh: ./build.sh --target=Sonar-End
 
 for:
 -
   branches:
     only:
       - master
-  after_test:
-    - sh: |
-        dotnet tool install -g coveralls.net --version 1.0.0
-        csmacnz.Coveralls --opencover -i ./test-coverage/coverage.opencover.xml --useRelativePaths --repoToken $COVERALLS_REPO_TOKEN
   before_deploy:
     - sh: ./build.sh --target=Create-NuGet-Packages
   deploy_script:

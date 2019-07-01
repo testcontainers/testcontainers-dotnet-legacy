@@ -1,4 +1,8 @@
-#addin nuget:?package=Cake.Git&version=0.19.0
+#tool nuget:?package=MSBuild.SonarQube.Runner.Tool&version=4.6.0
+
+#addin nuget:?package=Cake.Sonar&version=1.1.22
+
+#addin nuget:?package=Cake.Git&version=0.20.0
 
 #load "./build/parameters.cake"
 
@@ -53,7 +57,7 @@ Task("Build-Informations")
 {
   foreach (var project in param.Projects.All)
   {
-    Console.WriteLine($"{project.Name} [{project.Path.GetDirectory()}]");
+    Information("{0}", project.Name);
   }
 });
 
@@ -87,6 +91,31 @@ Task("Test")
         .Append($"/p:CoverletOutput=\"{MakeAbsolute(param.Paths.Directories.TestCoverage)}/\"")
     });
   }
+});
+
+Task("Sonar-Begin")
+  .Does(() =>
+{
+  SonarBegin(new SonarBeginSettings
+  {
+    Url = param.SonarQubeCredentials.Url,
+    Key = param.SonarQubeCredentials.Key,
+    Login = param.SonarQubeCredentials.Token,
+    Organization = param.SonarQubeCredentials.Organization,
+    Branch = param.Branch,
+    Silent = true,
+    VsTestReportsPath = $"{MakeAbsolute(param.Paths.Directories.TestResults)}/*.trx",
+    OpenCoverReportsPath = $"{MakeAbsolute(param.Paths.Directories.TestCoverage)}/coverage.opencover.xml"
+  });
+});
+
+Task("Sonar-End")
+  .Does(() =>
+{
+  SonarEnd(new SonarEndSettings
+  {
+    Login = param.SonarQubeCredentials.Token
+  });
 });
 
 Task("Create-NuGet-Packages")
