@@ -21,15 +21,7 @@ namespace TestContainers.Core.Containers
         string _userName = "root";
         string _password = "Password123";
 
-        public MySqlContainer() : base()
-        {
-
-        }
-
-        int GetMappedPort(int portNo) => portNo;
-
-
-        public override string ConnectionString => $"Server={GetDockerHostIpAddress()};UID={UserName};pwd={Password};SslMode=none;";
+        public override string ConnectionString => $"Server={GetDockerHostIpAddress()};Port={GetMappedPort(MYSQL_PORT)};UID={UserName};pwd={Password};SslMode=none;";
 
         protected override string TestQueryString => "SELECT 1";
 

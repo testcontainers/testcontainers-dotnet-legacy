@@ -22,7 +22,7 @@ namespace TestContainers.Core.Containers
         string _userName = "postgres";
         string _password = "Password123";
 
-        public override string ConnectionString => $"Host={GetDockerHostIpAddress()};Username={UserName};pwd={Password}";
+        public override string ConnectionString => $"Host={GetDockerHostIpAddress()};Port={GetMappedPort(POSTGRESQL_PORT)};Username={UserName};pwd={Password}";
 
         protected override string TestQueryString => "SELECT 1";
 

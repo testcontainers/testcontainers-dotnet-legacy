@@ -158,6 +158,26 @@ namespace TestContainers.Core.Containers
         }
 
 
+        public int GetMappedPort(int exposedPort)
+        {
+            if (ContainerInspectResponse == null)
+            {
+                throw new InvalidOperationException(
+                    "Container must be started before mapped ports can be retrieved");
+            }
+
+            var tcpExposedPort = string.Format(TcpExposedPortFormat, exposedPort);
+
+            if (ContainerInspectResponse.NetworkSettings.Ports.TryGetValue(tcpExposedPort, out var binding) &&
+                binding.Count > 0 &&
+                int.TryParse(binding[0].HostPort, out var mappedPort))
+            {
+                return mappedPort;
+            }
+
+            throw new InvalidOperationException($"ExposedPort[{exposedPort}] is not mapped");
+        }
+
         public async Task ExecuteCommand(params string[] command)
         {
             var containerExecCreateParams = new ContainerExecCreateParameters
