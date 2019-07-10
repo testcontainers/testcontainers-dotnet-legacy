@@ -16,6 +16,7 @@ namespace TestContainers.Tests.ContainerTests
                 .Begin()
                 .WithImage(RabbitMQContainer.IMAGE)
                 .WithExposedPorts(RabbitMQContainer.Port)
+                .WithPortBindings((RabbitMQContainer.Port, RabbitMQContainer.Port))
                 .Build();
 
         public Task InitializeAsync() => Container.Start();

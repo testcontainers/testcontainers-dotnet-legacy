@@ -25,6 +25,7 @@ namespace TestContainers.Tests.ContainerTests
                 .Begin()
                 .WithImage("redis:4.0.8")
                 .WithExposedPorts(6379)
+                .WithPortBindings((6379, 6379))
                 .WithMountPoints(($"{BaseDirectory}/master-6379.conf", "/usr/local/etc/redis/redis.conf", "bind"))
                 .WithCmd("/usr/local/etc/redis/redis.conf")
                 .Build();

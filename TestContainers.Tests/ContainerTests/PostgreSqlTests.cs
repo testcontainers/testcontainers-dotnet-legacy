@@ -16,6 +16,7 @@ namespace TestContainers.Tests.ContainerTests
                 .Begin()
                 .WithImage($"{PostgreSqlContainer.IMAGE}:{PostgreSqlContainer.DEFAULT_TAG}")
                 .WithExposedPorts(PostgreSqlContainer.POSTGRESQL_PORT)
+                .WithPortBindings((PostgreSqlContainer.POSTGRESQL_PORT, PostgreSqlContainer.POSTGRESQL_PORT))
                 .WithEnv(("POSTGRES_PASSWORD", "Password123"))
                 .Build();
 
