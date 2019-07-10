@@ -16,6 +16,7 @@ internal class BuildParameters
   public string Branch { get; private set; }
   public bool ShouldPublish { get; private set; }
   public DotNetCoreVerbosity Verbosity { get; private set; }
+  public SonarQubeCredentials SonarQubeCredentials { get; private set; }
   public NuGetCredentials NuGetCredentials { get; private set; }
   public BuildProjects Projects { get; private set; }
   public BuildPaths Paths { get; private set; }
@@ -39,6 +40,7 @@ internal class BuildParameters
       Branch = branch,
       ShouldPublish = "master".Equals(branch),
       Verbosity = DotNetCoreVerbosity.Quiet,
+      SonarQubeCredentials = SonarQubeCredentials.GetSonarQubeCredentials(context),
       NuGetCredentials = NuGetCredentials.GetNuGetCredentials(context),
       Projects = BuildProjects.Instance(context, solution),
       Paths = BuildPaths.Instance(context, version)
