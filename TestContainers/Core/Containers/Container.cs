@@ -189,7 +189,7 @@ namespace TestContainers.Core.Containers
 
             var response = await _dockerClient.Containers.ExecCreateContainerAsync(_containerId, containerExecCreateParams);
 
-            await _dockerClient.Containers.StartContainerExecAsync(_containerId);
+            await _dockerClient.Containers.StartContainerExecAsync(response.ID);
         }
 
         public string GetDockerHostIpAddress()
