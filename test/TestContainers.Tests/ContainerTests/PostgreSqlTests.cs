@@ -14,8 +14,8 @@ namespace TestContainers.Tests.ContainerTests
         public PostgreSqlFixture() =>
              Container = new DatabaseContainerBuilder<PostgreSqlContainer>()
                 .Begin()
-                .WithImage($"{PostgreSqlContainer.IMAGE}:{PostgreSqlContainer.DEFAULT_TAG}")
-                .WithExposedPorts(PostgreSqlContainer.POSTGRESQL_PORT)
+                .WithImage($"{PostgreSqlContainer.IMAGE}:{PostgreSqlContainer.TAG}")
+                .WithExposedPorts(PostgreSqlContainer.PORT)
                 .WithEnv(("POSTGRES_PASSWORD", "Password123"))
                 .Build();
 

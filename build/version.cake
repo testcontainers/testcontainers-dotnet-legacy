@@ -9,7 +9,7 @@ internal class BuildVersion
 
   public static BuildVersion Instance(ICakeContext context)
   {
-    var branch = context.EnvironmentVariable("APPVEYOR_REPO_BRANCH") ?? context.GitBranchCurrent(".").FriendlyName;
+    var branch = context.EnvironmentVariable("APPVEYOR_PULL_REQUEST_HEAD_REPO_BRANCH") ?? context.EnvironmentVariable("APPVEYOR_REPO_BRANCH") ?? context.GitBranchCurrent(".").FriendlyName;
 
     var buildNumber = context.EnvironmentVariable("APPVEYOR_BUILD_NUMBER");
 

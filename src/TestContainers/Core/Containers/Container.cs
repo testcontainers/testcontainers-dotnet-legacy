@@ -41,20 +41,32 @@ namespace TestContainers.Core.Containers
 
             if (started)
             {
-                using (var logs = await _dockerClient.Containers.GetContainerLogsAsync(_containerId,
-                    new ContainerLogsParameters
+                Stream logs = null;
+
+                try
+                {
+                    logs = await _dockerClient.Containers.GetContainerLogsAsync(_containerId, new ContainerLogsParameters
                     {
                         ShowStderr = true,
-                        ShowStdout = true,
-                    }, default(CancellationToken)))
-                {
+                        ShowStdout = true
+                    }, default);
+
                     using (var reader = new StreamReader(logs, Utf8EncodingWithoutBom))
                     {
+                        logs = null;
+
                         string nextLine;
                         while ((nextLine = await reader.ReadLineAsync()) != null)
                         {
                             Debug.WriteLine(nextLine);
                         }
+                    }
+                }
+                finally
+                {
+                    if (logs != null)
+                    {
+                        logs.Dispose();
                     }
                 }
             }
@@ -164,7 +176,7 @@ namespace TestContainers.Core.Containers
                 Cmd = command,
             };
 
-            var response = await _dockerClient.Containers.ExecCreateContainerAsync(_containerId, containerExecCreateParams);
+            await _dockerClient.Containers.ExecCreateContainerAsync(_containerId, containerExecCreateParams);
 
             await _dockerClient.Containers.StartContainerExecAsync(_containerId);
         }

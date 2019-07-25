@@ -7,8 +7,12 @@ namespace TestContainers.Core.Containers
 {
     public class RabbitMQContainer : Container
     {
-        public const string IMAGE = "rabbitmq:3.7-alpine";
-        public const int Port = 5672;
+        public const string IMAGE = "rabbitmq";
+
+        public const string TAG = "3.7-alpine";
+
+        public const int PORT = 5672;
+
         public const int DefaultRequestedHeartbeatInSec = 60;
 
         public string UserName { get; set; } = "guest";
@@ -22,7 +26,7 @@ namespace TestContainers.Core.Containers
             _connectionFactory ?? (_connectionFactory = new ConnectionFactory
             {
                 HostName = GetDockerHostIpAddress(),
-                Port = GetMappedPort(Port),
+                Port = GetMappedPort(PORT),
                 VirtualHost = VirtualHost,
                 UserName = UserName,
                 Password = Password,

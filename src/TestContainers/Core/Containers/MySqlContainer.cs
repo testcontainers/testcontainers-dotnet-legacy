@@ -7,29 +7,25 @@ namespace TestContainers.Core.Containers
 {
     public sealed class MySqlContainer : DatabaseContainer
     {
-        public const string NAME = "mysql";
         public const string IMAGE = "mysql";
-        public const int MYSQL_PORT = 3306;
 
-        public override string DatabaseName => base.DatabaseName ?? _databaseName;
+        public const string TAG = "5.7";
 
-        public override string UserName => base.UserName ?? _userName;
+        public const int PORT = 3306;
 
-        public override string Password => base.Password ?? _password;
+        private const string DEFAULT_DATABASE_NAME = "test";
 
-        string _databaseName = "test";
-        string _userName = "root";
-        string _password = "Password123";
+        private const string DEFAULT_USERNAME = "root";
 
-        public MySqlContainer() : base()
-        {
-
-        }
-
-        int GetMappedPort(int portNo) => portNo;
-
+        private const string DEFAULT_PASSWORD = "Password123";
 
         public override string ConnectionString => $"Server={GetDockerHostIpAddress()};UID={UserName};pwd={Password};SslMode=none;";
+
+        public override string DatabaseName => base.DatabaseName ?? DEFAULT_DATABASE_NAME;
+
+        public override string UserName => base.UserName ?? DEFAULT_USERNAME;
+
+        public override string Password => base.Password ?? DEFAULT_PASSWORD;
 
         protected override string TestQueryString => "SELECT 1";
 
@@ -50,7 +46,7 @@ namespace TestContainers.Core.Containers
                     await connection.OpenAsync();
 
                     var cmd = new MySqlCommand(TestQueryString, connection);
-                    var reader = (await cmd.ExecuteScalarAsync());
+                    await cmd.ExecuteScalarAsync();
                 });
 
             if (result.Outcome == OutcomeType.Failure)

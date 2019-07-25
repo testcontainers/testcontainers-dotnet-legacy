@@ -14,8 +14,8 @@ namespace TestContainers.Tests.ContainerTests
         public MySqlFixture() =>
              Container = new DatabaseContainerBuilder<MySqlContainer>()
                 .Begin()
-                .WithImage("mysql:5.7")
-                .WithExposedPorts(3306)
+                .WithImage($"{MySqlContainer.IMAGE}:{MySqlContainer.TAG}")
+                .WithExposedPorts(MySqlContainer.PORT)
                 .WithEnv(("MYSQL_ROOT_PASSWORD", "Password123"))
                 .Build();
 

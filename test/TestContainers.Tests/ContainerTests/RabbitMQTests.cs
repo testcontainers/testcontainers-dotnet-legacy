@@ -14,8 +14,8 @@ namespace TestContainers.Tests.ContainerTests
         public RabbitMQFixture() =>
             Container = new GenericContainerBuilder<RabbitMQContainer>()
                 .Begin()
-                .WithImage(RabbitMQContainer.IMAGE)
-                .WithExposedPorts(RabbitMQContainer.Port)
+                .WithImage($"{RabbitMQContainer.IMAGE}:{RabbitMQContainer.TAG}")
+                .WithExposedPorts(RabbitMQContainer.PORT)
                 .Build();
 
         public Task InitializeAsync() => Container.Start();
