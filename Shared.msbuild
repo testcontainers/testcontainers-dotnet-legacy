@@ -3,7 +3,7 @@
     <PackageId>$(AssemblyName)</PackageId>
     <Version>0.0.2</Version>
     <Copyright>Copyright © 2018</Copyright>
-    <Authors>swissarmykirpan</Authors>
+    <Authors>swissarmykirpan,Isen Ng,Andre Hofmeister</Authors>
     <Company>testcontainers.org</Company>
     <Description />
     <Summary />
