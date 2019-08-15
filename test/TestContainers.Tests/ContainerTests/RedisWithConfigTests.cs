@@ -24,7 +24,7 @@ namespace TestContainers.Tests.ContainerTests
                 Container = new GenericContainerBuilder<RedisContainer>()
                 .Begin()
                 .WithImage("redis:4.0.8")
-                .WithExposedPorts(6379)
+                .WithExposedPorts(RedisContainer.Port)
                 .WithMountPoints(($"{BaseDirectory}/master-6379.conf", "/usr/local/etc/redis/redis.conf", "bind"))
                 .WithCmd("/usr/local/etc/redis/redis.conf")
                 .Build();
