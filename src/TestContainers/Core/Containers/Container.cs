@@ -14,6 +14,8 @@ namespace TestContainers.Core.Containers
 {
     public class Container
     {
+        private const string TcpExposedPortFormat = "{0}/tcp";
+
         static readonly UTF8Encoding Utf8EncodingWithoutBom = new UTF8Encoding(false);
         readonly DockerClient _dockerClient;
         string _containerId { get; set; }
@@ -123,25 +125,26 @@ namespace TestContainers.Core.Containers
                 AttachStdout = true,
             };
 
-            var bindings = PortBindings?.ToDictionary(p => p.ExposedPort, p => p.PortBinding) ?? exposedPorts.ToDictionary(e => e, e => e);
-
-            var portBindings = new Dictionary<string, IList<PortBinding>>();
-            foreach (var binding in bindings)
-            {
-                portBindings.Add($"{binding.Key}/tcp", new[] { new PortBinding { HostPort = binding.Value.ToString() } });
-            }
-
             return new CreateContainerParameters(cfg)
             {
                 HostConfig = new HostConfig
                 {
-                    PortBindings = portBindings,
+                    PortBindings = PortBindings?.ToDictionary(
+                        e => string.Format(TcpExposedPortFormat, e.ExposedPort),
+                        e => (IList<PortBinding>) new List<PortBinding>
+                        {
+                            new PortBinding
+                            {
+                                HostPort = e.PortBinding.ToString()
+                            }
+                        }),
                     Mounts = Mounts?.Select(m => new Mount
                     {
                         Source = m.SourcePath,
                         Target = m.TargetPath,
                         Type = m.Type,
                     }).ToList(),
+                    PublishAllPorts = true,
                 }
             };
         }
@@ -155,6 +158,26 @@ namespace TestContainers.Core.Containers
         }
 
 
+        public int GetMappedPort(int exposedPort)
+        {
+            if (ContainerInspectResponse == null)
+            {
+                throw new InvalidOperationException(
+                    "Container must be started before mapped ports can be retrieved");
+            }
+
+            var tcpExposedPort = string.Format(TcpExposedPortFormat, exposedPort);
+
+            if (ContainerInspectResponse.NetworkSettings.Ports.TryGetValue(tcpExposedPort, out var binding) &&
+                binding.Count > 0 &&
+                int.TryParse(binding[0].HostPort, out var mappedPort))
+            {
+                return mappedPort;
+            }
+
+            throw new InvalidOperationException($"ExposedPort[{exposedPort}] is not mapped");
+        }
+
         public async Task ExecuteCommand(params string[] command)
         {
             var containerExecCreateParams = new ContainerExecCreateParameters
@@ -166,7 +189,7 @@ namespace TestContainers.Core.Containers
 
             var response = await _dockerClient.Containers.ExecCreateContainerAsync(_containerId, containerExecCreateParams);
 
-            await _dockerClient.Containers.StartContainerExecAsync(_containerId);
+            await _dockerClient.Containers.StartContainerExecAsync(response.ID);
         }
 
         public string GetDockerHostIpAddress()

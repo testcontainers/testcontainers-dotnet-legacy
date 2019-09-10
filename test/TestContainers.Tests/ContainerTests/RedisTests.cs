@@ -15,8 +15,7 @@ namespace TestContainers.Tests.ContainerTests
                 Container = new GenericContainerBuilder<RedisContainer>()
                 .Begin()
                 .WithImage("redis:4.0.8")
-                .WithExposedPorts(6379)
-                .WithPortBindings((6379, 6380))
+                .WithExposedPorts(RedisContainer.Port)
                 .Build();
 
         public Task InitializeAsync() => Container.Start();

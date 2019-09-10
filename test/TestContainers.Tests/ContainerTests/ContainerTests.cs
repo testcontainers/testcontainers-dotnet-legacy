@@ -52,5 +52,26 @@ namespace TestContainers.Tests.ContainerTests
 
             Assert.Equal(tag, container.DockerImageName);
         }
+
+        [Fact]
+        public async Task WithExecCommand()
+        {
+            var container = new GenericContainerBuilder<Container>()
+                .Begin()
+                .WithImage("alpine:latest")
+                .Build();
+
+            await container.Start();
+
+            var execCommand = new[]
+            {
+                "/bin/sh",
+                "-c",
+                "ls"
+            };
+
+            await container.ExecuteCommand(execCommand);
+            await container.Stop();
+        }
     }
 }
