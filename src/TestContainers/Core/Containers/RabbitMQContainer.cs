@@ -30,8 +30,6 @@ namespace TestContainers.Core.Containers
                 RequestedHeartbeat = DefaultRequestedHeartbeatInSec
             });
 
-        int GetMappedPort(int port) => port;
-
         protected override async Task WaitUntilContainerStarted()
         {
             await base.WaitUntilContainerStarted();

@@ -2,23 +2,13 @@
 using System;
 using System.Threading.Tasks;
 using StackExchange.Redis;
-using System.Linq;
 
 namespace TestContainers.Core.Containers
 {
     public sealed class RedisContainer : DatabaseContainer
     {
-        public override string ConnectionString
-        {
-            get
-            {
-                var portBindings = PortBindings?.SingleOrDefault(p => p.ExposedPort == ExposedPorts.First());
-
-                var port = portBindings?.PortBinding ?? ExposedPorts.First();
-
-                return $"{GetDockerHostIpAddress()}:{port}";
-            }
-        }
+        public const int Port = 6379;
+        public override string ConnectionString => $"{GetDockerHostIpAddress()}:{GetMappedPort(Port)}";
 
         protected override async Task WaitUntilContainerStarted()
         {
