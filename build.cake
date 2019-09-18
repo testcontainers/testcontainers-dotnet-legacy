@@ -52,7 +52,7 @@ Task("Restore-NuGet-Packages")
   });
 });
 
-Task("Build-Informations")
+Task("Build-Information")
   .Does(() =>
 {
   foreach (var project in param.Projects.All)
