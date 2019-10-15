@@ -16,13 +16,7 @@ namespace TestContainers.Containers
     public interface IContainer
     {
         /// <summary>
-        /// Gets the image name
-        /// </summary>
-        [NotNull]
-        string DockerImageName { get; }
-
-        /// <summary>
-        /// Gets the docker image
+        /// Gets the docker image used for this container
         /// </summary>
         [NotNull]
         IImage DockerImage { get; }
