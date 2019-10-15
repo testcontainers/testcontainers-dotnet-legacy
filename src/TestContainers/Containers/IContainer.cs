@@ -28,7 +28,7 @@ namespace TestContainers.Containers
         IImage DockerImage { get; }
 
         /// <summary>
-        /// Gets the container id after it has started
+        /// Gets the container id after it has been created
         /// </summary>
         string ContainerId { get; }
 

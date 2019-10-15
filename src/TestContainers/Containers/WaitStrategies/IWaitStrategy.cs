@@ -1,3 +1,4 @@
+using System.Threading;
 using System.Threading.Tasks;
 using Docker.DotNet;
 
@@ -13,7 +14,8 @@ namespace TestContainers.Containers.WaitStrategies
         /// </summary>
         /// <param name="dockerClient">Docker client to use</param>
         /// <param name="container">Container to wait for</param>
+        /// <param name="ct">Cancellation token</param>
         /// <returns>Task that completes when the services started successfully</returns>
-        Task WaitUntil(IDockerClient dockerClient, IContainer container);
+        Task WaitUntil(IDockerClient dockerClient, IContainer container, CancellationToken ct = default);
     }
 }
