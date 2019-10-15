@@ -11,7 +11,7 @@ using TestContainers.Images;
 namespace TestContainers.Containers
 {
     /// <summary>
-    /// A docker container object
+    /// A docker container
     /// </summary>
     public interface IContainer
     {

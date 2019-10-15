@@ -22,7 +22,7 @@ namespace TestContainers.Images
         /// Resolves this image into the local machine
         /// </summary>
         /// <param name="ct">cancellation token</param>
-        /// <returns>image id when the image is resolved locally</returns>
+        /// <returns>Task that completes when the image id has been resolved locally</returns>
         Task<string> Resolve(CancellationToken ct = default);
     }
 }
