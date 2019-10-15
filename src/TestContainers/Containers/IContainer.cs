@@ -3,8 +3,10 @@ using System.Collections.Generic;
 using System.Threading;
 using System.Threading.Tasks;
 using JetBrains.Annotations;
-using TestContainers.Container.Abstractions.Images;
-using TestContainers.Container.Abstractions.Models;
+using TestContainers.Containers.Mounts;
+using TestContainers.Containers.StartupStrategies;
+using TestContainers.Containers.WaitStrategies;
+using TestContainers.Images;
 
 namespace TestContainers.Containers
 {
@@ -43,25 +45,27 @@ namespace TestContainers.Containers
         /// Dictionary&lt;int ExposedPort, int PortBinding&gt;
         /// </summary>
         [NotNull]
-        Dictionary<int, int> PortBindings { get; }
+        IDictionary<int, int> PortBindings { get; }
 
         /// <summary>
         /// Environment variables to be injected into the container
         /// Dictionary&lt;int key, int value&gt;
         /// </summary>
         [NotNull]
-        Dictionary<string, string> Env { get; }
+        IDictionary<string, string> Env { get; }
 
         /// <summary>
         /// Labels to be set on the container
         /// Dictionary&lt;int key, int value&gt;
         /// </summary>
-        Dictionary<string, string> Labels { get; }
+        [NotNull]
+        IDictionary<string, string> Labels { get; }
 
         /// <summary>
         /// List of path bindings between host and container
         /// </summary>
-        IList<Bind> BindMounts { get; }
+        [NotNull]
+        IList<IBind> BindMounts { get; }
 
         /// <summary>
         /// Sets the container to use privileged mode when this is set
@@ -83,6 +87,16 @@ namespace TestContainers.Containers
         /// Option to auto remove the container after use
         /// </summary>
         bool AutoRemove { get; set; }
+
+        /// <summary>
+        /// Strategy to use to wait for services in the container to successfully start
+        /// </summary>
+        IWaitStrategy WaitStrategy { get; }
+
+        /// <summary>
+        /// Strategy to use to wait for the container to start
+        /// </summary>
+        IStartupStrategy StartupStrategy { get; }
 
         /// <summary>
         /// Starts the container
@@ -110,7 +124,8 @@ namespace TestContainers.Containers
         /// </summary>
         /// <param name="exposedPort">Exposed port to map</param>
         /// <returns>The mapped port</returns>
-        /// <exception cref="InvalidOperationException">when the container has yet to start or port is not mapped</exception>
+        /// <exception cref="InvalidOperationException">when the container has yet to start</exception>
+        /// <exception cref="ArgumentException">when the port is not mapped</exception>
         int GetMappedPort(int exposedPort);
 
         /// <summary>
@@ -121,15 +136,5 @@ namespace TestContainers.Containers
         /// <returns>Tuple containing the response of the command</returns>
         /// <exception cref="InvalidOperationException">when the container has yet to start</exception>
         Task<(string stdout, string stderr)> ExecuteCommandAsync(string[] command, CancellationToken ct = default);
-
-        // /// <summary>
-        // /// Strategy to use to wait for services in the container to successfully start
-        // /// </summary>
-        // protected IWaitStrategy WaitStrategy { get; [NotNull] set; } = new NoWaitStrategy();
-
-        // /// <summary>
-        // /// Strategy to use to wait for the container to start
-        // /// </summary>
-        // protected IStartupStrategy StartupStrategy { get; [NotNull] set; } = new IsRunningStartupCheckStrategy();
     }
 }

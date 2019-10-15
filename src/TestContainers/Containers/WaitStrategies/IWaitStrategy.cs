@@ -1,0 +1,19 @@
+using System.Threading.Tasks;
+using Docker.DotNet;
+
+namespace TestContainers.Containers.WaitStrategies
+{
+    /// <summary>
+    /// Strategy for waiting for services in the container to start
+    /// </summary>
+    public interface IWaitStrategy
+    {
+        /// <summary>
+        /// Wait for the services to start
+        /// </summary>
+        /// <param name="dockerClient">Docker client to use</param>
+        /// <param name="container">Container to wait for</param>
+        /// <returns>Task that completes when the services started successfully</returns>
+        Task WaitUntil(IDockerClient dockerClient, IContainer container);
+    }
+}
