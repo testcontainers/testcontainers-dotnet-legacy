@@ -75,7 +75,7 @@ namespace TestContainers.Containers
         /// Command to run when the container starts
         /// </summary>
         [NotNull]
-        IList<string> Command { get; set; }
+        IList<string> Command { get; }
 
         /// <summary>
         /// Option to auto remove the container after use
@@ -85,12 +85,12 @@ namespace TestContainers.Containers
         /// <summary>
         /// Strategy to use to wait for services in the container to successfully start
         /// </summary>
-        IWaitStrategy WaitStrategy { get; }
+        IWaitStrategy WaitStrategy { get; set; }
 
         /// <summary>
         /// Strategy to use to wait for the container to start
         /// </summary>
-        IStartupStrategy StartupStrategy { get; }
+        IStartupStrategy StartupStrategy { get; set; }
 
         /// <summary>
         /// Starts the container
