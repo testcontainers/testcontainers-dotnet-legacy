@@ -106,6 +106,17 @@ namespace TestContainers.Core.Builders
             return (TBuilder) this;
         }
 
+        public TBuilder WithShmSize(long shmSize)
+        {
+            fn = FnUtils.Compose(fn, (container) =>
+            {
+                container.ShmSize = shmSize;
+                return container;
+            });
+
+            return (TBuilder) this;
+        }
+
         public virtual TContainer Build() =>
             fn(null);
     }

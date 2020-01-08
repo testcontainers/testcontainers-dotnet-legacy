@@ -27,7 +27,8 @@ namespace TestContainers.Core.Containers
         public ContainerInspectResponse ContainerInspectResponse { get; set; }
         public (string SourcePath, string TargetPath, string Type)[] Mounts { get; set; }
         public string[] Commands { get; set; }
-
+        public long ShmSize { get; set; }
+        
         public Container() =>
             _dockerClient = DockerClientFactory.Instance.Client();
 
@@ -145,8 +146,10 @@ namespace TestContainers.Core.Containers
                         Type = m.Type,
                     }).ToList(),
                     PublishAllPorts = true,
+                    ShmSize = ShmSize
                 }
-            };
+
+                };
         }
 
         public async Task Stop()
