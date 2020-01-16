@@ -21,6 +21,7 @@ for:
   branches:
     only:
       - master
+      - develop
   before_deploy:
     - sh: ./build.sh --target=Create-NuGet-Packages
   deploy_script:

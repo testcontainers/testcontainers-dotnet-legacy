@@ -58,4 +58,15 @@ internal class NuGetCredentials : BuildCredentials
       context.EnvironmentVariable("NUGET_APIKEY")
     );
   }
+
+  public static NuGetCredentials GetNuGetPrereleaseCredentials(ICakeContext context)
+  {
+    return new NuGetCredentials
+    (
+      context.EnvironmentVariable("NUGET_PRERELEASE_USERNAME") ?? "",
+      context.EnvironmentVariable("NUGET_PRERELEASE_PASSWORD") ?? "",
+      context.EnvironmentVariable("NUGET_PRERELEASE_SOURCE"),
+      context.EnvironmentVariable("NUGET_PRERELEASE_APIKEY")
+    );
+  }
 }
