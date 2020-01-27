@@ -2,7 +2,7 @@
 
 #addin nuget:?package=Cake.Sonar&version=1.1.22
 
-#addin nuget:?package=Cake.Git&version=0.20.0
+#addin nuget:?package=Cake.Git&version=0.21.0
 
 #load "./build/parameters.cake"
 
@@ -119,6 +119,7 @@ Task("Sonar-End")
 });
 
 Task("Create-NuGet-Packages")
+  .WithCriteria(() => param.ShouldPublish)
   .Does(() =>
 {
   DotNetCorePack(param.Projects.Testcontainers.Path.FullPath, new DotNetCorePackSettings

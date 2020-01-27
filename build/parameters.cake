@@ -38,12 +38,18 @@ internal class BuildParameters
       Configuration = context.Argument("configuration", "master".Equals(branch) ? "Release" : "Debug"),
       Version = version,
       Branch = branch,
-      ShouldPublish = "master".Equals(branch),
+      ShouldPublish = ShouldPublishing(branch),
       Verbosity = DotNetCoreVerbosity.Quiet,
       SonarQubeCredentials = SonarQubeCredentials.GetSonarQubeCredentials(context),
-      NuGetCredentials = NuGetCredentials.GetNuGetCredentials(context),
+      NuGetCredentials = "master".Equals(branch) ? NuGetCredentials.GetNuGetCredentials(context) : NuGetCredentials.GetNuGetPrereleaseCredentials(context),
       Projects = BuildProjects.Instance(context, solution),
       Paths = BuildPaths.Instance(context, version)
     };
+  }
+
+  public static bool ShouldPublishing(string branch)
+  {
+    var branches = new [] { "master", "develop" };
+    return branches.Any(b => StringComparer.OrdinalIgnoreCase.Equals(b, branch));
   }
 }
