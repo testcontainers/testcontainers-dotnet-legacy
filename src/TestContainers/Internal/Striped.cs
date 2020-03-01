@@ -23,7 +23,10 @@ namespace TestContainers.Internal
 
         private readonly Func<T> _supplier;
 
-        /// <inheritdoc />
+        /// <summary>
+        /// Constructs a maps of locks
+        /// </summary>
+        /// <param name="supplier"></param>
         public Striped(Func<T> supplier)
         {
             _supplier = supplier;

@@ -40,7 +40,10 @@ namespace TestContainers.DockerClient
 
         private readonly ILogger _logger;
 
-        /// <inheritdoc />
+        /// <summary>
+        /// Constructs a docker client provider
+        /// </summary>
+        /// <param name="logger">Logger to use</param>
         protected AbstractDockerClientProvider(ILogger logger)
         {
             _logger = logger;

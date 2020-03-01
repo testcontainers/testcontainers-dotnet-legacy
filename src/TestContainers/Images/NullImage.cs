@@ -32,7 +32,9 @@ namespace TestContainers.Images
         /// <inheritdoc />
         public string ImageId { get; }
 
-        /// <inheritdoc />
+        /// <summary>
+        /// Constructs a null docker image used to signify that no image is provided
+        /// </summary>
         private NullImage()
         {
             ImageName = null;

@@ -14,7 +14,10 @@ namespace TestContainers.Transferables
     {
         private readonly string _path;
 
-        /// <inheritdoc />
+        /// <summary>
+        /// Represents a path that can be transferred to the docker context
+        /// </summary>
+        /// <param name="path">Path on filesystem</param>
         /// <exception cref="ArgumentNullException">when path is null</exception>
         public TransferablePath(string path)
         {
