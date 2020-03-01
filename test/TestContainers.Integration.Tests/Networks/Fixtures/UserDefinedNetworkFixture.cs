@@ -33,12 +33,12 @@ namespace TestContainers.Integration.Tests.Networks.Fixtures
 
         public async Task InitializeAsync()
         {
-            await Network.Reap();
+            await Network.ReapAsync();
         }
 
         public async Task DisposeAsync()
         {
-            await Network.Reap();
+            await Network.ReapAsync();
         }
     }
 }

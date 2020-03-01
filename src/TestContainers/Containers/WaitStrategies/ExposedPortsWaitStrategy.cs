@@ -27,7 +27,8 @@ namespace TestContainers.Containers.WaitStrategies
         }
 
         /// <inheritdoc />
-        public async Task WaitUntil(IDockerClient dockerClient, IContainer container, CancellationToken ct = default)
+        public async Task WaitUntilAsync(IDockerClient dockerClient, IContainer container,
+            CancellationToken ct = default)
         {
             var retryPolicy = Policy
                 .Handle<SocketException>()
@@ -36,7 +37,7 @@ namespace TestContainers.Containers.WaitStrategies
             var outcome = await Policy
                 .TimeoutAsync(TimeSpan.FromMinutes(1))
                 .WrapAsync(retryPolicy)
-                .ExecuteAndCaptureAsync(async () => await AllPortsExposed(container, ct));
+                .ExecuteAndCaptureAsync(async () => await AllPortsExposedAsync(container, ct));
 
             if (outcome.Outcome == OutcomeType.Failure)
             {
@@ -44,7 +45,7 @@ namespace TestContainers.Containers.WaitStrategies
             }
         }
 
-        private Task AllPortsExposed(IContainer container, CancellationToken ct = default)
+        private Task AllPortsExposedAsync(IContainer container, CancellationToken ct = default)
         {
             var ipAddress = container.GetDockerHostIpAddress();
 

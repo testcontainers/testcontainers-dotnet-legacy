@@ -70,7 +70,7 @@ namespace TestContainers.Images
         /// Runs the docker image build command to build this image
         /// </summary>
         /// <inheritdoc />
-        public override async Task<string> Resolve(CancellationToken ct = default)
+        public override async Task<string> ResolveAsync(CancellationToken ct = default)
         {
             if (ct.IsCancellationRequested)
             {
@@ -127,7 +127,7 @@ namespace TestContainers.Images
                             }
 
                             await new TransferablePath(fullPath)
-                                .TransferTo(tarArchive, relativePath, ct)
+                                .TransferToAsync(tarArchive, relativePath, ct)
                                 .ConfigureAwait(false);
                         }
 
@@ -139,7 +139,7 @@ namespace TestContainers.Images
                         var destinationPath = entry.Key;
                         var transferable = entry.Value;
                         await transferable
-                            .TransferTo(tarArchive, destinationPath, ct)
+                            .TransferToAsync(tarArchive, destinationPath, ct)
                             .ConfigureAwait(false);
 
                         _logger.LogDebug("Transferred [{}] into tar archive", destinationPath);

@@ -23,6 +23,6 @@ namespace TestContainers.Images
         /// </summary>
         /// <param name="ct">cancellation token</param>
         /// <returns>Task that completes with the ImageId when the image has been resolved locally</returns>
-        Task<string> Resolve(CancellationToken ct = default);
+        Task<string> ResolveAsync(CancellationToken ct = default);
     }
 }

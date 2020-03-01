@@ -120,23 +120,23 @@ namespace TestContainers.Containers
                 return;
             }
 
-            await ConfigureHook(ct);
+            await ConfigureHookAsync(ct);
 
-            await ContainerStartingHook(ct);
+            await ContainerStartingHookAsync(ct);
 
-            await ResolveImage(ct);
+            await ResolveImageAsync(ct);
 
-            await ResolveNetwork(ct);
+            await ResolveNetworkAsync(ct);
 
-            await CreateContainer(ct);
+            await CreateContainerAsync(ct);
 
-            await StartContainer(ct);
+            await StartContainerAsync(ct);
 
-            await ContainerStartedHook(ct);
+            await ContainerStartedHookAsync(ct);
 
-            await StartServices(ct);
+            await StartServicesAsync(ct);
 
-            await ServiceStartedHook(ct);
+            await ServiceStartedHookAsync(ct);
         }
 
         /// <inheritdoc />
@@ -147,7 +147,7 @@ namespace TestContainers.Containers
                 return;
             }
 
-            await ContainerStoppingHook(ct);
+            await ContainerStoppingHookAsync(ct);
 
             await DockerClient.Containers.StopContainerAsync(ContainerId, new ContainerStopParameters(), ct);
 
@@ -156,7 +156,7 @@ namespace TestContainers.Containers
                 await DockerClient.Containers.RemoveContainerAsync(ContainerId, new ContainerRemoveParameters(), ct);
             }
 
-            await ContainerStoppedHook(ct);
+            await ContainerStoppedHookAsync(ct);
         }
 
         /// <inheritdoc />
@@ -225,7 +225,7 @@ namespace TestContainers.Containers
         /// Configuration hook for inherited containers to implement
         /// </summary>
         [PublicAPI]
-        protected virtual Task ConfigureHook(CancellationToken ct = default)
+        protected virtual Task ConfigureHookAsync(CancellationToken ct = default)
         {
             return Task.CompletedTask;
         }
@@ -234,7 +234,7 @@ namespace TestContainers.Containers
         /// Hook before starting the container
         /// </summary>
         [PublicAPI]
-        protected virtual Task ContainerStartingHook(CancellationToken ct = default)
+        protected virtual Task ContainerStartingHookAsync(CancellationToken ct = default)
         {
             return Task.CompletedTask;
         }
@@ -243,7 +243,7 @@ namespace TestContainers.Containers
         /// Hook after starting the container
         /// </summary>
         [PublicAPI]
-        protected virtual Task ContainerStartedHook(CancellationToken ct = default)
+        protected virtual Task ContainerStartedHookAsync(CancellationToken ct = default)
         {
             return Task.CompletedTask;
         }
@@ -252,7 +252,7 @@ namespace TestContainers.Containers
         /// Hook after service in container started
         /// </summary>
         [PublicAPI]
-        protected virtual Task ServiceStartedHook(CancellationToken ct = default)
+        protected virtual Task ServiceStartedHookAsync(CancellationToken ct = default)
         {
             return Task.CompletedTask;
         }
@@ -261,7 +261,7 @@ namespace TestContainers.Containers
         /// Hook before stopping the container
         /// </summary>
         [PublicAPI]
-        protected virtual Task ContainerStoppingHook(CancellationToken ct = default)
+        protected virtual Task ContainerStoppingHookAsync(CancellationToken ct = default)
         {
             return Task.CompletedTask;
         }
@@ -270,22 +270,22 @@ namespace TestContainers.Containers
         /// Hook after stopping the container
         /// </summary>
         [PublicAPI]
-        protected virtual Task ContainerStoppedHook(CancellationToken ct = default)
+        protected virtual Task ContainerStoppedHookAsync(CancellationToken ct = default)
         {
             return Task.CompletedTask;
         }
 
-        private async Task ResolveImage(CancellationToken ct)
+        private async Task ResolveImageAsync(CancellationToken ct)
         {
             if (ct.IsCancellationRequested)
             {
                 return;
             }
 
-            await Image.Resolve(ct);
+            await Image.ResolveAsync(ct);
         }
 
-        private async Task ResolveNetwork(CancellationToken ct)
+        private async Task ResolveNetworkAsync(CancellationToken ct)
         {
             if (ct.IsCancellationRequested)
             {
@@ -294,11 +294,11 @@ namespace TestContainers.Containers
 
             if (Network != null)
             {
-                await Network.Resolve(ct);
+                await Network.ResolveAsync(ct);
             }
         }
 
-        private async Task CreateContainer(CancellationToken ct)
+        private async Task CreateContainerAsync(CancellationToken ct)
         {
             if (ct.IsCancellationRequested)
             {
@@ -313,7 +313,7 @@ namespace TestContainers.Containers
             _logger.LogDebug("Container created for id[{}] with image[{}]", Image.ImageName, ContainerId);
         }
 
-        private async Task StartContainer(CancellationToken ct)
+        private async Task StartContainerAsync(CancellationToken ct)
         {
             if (ct.IsCancellationRequested)
             {
@@ -331,7 +331,7 @@ namespace TestContainers.Containers
                     throw new ContainerLaunchException("Unable to start container: " + ContainerId);
                 }
 
-                await StartupStrategy.WaitUntilSuccess(DockerClient, this, ct);
+                await StartupStrategy.WaitUntilSuccessAsync(DockerClient, this, ct);
 
                 ContainerInfo = await DockerClient.Containers.InspectContainerAsync(ContainerId, ct);
 
@@ -343,13 +343,13 @@ namespace TestContainers.Containers
                 _logger.LogError(e, "Unable to start container with id[{}] and image[{}]", ContainerId,
                     Image.ImageName);
 
-                await PrintContainerLogs(ct);
+                await PrintContainerLogsAsync(ct);
 
                 throw;
             }
         }
 
-        private async Task StartServices(CancellationToken ct)
+        private async Task StartServicesAsync(CancellationToken ct)
         {
             if (ct.IsCancellationRequested)
             {
@@ -361,7 +361,7 @@ namespace TestContainers.Containers
                 _logger.LogDebug("Starting container services for name[{}] with id[{}] and image[{}]", ContainerId,
                     ContainerName, Image.ImageName);
 
-                await WaitStrategy.WaitUntil(DockerClient, this, ct);
+                await WaitStrategy.WaitUntilAsync(DockerClient, this, ct);
 
                 _logger.LogInformation("Container services started for name[{}] with id[{}] and image[{}]", ContainerId,
                     ContainerName, Image.ImageName);
@@ -371,7 +371,7 @@ namespace TestContainers.Containers
                 _logger.LogError(e, "Unable to start container services for name[{}] with id[{}] and image[{}]",
                     ContainerId, ContainerName, Image.ImageName);
 
-                await PrintContainerLogs(ct);
+                await PrintContainerLogsAsync(ct);
 
                 throw;
             }
@@ -457,7 +457,7 @@ namespace TestContainers.Containers
             return !string.IsNullOrWhiteSpace(network.Gateway) ? network.Gateway : null;
         }
 
-        private async Task PrintContainerLogs(CancellationToken ct)
+        private async Task PrintContainerLogsAsync(CancellationToken ct)
         {
             if (ContainerId != null && _logger.IsEnabled(LogLevel.Error))
             {

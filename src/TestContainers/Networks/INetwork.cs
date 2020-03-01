@@ -32,6 +32,6 @@ namespace TestContainers.Networks
         /// </summary>
         /// <param name="ct">cancellation token</param>
         /// <returns>network id when the network is resolved</returns>
-        Task<string> Resolve(CancellationToken ct = default);
+        Task<string> ResolveAsync(CancellationToken ct = default);
     }
 }

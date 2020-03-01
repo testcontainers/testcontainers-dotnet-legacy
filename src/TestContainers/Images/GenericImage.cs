@@ -29,14 +29,14 @@ namespace TestContainers.Images
         /// Pulls the image from the remote repository if it does not exist locally
         /// </summary>
         /// <inheritdoc />
-        public override async Task<string> Resolve(CancellationToken ct = default)
+        public override async Task<string> ResolveAsync(CancellationToken ct = default)
         {
             if (ct.IsCancellationRequested)
             {
                 return null;
             }
 
-            if (await CheckIfImageExists(ct))
+            if (await CheckIfImageExistsAsync(ct))
             {
                 return ImageId;
             }
@@ -48,9 +48,9 @@ namespace TestContainers.Images
 
             try
             {
-                if (!await CheckIfImageExists(ct))
+                if (!await CheckIfImageExistsAsync(ct))
                 {
-                    await PullImage(ct);
+                    await PullImageAsync(ct);
                 }
             }
             finally
@@ -61,7 +61,7 @@ namespace TestContainers.Images
             return ImageId;
         }
 
-        private async Task<bool> CheckIfImageExists(CancellationToken ct)
+        private async Task<bool> CheckIfImageExistsAsync(CancellationToken ct)
         {
             var images = await DockerClient.Images.ListImagesAsync(new ImagesListParameters(), ct);
             var existingImage = images.FirstOrDefault(i => i.RepoTags != null && i.RepoTags.Contains(ImageName));
@@ -76,7 +76,7 @@ namespace TestContainers.Images
             return true;
         }
 
-        private async Task PullImage(CancellationToken ct)
+        private async Task PullImageAsync(CancellationToken ct)
         {
             _logger.LogInformation("Pulling container image: {}", ImageName);
             var createParameters = new ImagesCreateParameters

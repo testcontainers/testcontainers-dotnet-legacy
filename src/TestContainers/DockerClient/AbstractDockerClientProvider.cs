@@ -47,7 +47,7 @@ namespace TestContainers.DockerClient
         }
 
         /// <inheritdoc />
-        public async Task<bool> TryTest(CancellationToken ct = default)
+        public async Task<bool> TryTestAsync(CancellationToken ct = default)
         {
             try
             {

@@ -16,7 +16,7 @@ namespace TestContainers.Tests.Containers.WaitStrategies
         public void ShouldReturnSuccessImmediately()
         {
             // act
-            var result = _strategy.WaitUntil(null, null);
+            var result = _strategy.WaitUntilAsync(null, null);
 
             // assert
             Assert.True(result.IsCompletedSuccessfully);

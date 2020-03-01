@@ -27,6 +27,6 @@ namespace TestContainers.Images
         }
 
         /// <inheritdoc />
-        public abstract Task<string> Resolve(CancellationToken ct = default);
+        public abstract Task<string> ResolveAsync(CancellationToken ct = default);
     }
 }

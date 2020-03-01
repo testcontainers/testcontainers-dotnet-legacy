@@ -15,7 +15,7 @@ namespace TestContainers.Internal
         }
 
         /// <inheritdoc />
-        protected override Task Work()
+        protected override Task WorkAsync()
         {
             return _work();
         }

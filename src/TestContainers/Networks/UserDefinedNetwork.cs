@@ -47,14 +47,14 @@ namespace TestContainers.Networks
         }
 
         /// <inheritdoc />
-        public async Task<string> Resolve(CancellationToken ct = default)
+        public async Task<string> ResolveAsync(CancellationToken ct = default)
         {
             if (ct.IsCancellationRequested)
             {
                 return null;
             }
 
-            if (await CheckIfNetworkExists(ct))
+            if (await CheckIfNetworkExistsAsync(ct))
             {
                 return NetworkId;
             }
@@ -67,9 +67,9 @@ namespace TestContainers.Networks
 
             try
             {
-                if (!await CheckIfNetworkExists(ct))
+                if (!await CheckIfNetworkExistsAsync(ct))
                 {
-                    await CreateNetwork(ct);
+                    await CreateNetworkAsync(ct);
                 }
             }
             finally
@@ -80,7 +80,7 @@ namespace TestContainers.Networks
             return NetworkId;
         }
 
-        private async Task<bool> CheckIfNetworkExists(CancellationToken ct)
+        private async Task<bool> CheckIfNetworkExistsAsync(CancellationToken ct)
         {
             var networks = await DockerClient.Networks.ListNetworksAsync(new NetworksListParameters(), ct);
             var existingNetwork = networks.FirstOrDefault(i => string.Equals(i.Name, NetworkName));
@@ -95,7 +95,7 @@ namespace TestContainers.Networks
             return true;
         }
 
-        private async Task CreateNetwork(CancellationToken ct)
+        private async Task CreateNetworkAsync(CancellationToken ct)
         {
             _logger.LogInformation("Creating network: {}", NetworkName);
 

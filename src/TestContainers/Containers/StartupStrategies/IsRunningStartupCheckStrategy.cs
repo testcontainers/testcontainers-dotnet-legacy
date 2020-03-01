@@ -15,7 +15,7 @@ namespace TestContainers.Containers.StartupStrategies
     public class IsRunningStartupCheckStrategy : IStartupStrategy
     {
         /// <inheritdoc />
-        public async Task WaitUntilSuccess(IDockerClient dockerClient, IContainer container,
+        public async Task WaitUntilSuccessAsync(IDockerClient dockerClient, IContainer container,
             CancellationToken ct = default)
         {
             var retryPolicy = Policy
@@ -25,7 +25,8 @@ namespace TestContainers.Containers.StartupStrategies
             var outcome = await Policy
                 .TimeoutAsync(TimeSpan.FromMinutes(1))
                 .WrapAsync(retryPolicy)
-                .ExecuteAndCaptureAsync(async () => await GetCurrentState(dockerClient, container.ContainerId, ct));
+                .ExecuteAndCaptureAsync(async () =>
+                    await GetCurrentStateAsync(dockerClient, container.ContainerId, ct));
 
             if (outcome.Outcome == OutcomeType.Failure)
             {
@@ -50,7 +51,7 @@ namespace TestContainers.Containers.StartupStrategies
             return false;
         }
 
-        private static async Task<ContainerState> GetCurrentState(IDockerClient dockerClient, string containerId,
+        private static async Task<ContainerState> GetCurrentStateAsync(IDockerClient dockerClient, string containerId,
             CancellationToken ct = default)
         {
             var response = await dockerClient.Containers.InspectContainerAsync(containerId, ct);

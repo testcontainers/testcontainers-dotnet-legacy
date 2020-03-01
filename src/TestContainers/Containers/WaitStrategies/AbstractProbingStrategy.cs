@@ -32,7 +32,8 @@ namespace TestContainers.Containers.WaitStrategies
         protected abstract IEnumerable<Type> ExceptionTypes { get; }
 
         /// <inheritdoc />
-        public async Task WaitUntil(IDockerClient dockerClient, IContainer container, CancellationToken ct = default)
+        public async Task WaitUntilAsync(IDockerClient dockerClient, IContainer container,
+            CancellationToken ct = default)
         {
             var exceptionPolicy = Policy
                 .Handle<Exception>(e => ExceptionTypes.Any(t => t.IsInstanceOfType(e)))
@@ -41,7 +42,7 @@ namespace TestContainers.Containers.WaitStrategies
             var result = await Policy
                 .TimeoutAsync(Timeout)
                 .WrapAsync(exceptionPolicy)
-                .ExecuteAndCaptureAsync(async () => { await Probe(dockerClient, container, ct); });
+                .ExecuteAndCaptureAsync(async () => { await ProbeAsync(dockerClient, container, ct); });
 
             if (result.Outcome == OutcomeType.Failure)
             {
@@ -56,6 +57,7 @@ namespace TestContainers.Containers.WaitStrategies
         /// <param name="container">Container to probe</param>
         /// <param name="ct">Cancellation token</param>
         /// <returns>A task that completes when the probe completes</returns>
-        protected abstract Task Probe(IDockerClient dockerClient, IContainer container, CancellationToken ct = default);
+        protected abstract Task ProbeAsync(IDockerClient dockerClient, IContainer container,
+            CancellationToken ct = default);
     }
 }

@@ -41,7 +41,7 @@ namespace TestContainers.Integration.Tests.Containers.Fixtures
             Container = new ContainerBuilder<GenericContainer>()
                 .ConfigureHostConfiguration(builder => builder.AddInMemoryCollection())
                 .ConfigureAppConfiguration((context, builder) => builder.AddInMemoryCollection())
-                .ConfigureDockerImageName($"{GenericContainer.DefaultImage}:{GenericContainer.DefaultTag}")
+                .ConfigureDockerImageName($"{GenericContainer.DefaultImageName}:{GenericContainer.DefaultTagName}")
                 .ConfigureLogging(builder =>
                 {
                     builder.AddConsole();
