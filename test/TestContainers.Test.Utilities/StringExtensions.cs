@@ -1,6 +1,6 @@
 using System;
 
-namespace Container.Test.Utility
+namespace TestContainers.Test.Utilities
 {
     public static class StringExtensions
     {
