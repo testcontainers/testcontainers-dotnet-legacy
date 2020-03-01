@@ -11,7 +11,7 @@ namespace TestContainers.Containers.WaitStrategies
     public class NoWaitStrategy : IWaitStrategy
     {
         /// <inheritdoc />
-        public Task WaitUntil(IDockerClient dockerClient, IContainer container, CancellationToken ct = default)
+        public Task WaitUntilAsync(IDockerClient dockerClient, IContainer container, CancellationToken ct = default)
         {
             return Task.CompletedTask;
         }

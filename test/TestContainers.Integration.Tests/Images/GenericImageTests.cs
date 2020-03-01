@@ -31,7 +31,7 @@ namespace TestContainers.Integration.Tests.Images
             public async Task ShouldResolveImageCorrectly()
             {
                 // act
-                var actualImageId = await Image.Resolve();
+                var actualImageId = await Image.ResolveAsync();
 
                 // assert
                 var actualImage = await DockerClient.Images.InspectImageAsync(Image.ImageName);

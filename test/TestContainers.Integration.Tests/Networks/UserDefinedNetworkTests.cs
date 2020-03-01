@@ -31,7 +31,7 @@ namespace TestContainers.Integration.Tests.Networks
             public async Task ShouldResolveImageCorrectly()
             {
                 // act
-                var actualNetworkId = await Network.Resolve();
+                var actualNetworkId = await Network.ResolveAsync();
 
                 // assert
                 var actualNetwork = await DockerClient.Networks.InspectNetworkAsync(Network.NetworkId);

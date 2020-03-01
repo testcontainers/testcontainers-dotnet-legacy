@@ -7,7 +7,7 @@ namespace TestContainers.Test.Utilities
 {
     public static class ImageExtensions
     {
-        public static async Task Reap(this IImage image)
+        public static async Task ReapAsync(this IImage image)
         {
             var dockerClient = ((AbstractImage) image).DockerClient;
             var imageName = image.ImageName;

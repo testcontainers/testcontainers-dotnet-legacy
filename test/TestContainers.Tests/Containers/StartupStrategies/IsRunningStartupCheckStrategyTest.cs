@@ -48,7 +48,7 @@ namespace TestContainers.Tests.Containers.StartupStrategies
             _containerStateMock.Running = true;
 
             // act
-            var result = _strategy.WaitUntilSuccess(_dockerClientMock.Object, _mockContainer.Object);
+            var result = _strategy.WaitUntilSuccessAsync(_dockerClientMock.Object, _mockContainer.Object);
             await result;
 
             // assert
@@ -63,7 +63,7 @@ namespace TestContainers.Tests.Containers.StartupStrategies
 
             // act
             var ex = await Record.ExceptionAsync(async () =>
-                await _strategy.WaitUntilSuccess(_dockerClientMock.Object, _mockContainer.Object));
+                await _strategy.WaitUntilSuccessAsync(_dockerClientMock.Object, _mockContainer.Object));
 
             // assert
             Assert.IsType<ContainerLaunchException>(ex);
@@ -75,7 +75,7 @@ namespace TestContainers.Tests.Containers.StartupStrategies
         {
             // arrange
             _containerStateMock.Running = false;
-            var task = _strategy.WaitUntilSuccess(_dockerClientMock.Object, _mockContainer.Object);
+            var task = _strategy.WaitUntilSuccessAsync(_dockerClientMock.Object, _mockContainer.Object);
             Assert.False(task.IsCompleted);
 
             // act

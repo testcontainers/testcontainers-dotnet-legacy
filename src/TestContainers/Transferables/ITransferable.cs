@@ -23,6 +23,6 @@ namespace TestContainers.Transferables
         /// <param name="destinationPath">Path in the archive to transfer this transferable to</param>
         /// <param name="ct">Cancellation token</param>
         /// <exception cref="ArgumentNullException">when tarArchive or destinationPath is null</exception>
-        Task TransferTo(TarArchive tarArchive, string destinationPath, CancellationToken ct = default);
+        Task TransferToAsync(TarArchive tarArchive, string destinationPath, CancellationToken ct = default);
     }
 }

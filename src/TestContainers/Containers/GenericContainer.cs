@@ -41,9 +41,9 @@ namespace TestContainers.Containers
         }
 
         /// <inheritdoc />
-        protected override async Task ConfigureHook(CancellationToken ct = default)
+        protected override async Task ConfigureHookAsync(CancellationToken ct = default)
         {
-            await base.ConfigureHook(ct);
+            await base.ConfigureHookAsync(ct);
 
             _logger.LogDebug("Adding session labels to generic container: {}", ResourceReaper.SessionId);
 
@@ -54,9 +54,9 @@ namespace TestContainers.Containers
         }
 
         /// <inheritdoc />
-        protected override async Task ContainerStartingHook(CancellationToken ct = default)
+        protected override async Task ContainerStartingHookAsync(CancellationToken ct = default)
         {
-            await base.ContainerStartingHook(ct);
+            await base.ContainerStartingHookAsync(ct);
 
             _logger.LogDebug("Starting reaper ...");
             await ResourceReaper.Instance.StartAsync(DockerClient, _loggerFactory, ct);

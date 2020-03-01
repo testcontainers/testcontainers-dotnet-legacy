@@ -26,7 +26,7 @@ namespace TestContainers.Integration.Tests.Images.Fixtures
                 })
                 .ConfigureImage((context, image) =>
                 {
-                    image.ImageName = $"{GenericContainer.DefaultImage}:{GenericContainer.DefaultTag}";
+                    image.ImageName = $"{GenericContainer.DefaultImageName}:{GenericContainer.DefaultTagName}";
                 })
                 .Build();
 
@@ -35,12 +35,12 @@ namespace TestContainers.Integration.Tests.Images.Fixtures
 
         public async Task InitializeAsync()
         {
-            await Image.Reap();
+            await Image.ReapAsync();
         }
 
         public async Task DisposeAsync()
         {
-            await Image.Reap();
+            await Image.ReapAsync();
         }
     }
 }

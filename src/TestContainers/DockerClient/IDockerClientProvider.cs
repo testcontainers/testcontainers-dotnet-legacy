@@ -39,6 +39,6 @@ namespace TestContainers.DockerClient
         /// </summary>
         /// <param name="ct">Cancellation token</param>
         /// <returns>True if this provider could connect to docker</returns>
-        Task<bool> TryTest(CancellationToken ct = default);
+        Task<bool> TryTestAsync(CancellationToken ct = default);
     }
 }

@@ -65,14 +65,14 @@ namespace TestContainers.Containers.Reaper
             : base(image, dockerClient, loggerFactory)
         {
             _logger = loggerFactory.CreateLogger<RyukContainer>();
-            _sendToRyukWorker = new BatchWorkerFromDelegate(SendToRyuk);
-            _connectToRyukWorker = new BatchWorkerFromDelegate(ConnectToRyuk);
+            _sendToRyukWorker = new BatchWorkerFromDelegate(SendToRyukAsync);
+            _connectToRyukWorker = new BatchWorkerFromDelegate(ConnectToRyukAsync);
         }
 
         /// <inheritdoc />
-        protected override async Task ConfigureHook(CancellationToken ct = default)
+        protected override async Task ConfigureHookAsync(CancellationToken ct = default)
         {
-            await base.ConfigureHook(ct);
+            await base.ConfigureHookAsync(ct);
 
             WaitStrategy = new ExposedPortsWaitStrategy(new List<int> {RyukPort});
             ExposedPorts.Add(RyukPort);
@@ -91,7 +91,7 @@ namespace TestContainers.Containers.Reaper
         }
 
         /// <inheritdoc />
-        protected override Task ServiceStartedHook(CancellationToken ct = default)
+        protected override Task ServiceStartedHookAsync(CancellationToken ct = default)
         {
             _ryukHost = GetDockerHostIpAddress();
             _ryukPort = GetMappedPort(RyukPort);
@@ -101,7 +101,7 @@ namespace TestContainers.Containers.Reaper
         }
 
         /// <inheritdoc />
-        protected override Task ContainerStoppingHook(CancellationToken ct = default)
+        protected override Task ContainerStoppingHookAsync(CancellationToken ct = default)
         {
             _tcpClient?.Dispose();
             return Task.CompletedTask;
@@ -128,14 +128,14 @@ namespace TestContainers.Containers.Reaper
             _connectToRyukWorker.Dispose();
         }
 
-        internal async Task<bool?> IsConnected()
+        internal async Task<bool?> IsConnectedAsync()
         {
-            await _connectToRyukWorker.WaitForCurrentWorkToBeServiced();
-            await _sendToRyukWorker.WaitForCurrentWorkToBeServiced();
+            await _connectToRyukWorker.WaitForCurrentWorkToBeServicedAsync();
+            await _sendToRyukWorker.WaitForCurrentWorkToBeServicedAsync();
             return _tcpClient?.Connected;
         }
 
-        private Task ConnectToRyuk()
+        private Task ConnectToRyukAsync()
         {
             try
             {
@@ -159,7 +159,7 @@ namespace TestContainers.Containers.Reaper
             return Task.CompletedTask;
         }
 
-        private async Task SendToRyuk()
+        private async Task SendToRyukAsync()
         {
             if (_deathNote.Count <= 0)
             {

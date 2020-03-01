@@ -16,6 +16,6 @@ namespace TestContainers.Containers.StartupStrategies
         /// <param name="container">Container to wait for</param>
         /// <param name="ct">Cancellation token</param>
         /// <returns>Task that completes when the container started successfully</returns>
-        Task WaitUntilSuccess(IDockerClient dockerClient, IContainer container, CancellationToken ct = default);
+        Task WaitUntilSuccessAsync(IDockerClient dockerClient, IContainer container, CancellationToken ct = default);
     }
 }

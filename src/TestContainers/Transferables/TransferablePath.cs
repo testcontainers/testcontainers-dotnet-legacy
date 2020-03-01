@@ -30,7 +30,7 @@ namespace TestContainers.Transferables
 
         /// <inheritdoc />
         /// <exception cref="FileNotFoundException">when file/folder does not exist</exception>
-        public async Task TransferTo(TarArchive tarArchive, string destinationPath, CancellationToken ct = default)
+        public async Task TransferToAsync(TarArchive tarArchive, string destinationPath, CancellationToken ct = default)
         {
             if (tarArchive == null)
             {

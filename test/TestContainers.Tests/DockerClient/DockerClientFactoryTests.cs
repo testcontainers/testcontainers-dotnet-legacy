@@ -27,7 +27,7 @@ namespace TestContainers.Tests.DockerClient
                 new List<IDockerClientProvider> {provider1, provider2, provider3, provider4});
 
             // act
-            var result = await factory.Create();
+            var result = await factory.CreateAsync();
 
             // assert
             Assert.Equal(mockConfig, result.Configuration);
@@ -66,7 +66,7 @@ namespace TestContainers.Tests.DockerClient
             return _getConfigurationFunction();
         }
 
-        public Task<bool> TryTest(CancellationToken ct = default(CancellationToken))
+        public Task<bool> TryTestAsync(CancellationToken ct = default(CancellationToken))
         {
             return _tryTestFunction(ct);
         }

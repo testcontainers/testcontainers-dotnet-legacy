@@ -83,7 +83,7 @@ namespace TestContainers.Integration.Tests.Transferables
             public async Task ShouldThrowArgumentNullExceptionIfTarArchiveIsNull()
             {
                 // act
-                var ex = await Record.ExceptionAsync(async () => await _mountableFile.TransferTo(null, "my_file"));
+                var ex = await Record.ExceptionAsync(async () => await _mountableFile.TransferToAsync(null, "my_file"));
 
                 // assert
                 Assert.IsType<ArgumentNullException>(ex);
@@ -97,7 +97,8 @@ namespace TestContainers.Integration.Tests.Transferables
                 var tarArchive = TarArchive.CreateOutputTarArchive(memoryStream);
 
                 // act
-                var ex = await Record.ExceptionAsync(async () => await _mountableFile.TransferTo(tarArchive, null));
+                var ex = await Record.ExceptionAsync(async () =>
+                    await _mountableFile.TransferToAsync(tarArchive, null));
 
                 // assert
                 Assert.IsType<ArgumentNullException>(ex);
@@ -131,7 +132,7 @@ namespace TestContainers.Integration.Tests.Transferables
 
                 // act
                 var ex = await Record.ExceptionAsync(async () =>
-                    await mountableFile.TransferTo(_tarWriteStream, "no"));
+                    await mountableFile.TransferToAsync(_tarWriteStream, "no"));
 
                 // assert
                 Assert.IsType<FileNotFoundException>(ex);
@@ -145,7 +146,7 @@ namespace TestContainers.Integration.Tests.Transferables
                 var destinationFileName = Path.GetFileName(_fixture.TempFilePath);
 
                 // act
-                await mountableFile.TransferTo(_tarWriteStream, destinationFileName);
+                await mountableFile.TransferToAsync(_tarWriteStream, destinationFileName);
                 _tarWriteStream.Close();
 
                 // assert
@@ -193,7 +194,7 @@ namespace TestContainers.Integration.Tests.Transferables
 
                 // act
                 var ex = await Record.ExceptionAsync(async () =>
-                    await mountableFile.TransferTo(_tarWriteStream, "."));
+                    await mountableFile.TransferToAsync(_tarWriteStream, "."));
 
                 // assert
                 Assert.IsType<FileNotFoundException>(ex);
@@ -206,7 +207,7 @@ namespace TestContainers.Integration.Tests.Transferables
                 var mountableFile = new TransferablePath(_fixture.TempFolderPath);
 
                 // act
-                await mountableFile.TransferTo(_tarWriteStream, ".");
+                await mountableFile.TransferToAsync(_tarWriteStream, ".");
                 _tarWriteStream.Close();
 
                 // assert

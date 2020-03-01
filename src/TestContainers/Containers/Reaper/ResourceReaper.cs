@@ -153,9 +153,9 @@ namespace TestContainers.Containers.Reaper
             _ryukContainer?.Dispose();
         }
 
-        internal Task<bool?> IsConnected()
+        internal Task<bool?> IsConnectedAsync()
         {
-            return _ryukContainer?.IsConnected();
+            return _ryukContainer?.IsConnectedAsync();
         }
 
         internal string GetRyukContainerId()
@@ -177,10 +177,10 @@ namespace TestContainers.Containers.Reaper
                     return;
                 }
 
-                AppDomain.CurrentDomain.ProcessExit += (sender, eventArgs) => PerformCleanup(dockerClient).Wait();
+                AppDomain.CurrentDomain.ProcessExit += (sender, eventArgs) => PerformCleanupAsync(dockerClient).Wait();
                 Console.CancelKeyPress += (sender, eventArgs) =>
                 {
-                    PerformCleanup(dockerClient).Wait();
+                    PerformCleanupAsync(dockerClient).Wait();
 
                     // don't terminate the process immediately, wait for the Main thread to exit gracefully.
                     eventArgs.Cancel = true;
@@ -190,7 +190,7 @@ namespace TestContainers.Containers.Reaper
             }
         }
 
-        private async Task PerformCleanup(IDockerClient dockerClient)
+        private async Task PerformCleanupAsync(IDockerClient dockerClient)
         {
             var imageDeleteParameters = new ImageDeleteParameters
             {

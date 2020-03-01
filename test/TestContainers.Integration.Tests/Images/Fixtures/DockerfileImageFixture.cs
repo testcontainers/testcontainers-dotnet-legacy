@@ -36,7 +36,7 @@ namespace TestContainers.Integration.Tests.Images.Fixtures
 
         public async Task InitializeAsync()
         {
-            await Task.WhenAll(ImagesToReap.Select(i => i.Reap()));
+            await Task.WhenAll(ImagesToReap.Select(i => i.ReapAsync()));
         }
 
         public async Task DisposeAsync()
@@ -45,7 +45,7 @@ namespace TestContainers.Integration.Tests.Images.Fixtures
             // otherwise images will fail to reap because it's being used by the running container
             await Task.WhenAll(ContainersToStop.Select(c => c.StopAsync()));
 
-            await Task.WhenAll(ImagesToReap.Select(i => i.Reap()));
+            await Task.WhenAll(ImagesToReap.Select(i => i.ReapAsync()));
         }
     }
 }

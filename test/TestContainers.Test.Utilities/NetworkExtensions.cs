@@ -7,7 +7,7 @@ namespace TestContainers.Test.Utilities
 {
     public static class NetworkExtensions
     {
-        public static async Task Reap(this INetwork network)
+        public static async Task ReapAsync(this INetwork network)
         {
             var dockerClient = ((UserDefinedNetwork) network).DockerClient;
             var networkName = network.NetworkName;

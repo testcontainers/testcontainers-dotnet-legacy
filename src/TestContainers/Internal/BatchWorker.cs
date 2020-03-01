@@ -27,7 +27,7 @@ namespace TestContainers.Internal
         private TaskCompletionSource<Task> _nextWorkCyclePromise;
 
         /// <summary>Implement this member in derived classes to define what constitutes a work cycle</summary>
-        protected abstract Task Work();
+        protected abstract Task WorkAsync();
 
         /// <summary>
         /// Notify the worker that there is more work.
@@ -70,13 +70,13 @@ namespace TestContainers.Internal
                     {
                         _scheduledNotify = utcTime;
 
-                        ScheduleNotify(utcTime, now).Ignore();
+                        ScheduleNotifyAsync(utcTime, now).Ignore();
                     }
                 }
             }
         }
 
-        private async Task ScheduleNotify(DateTime time, DateTime now)
+        private async Task ScheduleNotifyAsync(DateTime time, DateTime now)
         {
             await Task.Delay(time - now);
 
@@ -102,7 +102,7 @@ namespace TestContainers.Internal
             try
             {
                 // Start the task that is doing the work
-                _currentWorkCycle = Work();
+                _currentWorkCycle = WorkAsync();
             }
             finally
             {
@@ -162,7 +162,7 @@ namespace TestContainers.Internal
         /// Wait for the current work cycle, and also the next work cycle if there is currently unserviced work.
         /// </summary>
         /// <returns></returns>
-        public async Task WaitForCurrentWorkToBeServiced()
+        public async Task WaitForCurrentWorkToBeServicedAsync()
         {
             Task<Task> waitfortasktask = null;
             Task waitfortask = null;
@@ -196,43 +196,6 @@ namespace TestContainers.Internal
             else if (waitfortask != null)
             {
                 await waitfortask;
-            }
-        }
-
-        /// <summary>
-        /// Notify the worker that there is more work, and wait for the current work cycle, and also the next work cycle if there is currently unserviced work.
-        /// </summary>
-        public async Task NotifyAndWaitForWorkToBeServiced()
-        {
-            Task<Task> waitForTaskTask = null;
-            Task waitForTask = null;
-
-            lock (_lockable)
-            {
-                if (_currentWorkCycle != null || _startingCurrentWorkCycle)
-                {
-                    _moreWork = true;
-                    if (_nextWorkCyclePromise == null)
-                    {
-                        _nextWorkCyclePromise = new TaskCompletionSource<Task>();
-                    }
-
-                    waitForTaskTask = _nextWorkCyclePromise.Task;
-                }
-                else
-                {
-                    Start();
-                    waitForTask = _currentWorkCycle;
-                }
-            }
-
-            if (waitForTaskTask != null)
-            {
-                await await waitForTaskTask;
-            }
-            else if (waitForTask != null)
-            {
-                await waitForTask;
             }
         }
 

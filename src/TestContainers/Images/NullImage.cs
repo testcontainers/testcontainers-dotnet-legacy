@@ -40,7 +40,7 @@ namespace TestContainers.Images
         }
 
         /// <inheritdoc />
-        public Task<string> Resolve(CancellationToken ct = default)
+        public Task<string> ResolveAsync(CancellationToken ct = default)
         {
             throw new NotImplementedException();
         }

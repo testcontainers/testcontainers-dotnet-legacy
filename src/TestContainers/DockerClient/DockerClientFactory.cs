@@ -34,7 +34,7 @@ namespace TestContainers.DockerClient
                     var description = provider.Description;
 
                     _logger.LogDebug("Testing provider: {}", name);
-                    if (await provider.TryTest())
+                    if (await provider.TryTestAsync())
                     {
                         _logger.LogDebug("Provider[{}] found\n{}", name, description);
                         return provider.GetConfiguration();
@@ -51,7 +51,7 @@ namespace TestContainers.DockerClient
         /// Creates a new DockerClient
         /// </summary>
         /// <returns>A task that completes when the client is created</returns>
-        public async Task<IDockerClient> Create(CancellationToken ct = default)
+        public async Task<IDockerClient> CreateAsync(CancellationToken ct = default)
         {
             var configuration = await _configuration.GetValueAsync(ct);
             return configuration.CreateClient();

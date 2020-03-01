@@ -23,7 +23,8 @@ namespace TestContainers.Containers.WaitStrategies
         }
 
         /// <inheritdoc />
-        protected override async Task Probe(IDockerClient dockerClient, IContainer container, CancellationToken ct = default)
+        protected override async Task ProbeAsync(IDockerClient dockerClient, IContainer container,
+            CancellationToken ct = default)
         {
             await _probe.Invoke(dockerClient, container, ct);
         }
