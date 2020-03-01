@@ -3,12 +3,12 @@ using System.Collections.Generic;
 using System.IO;
 using System.Net.Sockets;
 using System.Threading.Tasks;
-using Container.Test.Utility;
 using Docker.DotNet;
 using TestContainers.Containers;
 using TestContainers.Containers.Reaper;
 using TestContainers.Integration.Tests.Containers.Fixtures;
 using TestContainers.Internal;
+using TestContainers.Test.Utilities;
 using Xunit;
 
 namespace TestContainers.Integration.Tests.Containers
