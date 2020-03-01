@@ -1,8 +1,10 @@
 using System.Collections.Generic;
+using System.Linq;
 using System.Threading.Tasks;
 using Microsoft.Extensions.Logging;
 using TestContainers.Containers;
 using TestContainers.Images;
+using TestContainers.Test.Utilities;
 using Xunit;
 
 namespace TestContainers.Integration.Tests.Images.Fixtures
@@ -34,25 +36,16 @@ namespace TestContainers.Integration.Tests.Images.Fixtures
 
         public async Task InitializeAsync()
         {
-            foreach (var image in ImagesToReap)
-            {
-                await image.Reap();
-            }
+            await Task.WhenAll(ImagesToReap.Select(i => i.Reap()));
         }
 
         public async Task DisposeAsync()
         {
             // must stop containers before reaping images
             // otherwise images will fail to reap because it's being used by the running container
-            foreach (var container in ContainersToStop)
-            {
-                await container.StopAsync();
-            }
+            await Task.WhenAll(ContainersToStop.Select(c => c.StopAsync()));
 
-            foreach (var image in ImagesToReap)
-            {
-                await image.Reap();
-            }
+            await Task.WhenAll(ImagesToReap.Select(i => i.Reap()));
         }
     }
 }

@@ -3,6 +3,7 @@ using Docker.DotNet;
 using Microsoft.Extensions.Logging;
 using TestContainers.Containers;
 using TestContainers.Images;
+using TestContainers.Test.Utilities;
 using Xunit;
 
 namespace TestContainers.Integration.Tests.Images.Fixtures
