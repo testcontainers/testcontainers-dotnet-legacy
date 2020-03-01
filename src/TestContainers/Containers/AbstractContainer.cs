@@ -467,7 +467,7 @@ namespace TestContainers.Containers
                 {
                     using (var reader = new StreamReader(logStream))
                     {
-                        _logger.LogError(reader.ReadToEnd());
+                        _logger.LogError(await reader.ReadToEndAsync());
                     }
                 }
             }

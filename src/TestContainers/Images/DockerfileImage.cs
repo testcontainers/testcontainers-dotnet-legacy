@@ -169,7 +169,7 @@ namespace TestContainers.Images
                     {
                         while (!reader.EndOfStream)
                         {
-                            _logger.LogTrace(reader.ReadLine());
+                            _logger.LogTrace(await reader.ReadLineAsync());
                         }
                     }
                 }
