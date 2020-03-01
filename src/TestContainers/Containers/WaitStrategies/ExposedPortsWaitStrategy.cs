@@ -20,7 +20,10 @@ namespace TestContainers.Containers.WaitStrategies
         /// </summary>
         public IList<int> ExposedPorts { get; }
 
-        /// <inheritdoc />
+        /// <summary>
+        /// Constructs a wait strategy that checks exposed ports
+        /// </summary>
+        /// <param name="exposedPorts">List of ports to check</param>
         public ExposedPortsWaitStrategy(IList<int> exposedPorts)
         {
             ExposedPorts = exposedPorts;

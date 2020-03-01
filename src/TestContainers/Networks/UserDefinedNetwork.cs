@@ -36,7 +36,11 @@ namespace TestContainers.Networks
 
         private readonly ILoggerFactory _loggerFactory;
 
-        /// <inheritdoc />
+        /// <summary>
+        /// Constructs a docker network
+        /// </summary>
+        /// <param name="dockerClient">Docker client used to resolve this network</param>
+        /// <param name="loggerFactory">Logger to use</param>
         public UserDefinedNetwork(IDockerClient dockerClient, ILoggerFactory loggerFactory)
         {
             DockerClient = dockerClient;

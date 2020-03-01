@@ -17,7 +17,12 @@ namespace TestContainers.DockerClient
         private readonly ILogger<DockerClientFactory> _logger;
         private readonly AsyncLazy<DockerClientConfiguration> _configuration;
 
-        /// <inheritdoc />
+        /// <summary>
+        /// Constructs a docker provider factory to provide a docker client that is available to the environment
+        /// </summary>
+        /// <param name="logger">Logger to use</param>
+        /// <param name="dockerClientProviders">Providers available to choose from</param>
+        /// <exception cref="InvalidOperationException"></exception>
         public DockerClientFactory(ILogger<DockerClientFactory> logger,
             IEnumerable<IDockerClientProvider> dockerClientProviders)
         {

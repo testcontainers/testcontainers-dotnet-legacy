@@ -19,7 +19,11 @@ namespace TestContainers.Images
 
         private readonly ILogger _logger;
 
-        /// <inheritdoc />
+        /// <summary>
+        /// Constructs a docker image object
+        /// </summary>
+        /// <param name="dockerClient">Docker client that will be used to resolve this image</param>
+        /// <param name="loggerFactory">Logger to use</param>
         protected AbstractImage(IDockerClient dockerClient, ILoggerFactory loggerFactory)
         {
             DockerClient = dockerClient;

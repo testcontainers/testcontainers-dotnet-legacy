@@ -104,7 +104,12 @@ namespace TestContainers.Containers
 
         private CreateContainerResponse CreateContainerResponse { get; set; }
 
-        /// <inheritdoc />
+        /// <summary>
+        /// Constructs a container
+        /// </summary>
+        /// <param name="image">Image to construct this container with</param>
+        /// <param name="dockerClient">Docker client used to construct this container</param>
+        /// <param name="loggerFactory">Logger factory for logging</param>
         protected AbstractContainer(IImage image, IDockerClient dockerClient, ILoggerFactory loggerFactory)
         {
             Image = NullImage.IsNullImage(image) ? CreateDefaultImage(dockerClient, loggerFactory) : image;
