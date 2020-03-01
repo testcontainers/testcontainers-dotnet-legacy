@@ -24,10 +24,10 @@ namespace TestContainers.Containers
         public const string DefaultTagName = "3.5";
 
         /// <inheritdoc />
-        protected override string DefaultImage { get => DefaultImageName; }
+        protected override string DefaultImage => DefaultImageName;
 
         /// <inheritdoc />
-        protected override string DefaultTag { get => DefaultTagName; }
+        protected override string DefaultTag => DefaultTagName;
 
         private readonly ILogger _logger;
         private readonly ILoggerFactory _loggerFactory;

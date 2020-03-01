@@ -66,8 +66,7 @@ namespace TestContainers.Containers.Reaper
             var logger = loggerFactory?.CreateLogger(typeof(ResourceReaper));
 
             var disabled = Environment.GetEnvironmentVariable("REAPER_DISABLED");
-            if (!string.IsNullOrWhiteSpace(disabled) &&
-                (disabled.Equals("1") || disabled.ToLower().Equals("true")))
+            if ("1".Equals(disabled) || "true".Equals(disabled, StringComparison.InvariantCultureIgnoreCase))
             {
                 logger?.LogInformation("Reaper is disabled via $REAPER_DISABLED environment variable");
                 return;

@@ -96,9 +96,9 @@ namespace TestContainers.Integration.Tests.Networks
                     container2.StartAsync());
 
                 // assert
-                (string out1, string err1) =
+                var (out1, err1) =
                     await container1.ExecuteCommand("sh", "-c", $"echo -n {container1Text} | nc {container2Alias} {serverPort}");
-                (string out2, string err2) =
+                var (out2, err2) =
                     await container2.ExecuteCommand("sh", "-c", $"echo -n {container2Text} | nc {container1Alias} {serverPort}");
 
                 Assert.Equal(container1Text, out1);
