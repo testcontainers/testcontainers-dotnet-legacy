@@ -13,6 +13,7 @@ using TestContainers.Containers.Mounts;
 using TestContainers.Containers.StartupStrategies;
 using TestContainers.Containers.WaitStrategies;
 using TestContainers.Images;
+using TestContainers.Internal;
 using TestContainers.Networks;
 
 namespace TestContainers.Containers
@@ -437,7 +438,11 @@ namespace TestContainers.Containers
 
         private string GetContainerGateway()
         {
-            if (File.Exists("/.dockerenv") || ContainerInfo == null)
+            // if we are in a dind environment, only there is no gateway
+            // if container info is not setup, there is no gateway to get
+            // if we are in a classic windows docker desktop, ContainerInfo gateway cannot be reached
+            // because of the way a Moby VM is setup to run all the docker containers
+            if (File.Exists("/.dockerenv") || OS.IsWindows() || ContainerInfo == null)
             {
                 return null;
             }
