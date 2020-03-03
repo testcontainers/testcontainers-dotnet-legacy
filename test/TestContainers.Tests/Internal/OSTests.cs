@@ -1,5 +1,6 @@
 using System.Collections.Generic;
 using System.IO;
+using System.Runtime.InteropServices;
 using TestContainers.Internal;
 using Xunit;
 
@@ -32,6 +33,20 @@ namespace TestContainers.Tests.Internal
                     "windows\\relative\\path", $"windows{DirectorySeparator}relative{DirectorySeparator}path"
                 }
             };
+        }
+
+        public class IsWindowsTests : OsTests
+        {
+            [Fact]
+            public void ShouldReturnTrueIsOsIsWindows()
+            {
+                // arrange
+                var expected = RuntimeInformation.IsOSPlatform(OSPlatform.Windows);
+                // act
+                var result = OS.IsWindows();
+                // assert
+                Assert.Equal(expected, result);
+            }
         }
     }
 }
