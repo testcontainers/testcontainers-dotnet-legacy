@@ -25,12 +25,12 @@ namespace TestContainers.Containers.Reaper
         /// <summary>
         /// Default container image name to use if none is supplied
         /// </summary>
-        [PublicAPI] public const string DefaultImageName = "quay.io/testcontainers";
+        [PublicAPI] public const string DefaultImageName = "quay.io/testcontainers/ryuk";
 
         /// <summary>
         /// Default image tag to use if none is supplied
         /// </summary>
-        [PublicAPI] public const string DefaultTagName = "ryuk:0.2.3";
+        [PublicAPI] public const string DefaultTagName = "0.2.3";
 
         /// <inheritdoc />
         protected override string DefaultImage { get => DefaultImageName; }

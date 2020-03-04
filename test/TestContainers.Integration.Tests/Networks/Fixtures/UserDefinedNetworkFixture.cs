@@ -1,7 +1,10 @@
 using System.Threading.Tasks;
 using Docker.DotNet;
+using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.Logging;
+using TestContainers.Internal.Builders;
 using TestContainers.Networks;
+using TestContainers.Networks.Builders;
 using TestContainers.Test.Utilities;
 using Xunit;
 

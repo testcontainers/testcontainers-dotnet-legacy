@@ -5,6 +5,7 @@ using System.Net.Sockets;
 using System.Threading.Tasks;
 using Docker.DotNet;
 using TestContainers.Containers;
+using TestContainers.Containers.Builders;
 using TestContainers.Containers.Reaper;
 using TestContainers.Integration.Tests.Containers.Fixtures;
 using TestContainers.Internal;
@@ -37,7 +38,7 @@ namespace TestContainers.Integration.Tests.Containers
                     .Build();
 
                 // act
-                var actual = container.DockerImageName;
+                var actual = container.Image.ImageName;
 
                 // assert
                 Assert.Equal($"{GenericContainer.DefaultImageName}:{GenericContainer.DefaultTagName}", actual);

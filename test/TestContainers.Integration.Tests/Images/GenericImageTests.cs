@@ -1,6 +1,7 @@
 using System.Threading.Tasks;
 using Docker.DotNet;
 using TestContainers.Containers;
+using TestContainers.Containers.Builders;
 using TestContainers.Images;
 using TestContainers.Integration.Tests.Images.Fixtures;
 using Xunit;
@@ -50,14 +51,14 @@ namespace TestContainers.Integration.Tests.Images
             {
                 // arrange
                 var container = new ContainerBuilder<GenericContainer>()
-                    .ConfigureDockerImage(Image)
+                    .ConfigureImage(Image)
                     .Build();
 
                 // act
                 await container.StartAsync();
 
                 // assert
-                Assert.Equal(Image.ImageName, container.DockerImageName);
+                Assert.Equal(Image.ImageName, container.Image.ImageName);
                 await container.StopAsync();
             }
         }
