@@ -2,7 +2,9 @@ using System.IO;
 using System.Net;
 using System.Threading.Tasks;
 using TestContainers.Containers;
+using TestContainers.Containers.Builders;
 using TestContainers.Images;
+using TestContainers.Images.Builders;
 using TestContainers.Integration.Tests.Images.Fixtures;
 using TestContainers.Test.Utilities;
 using TestContainers.Transferables;
@@ -42,7 +44,7 @@ namespace TestContainers.Integration.Tests.Images
                 _fixture.ImagesToReap.Add(image);
 
                 // act
-                var actualImageId = await image.Resolve();
+                var actualImageId = await image.ResolveAsync();
 
                 // assert
                 var actualImage = await image.DockerClient.Images.InspectImageAsync(image.ImageName);
@@ -153,7 +155,7 @@ namespace TestContainers.Integration.Tests.Images
             private async Task<string> StartContainer(IImage image)
             {
                 var container = _containerBuilder
-                    .ConfigureDockerImage(image)
+                    .ConfigureImage(image)
                     .Build();
 
                 _fixture.ContainersToStop.Add(container);

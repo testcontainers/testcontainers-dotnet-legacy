@@ -95,7 +95,7 @@ namespace TestContainers.Containers
         /// Command to run when the container starts
         /// </summary>
         [NotNull]
-        IList<string> Command { get; }
+        IList<string> Command { get; [NotNull] set; }
 
         /// <summary>
         /// Option to auto remove the container after use

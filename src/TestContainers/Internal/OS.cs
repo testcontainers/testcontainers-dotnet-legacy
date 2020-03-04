@@ -1,6 +1,5 @@
 using System;
 using System.IO;
-using System.Runtime.InteropServices;
 
 namespace TestContainers.Internal
 {
@@ -59,15 +58,6 @@ namespace TestContainers.Internal
             }
 
             return path.Replace(toReplace, replacedTo);
-        }
-
-        /// <summary>
-        /// Returns whether the current running OS is a Windows OS
-        /// </summary>
-        /// <returns>True if the current running OS is Windows OS</returns>
-        public static bool IsWindows()
-        {
-            return RuntimeInformation.IsOSPlatform(OSPlatform.Windows);
         }
     }
 }

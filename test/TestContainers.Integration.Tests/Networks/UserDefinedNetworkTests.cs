@@ -1,6 +1,8 @@
+using System.Collections.Generic;
 using System.Threading.Tasks;
 using Docker.DotNet;
 using TestContainers.Containers;
+using TestContainers.Containers.Builders;
 using TestContainers.Integration.Tests.Networks.Fixtures;
 using TestContainers.Networks;
 using Xunit;
@@ -28,7 +30,7 @@ namespace TestContainers.Integration.Tests.Networks
             }
 
             [Fact]
-            public async Task ShouldResolveImageCorrectly()
+            public async Task ShouldResolveNetworkCorrectly()
             {
                 // act
                 var actualNetworkId = await Network.ResolveAsync();
@@ -73,7 +75,7 @@ namespace TestContainers.Integration.Tests.Networks
                 const string container2Alias = "container2";
 
                 var container1 = new ContainerBuilder<GenericContainer>()
-                    .ConfigureDockerImageName(serverImageName)
+                    .ConfigureImage(serverImageName)
                     .ConfigureNetwork(Network)
                     .ConfigureContainer((h, c) =>
                     {
@@ -82,7 +84,7 @@ namespace TestContainers.Integration.Tests.Networks
                     .Build();
 
                 var container2 = new ContainerBuilder<GenericContainer>()
-                    .ConfigureDockerImageName(serverImageName)
+                    .ConfigureImage(serverImageName)
                     .ConfigureNetwork(Network)
                     .ConfigureContainer((h, c) =>
                     {
@@ -97,9 +99,11 @@ namespace TestContainers.Integration.Tests.Networks
 
                 // assert
                 var (out1, err1) =
-                    await container1.ExecuteCommand("sh", "-c", $"echo -n {container1Text} | nc {container2Alias} {serverPort}");
+                    await container1.ExecuteCommandAsync(
+                        new List<string> {"sh", "-c", $"echo -n {container1Text} | nc {container2Alias} {serverPort}"});
                 var (out2, err2) =
-                    await container2.ExecuteCommand("sh", "-c", $"echo -n {container2Text} | nc {container1Alias} {serverPort}");
+                    await container2.ExecuteCommandAsync(
+                        new List<string> {"sh", "-c", $"echo -n {container2Text} | nc {container1Alias} {serverPort}"});
 
                 Assert.Equal(container1Text, out1);
                 Assert.Equal(container2Text, out2);

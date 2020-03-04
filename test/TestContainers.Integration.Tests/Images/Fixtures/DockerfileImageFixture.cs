@@ -1,9 +1,12 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
+using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.Logging;
 using TestContainers.Containers;
 using TestContainers.Images;
+using TestContainers.Images.Builders;
+using TestContainers.Internal.Builders;
 using TestContainers.Test.Utilities;
 using Xunit;
 

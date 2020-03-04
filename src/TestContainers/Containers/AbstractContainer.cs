@@ -13,7 +13,6 @@ using TestContainers.Containers.Mounts;
 using TestContainers.Containers.StartupStrategies;
 using TestContainers.Containers.WaitStrategies;
 using TestContainers.Images;
-using TestContainers.Internal;
 using TestContainers.Networks;
 
 namespace TestContainers.Containers
@@ -72,7 +71,7 @@ namespace TestContainers.Containers
         public string WorkingDirectory { get; set; }
 
         /// <inheritdoc />
-        public IList<string> Command { get; } = new List<string>();
+        public IList<string> Command { get; set; } = new List<string>();
 
         /// <inheritdoc />
         public bool AutoRemove { get; set; }
@@ -438,11 +437,9 @@ namespace TestContainers.Containers
 
         private string GetContainerGateway()
         {
-            // if we are in a dind environment, only there is no gateway
-            // if container info is not setup, there is no gateway to get
-            // if we are in a classic windows docker desktop, ContainerInfo gateway cannot be reached
-            // because of the way a Moby VM is setup to run all the docker containers
-            if (File.Exists("/.dockerenv") || OS.IsWindows() || ContainerInfo == null)
+            // if not inside a container, the gateway is simply localhost
+            // if container hasn't started, then there's nothing to inspect
+            if (!IsThisContainerInAContainer() || ContainerInfo == null)
             {
                 return null;
             }
@@ -481,6 +478,11 @@ namespace TestContainers.Containers
                     }
                 }
             }
+        }
+
+        private static bool IsThisContainerInAContainer()
+        {
+            return File.Exists("/.dockerenv");
         }
     }
 }

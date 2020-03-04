@@ -14,6 +14,8 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "TestContainers.Integration.
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "TestContainers.Test.Utilities", "test\TestContainers.Test.Utilities\TestContainers.Test.Utilities.csproj", "{909B5046-B5D3-40EA-99D8-81B9A6411DEB}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "ResourceReaper.Integration.Tests", "test\ResourceReaper.Integration.Tests\ResourceReaper.Integration.Tests.csproj", "{39CF3D2D-98A3-4D47-A45D-03DAE2D24C87}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -36,6 +38,10 @@ Global
 		{909B5046-B5D3-40EA-99D8-81B9A6411DEB}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{909B5046-B5D3-40EA-99D8-81B9A6411DEB}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{909B5046-B5D3-40EA-99D8-81B9A6411DEB}.Release|Any CPU.Build.0 = Release|Any CPU
+		{39CF3D2D-98A3-4D47-A45D-03DAE2D24C87}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{39CF3D2D-98A3-4D47-A45D-03DAE2D24C87}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{39CF3D2D-98A3-4D47-A45D-03DAE2D24C87}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{39CF3D2D-98A3-4D47-A45D-03DAE2D24C87}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
@@ -45,6 +51,7 @@ Global
 		{9C954639-D343-4E02-A5C8-B3A466CE2F70} = {5DC26A60-8775-4076-A94D-1BDC36B0A828}
 		{5FAF86E5-5ACA-469D-914D-50B22BD7FE19} = {5DC26A60-8775-4076-A94D-1BDC36B0A828}
 		{909B5046-B5D3-40EA-99D8-81B9A6411DEB} = {5DC26A60-8775-4076-A94D-1BDC36B0A828}
+		{39CF3D2D-98A3-4D47-A45D-03DAE2D24C87} = {5DC26A60-8775-4076-A94D-1BDC36B0A828}
 	EndGlobalSection
 	GlobalSection(ExtensibilityGlobals) = postSolution
 		SolutionGuid = {6D84DD44-76E1-4131-9E5E-075E384BFEE6}

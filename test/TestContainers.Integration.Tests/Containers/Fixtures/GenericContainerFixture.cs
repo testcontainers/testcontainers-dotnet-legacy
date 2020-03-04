@@ -2,9 +2,12 @@ using System.Collections.Generic;
 using System.IO;
 using System.Threading.Tasks;
 using Docker.DotNet;
+using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.Logging;
 using TestContainers.Containers;
+using TestContainers.Containers.Builders;
 using TestContainers.Containers.Mounts;
+using TestContainers.Internal.Builders;
 using Xunit;
 
 namespace TestContainers.Integration.Tests.Containers.Fixtures
@@ -41,7 +44,7 @@ namespace TestContainers.Integration.Tests.Containers.Fixtures
             Container = new ContainerBuilder<GenericContainer>()
                 .ConfigureHostConfiguration(builder => builder.AddInMemoryCollection())
                 .ConfigureAppConfiguration((context, builder) => builder.AddInMemoryCollection())
-                .ConfigureDockerImageName($"{GenericContainer.DefaultImageName}:{GenericContainer.DefaultTagName}")
+                .ConfigureImage($"{GenericContainer.DefaultImageName}:{GenericContainer.DefaultTagName}")
                 .ConfigureLogging(builder =>
                 {
                     builder.AddConsole();
