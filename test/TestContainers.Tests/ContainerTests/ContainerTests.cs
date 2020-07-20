@@ -30,12 +30,7 @@ namespace TestContainers.Tests.ContainerTests
         public GenericContainerTests(GenericContainerFixture fixture) => _containerInfo = fixture.ContainerInfo;
 
         [Fact]
-        public void CustomLabelTest()
-        {
-            var label = _containerInfo.Config.Labels.Single();
-            Assert.Equal("your.custom", label.Key);
-            Assert.Equal("label", label.Value);
-        }
+        public void CustomLabelTest() => Assert.Equal("label", _containerInfo.Config.Labels["your.custom"]);
 
         [Theory]
         [InlineData("alpine:latest", "alpine:latest")]
