@@ -1,10 +1,10 @@
-﻿using StackExchange.Redis;
 using System;
 using System.Collections.Generic;
 using System.IO;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using StackExchange.Redis;
 using TestContainers.Core.Builders;
 using TestContainers.Core.Containers;
 using Xunit;
