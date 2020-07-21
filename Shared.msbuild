@@ -31,7 +31,4 @@
   <ItemGroup>
     <None Include="$(MSBuildThisFileDirectory)LICENSE.md" Visible="false" Pack="true" PackagePath="$(PackageLicenseFile)" />
   </ItemGroup>
-  <ItemGroup>
-    <Compile Include="$(MSBuildThisFileDirectory)SolutionInfo.cs" />
-  </ItemGroup>
 </Project>
