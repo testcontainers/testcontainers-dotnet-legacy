@@ -18,7 +18,7 @@ internal class BuildVersion
 
     var buildNumber = context.EnvironmentVariable("APPVEYOR_BUILD_NUMBER");
 
-    var version = context.ParseAssemblyInfo("SolutionInfo.cs").AssemblyVersion;
+    var version = context.XmlPeek("Shared.msbuild", "/Project/PropertyGroup[1]/Version/text()");
 
     if (!"master".Equals(branch))
     {
