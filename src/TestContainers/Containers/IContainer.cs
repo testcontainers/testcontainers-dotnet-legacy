@@ -7,6 +7,7 @@ using TestContainers.Containers.Mounts;
 using TestContainers.Containers.StartupStrategies;
 using TestContainers.Containers.WaitStrategies;
 using TestContainers.Images;
+using TestContainers.Networks;
 
 namespace TestContainers.Containers
 {
@@ -19,12 +20,19 @@ namespace TestContainers.Containers
         /// Gets the docker image used for this container
         /// </summary>
         [NotNull]
-        IImage DockerImage { get; }
+        IImage Image { get; }
 
         /// <summary>
         /// Gets the container id after it has been created
         /// </summary>
+        [CanBeNull]
         string ContainerId { get; }
+
+        /// <summary>
+        /// Name of the container after it has started
+        /// </summary>
+        [CanBeNull]
+        string ContainerName { get; }
 
         /// <summary>
         /// List of ports to be exposed on the container
@@ -62,6 +70,18 @@ namespace TestContainers.Containers
         IList<IBind> BindMounts { get; }
 
         /// <summary>
+        /// Gets the docker network if specified
+        /// </summary>
+        INetwork Network { get; set; }
+
+        /// <summary>
+        /// Gets the docker network aliases set to this container
+        /// </summary>
+        [NotNull]
+        IList<string> NetWorkAliases { get; }
+
+
+        /// <summary>
         /// Sets the container to use privileged mode when this is set
         /// </summary>
         bool IsPrivileged { get; set; }
@@ -75,7 +95,7 @@ namespace TestContainers.Containers
         /// Command to run when the container starts
         /// </summary>
         [NotNull]
-        IList<string> Command { get; }
+        IList<string> Command { get; [NotNull] set; }
 
         /// <summary>
         /// Option to auto remove the container after use
@@ -85,12 +105,14 @@ namespace TestContainers.Containers
         /// <summary>
         /// Strategy to use to wait for services in the container to successfully start
         /// </summary>
-        IWaitStrategy WaitStrategy { get; set; }
+        [NotNull]
+        IWaitStrategy WaitStrategy { get; [NotNull] set; }
 
         /// <summary>
         /// Strategy to use to wait for the container to start
         /// </summary>
-        IStartupStrategy StartupStrategy { get; set; }
+        [NotNull]
+        IStartupStrategy StartupStrategy { get; [NotNull] set; }
 
         /// <summary>
         /// Starts the container
@@ -129,6 +151,7 @@ namespace TestContainers.Containers
         /// <param name="ct">Cancellation token</param>
         /// <returns>Tuple containing the response of the command</returns>
         /// <exception cref="InvalidOperationException">when the container has yet to start</exception>
-        Task<(string stdout, string stderr)> ExecuteCommandAsync(string[] command, CancellationToken ct = default);
+        Task<(string stdout, string stderr)> ExecuteCommandAsync(IEnumerable<string> command,
+            CancellationToken ct = default);
     }
 }
