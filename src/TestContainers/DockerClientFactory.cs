@@ -1,8 +1,8 @@
 using System;
-using Docker.DotNet;
-using System.Reflection;
 using System.Linq;
+using System.Reflection;
 using System.Runtime.InteropServices;
+using Docker.DotNet;
 
 namespace TestContainers
 {

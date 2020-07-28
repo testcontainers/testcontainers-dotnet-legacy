@@ -1,8 +1,8 @@
-using Xunit;
-using StackExchange.Redis;
 using System.Threading.Tasks;
-using TestContainers.Core.Containers;
+using StackExchange.Redis;
 using TestContainers.Core.Builders;
+using TestContainers.Core.Containers;
+using Xunit;
 
 namespace TestContainers.Tests.ContainerTests
 {

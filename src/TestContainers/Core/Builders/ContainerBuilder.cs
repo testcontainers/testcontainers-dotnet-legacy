@@ -1,7 +1,7 @@
 using System;
 using System.Linq;
-using TestContainers.Core.Containers;
 using Docker.DotNet;
+using TestContainers.Core.Containers;
 
 namespace TestContainers.Core.Builders
 {
