@@ -9,7 +9,7 @@ namespace TestContainers.Core.Containers
     {
         public const string NAME = "mssql";
 
-        public const string IMAGE_LNX = "mcr.microsoft.com/mssql/server" ;
+        public const string IMAGE_LNX = "mcr.microsoft.com/mssql/server";
         public const string IMAGE_WIN = "microsoft/mssql-server-windows-developer";
 
         public const string DEFAULT_TAG = "2017-latest";
