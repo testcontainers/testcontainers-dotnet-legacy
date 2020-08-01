@@ -1,6 +1,4 @@
 using System;
-using System.Collections.Generic;
-using System.Text;
 using System.Threading.Tasks;
 using Microsoft.Data.SqlClient;
 using Polly;
@@ -23,9 +21,9 @@ namespace TestContainers.Core.Containers
 
         public override string Password => base.Password ?? _password;
 
-        string _databaseName = "test";
-        string _userName = "SA";
-        string _password = "Password123";
+        readonly string _databaseName = "test";
+        readonly string _userName = "SA";
+        readonly string _password = "Password123";
 
         public override string ConnectionString => $"Server={GetDockerHostIpAddress()},{GetMappedPort(SQLSERVER_PORT)};User Id={UserName}; Password={Password};";
 
