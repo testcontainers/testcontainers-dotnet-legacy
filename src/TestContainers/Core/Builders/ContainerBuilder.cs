@@ -66,7 +66,15 @@ namespace TestContainers.Core.Builders
         {
             fn = FnUtils.Compose(fn, (container) =>
             {
-                container.EnvironmentVariables = keyValuePairs;
+                if (container.EnvironmentVariables == null || (container.EnvironmentVariables != null && !container.EnvironmentVariables.Any()))
+                {
+                    container.EnvironmentVariables = keyValuePairs;
+                }
+                else
+                {
+                    container.EnvironmentVariables = container.EnvironmentVariables.Union(keyValuePairs).ToArray();
+                }
+
                 return container;
             });
 
