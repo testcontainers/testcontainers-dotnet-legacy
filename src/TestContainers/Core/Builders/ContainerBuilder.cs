@@ -66,7 +66,7 @@ namespace TestContainers.Core.Builders
         {
             fn = FnUtils.Compose(fn, (container) =>
             {
-                if (container.EnvironmentVariables == null || (container.EnvironmentVariables != null && !container.EnvironmentVariables.Any()))
+                if (!(container.EnvironmentVariables?.Any() ?? false))
                 {
                     container.EnvironmentVariables = keyValuePairs;
                 }
