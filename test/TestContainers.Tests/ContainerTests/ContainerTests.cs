@@ -68,5 +68,24 @@ namespace TestContainers.Tests.ContainerTests
             await container.ExecuteCommand(execCommand);
             await container.Stop();
         }
+
+        [Fact]
+        public void WithEnv_MultipleCallsWithDifferentValuesAppendToEnvVariables()
+        {
+            var expectedEnvVariables = new[]
+            {
+                ("var1", "val1"),
+                ("var2", "val2")
+            };
+
+            var container = new GenericContainerBuilder<Container>()
+                .Begin()
+                .WithImage("anyimage")
+                .WithEnv(expectedEnvVariables[0])
+                .WithEnv(expectedEnvVariables[1])
+                .Build();
+
+            Assert.Equal(expectedEnvVariables, container.EnvironmentVariables);
+        }
     }
 }
