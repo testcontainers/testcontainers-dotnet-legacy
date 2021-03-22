@@ -1,0 +1,22 @@
+﻿<Project Sdk="Microsoft.NET.Sdk">
+
+  <PropertyGroup>
+    <TargetFramework>netcoreapp3.1</TargetFramework>
+    <IsPackable>false</IsPackable>
+  </PropertyGroup>
+
+  <ItemGroup>
+    <PackageReference Include="coverlet.msbuild" Version="2.7.0" />
+    <PackageReference Include="Microsoft.NET.Test.Sdk" Version="16.3.0" />
+    <PackageReference Include="xunit" Version="2.4.1" />
+    <PackageReference Include="Xunit.Extensions.Ordering" Version="1.4.5" />
+    <PackageReference Include="xunit.runner.visualstudio" Version="2.4.1" />
+    <PackageReference Include="Microsoft.Extensions.Logging.Console" Version="2.2.0" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <ProjectReference Include="..\..\src\TestContainers\TestContainers.csproj" />
+    <ProjectReference Include="..\TestContainers.Test.Utilities\TestContainers.Test.Utilities.csproj" />
+  </ItemGroup>
+
+</Project>

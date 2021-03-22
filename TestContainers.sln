@@ -1,4 +1,4 @@
-Microsoft Visual Studio Solution File, Format Version 12.00
+﻿Microsoft Visual Studio Solution File, Format Version 12.00
 # Visual Studio 15
 VisualStudioVersion = 15.0.28307.645
 MinimumVisualStudioVersion = 10.0.40219.1
@@ -9,6 +9,12 @@ EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "TestContainers", "src\TestContainers\TestContainers.csproj", "{4D05E9EF-78BF-48A6-9CF6-D4F6AEBE2C7A}"
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "TestContainers.Tests", "test\TestContainers.Tests\TestContainers.Tests.csproj", "{9C954639-D343-4E02-A5C8-B3A466CE2F70}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "TestContainers.Integration.Tests", "test\TestContainers.Integration.Tests\TestContainers.Integration.Tests.csproj", "{5FAF86E5-5ACA-469D-914D-50B22BD7FE19}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "TestContainers.Test.Utilities", "test\TestContainers.Test.Utilities\TestContainers.Test.Utilities.csproj", "{909B5046-B5D3-40EA-99D8-81B9A6411DEB}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "ResourceReaper.Integration.Tests", "test\ResourceReaper.Integration.Tests\ResourceReaper.Integration.Tests.csproj", "{39CF3D2D-98A3-4D47-A45D-03DAE2D24C87}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -24,6 +30,18 @@ Global
 		{9C954639-D343-4E02-A5C8-B3A466CE2F70}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{9C954639-D343-4E02-A5C8-B3A466CE2F70}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{9C954639-D343-4E02-A5C8-B3A466CE2F70}.Release|Any CPU.Build.0 = Release|Any CPU
+		{5FAF86E5-5ACA-469D-914D-50B22BD7FE19}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{5FAF86E5-5ACA-469D-914D-50B22BD7FE19}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{5FAF86E5-5ACA-469D-914D-50B22BD7FE19}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{5FAF86E5-5ACA-469D-914D-50B22BD7FE19}.Release|Any CPU.Build.0 = Release|Any CPU
+		{909B5046-B5D3-40EA-99D8-81B9A6411DEB}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{909B5046-B5D3-40EA-99D8-81B9A6411DEB}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{909B5046-B5D3-40EA-99D8-81B9A6411DEB}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{909B5046-B5D3-40EA-99D8-81B9A6411DEB}.Release|Any CPU.Build.0 = Release|Any CPU
+		{39CF3D2D-98A3-4D47-A45D-03DAE2D24C87}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{39CF3D2D-98A3-4D47-A45D-03DAE2D24C87}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{39CF3D2D-98A3-4D47-A45D-03DAE2D24C87}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{39CF3D2D-98A3-4D47-A45D-03DAE2D24C87}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
@@ -31,6 +49,9 @@ Global
 	GlobalSection(NestedProjects) = preSolution
 		{4D05E9EF-78BF-48A6-9CF6-D4F6AEBE2C7A} = {BB91417F-1345-4FAD-9D56-7B11DF593084}
 		{9C954639-D343-4E02-A5C8-B3A466CE2F70} = {5DC26A60-8775-4076-A94D-1BDC36B0A828}
+		{5FAF86E5-5ACA-469D-914D-50B22BD7FE19} = {5DC26A60-8775-4076-A94D-1BDC36B0A828}
+		{909B5046-B5D3-40EA-99D8-81B9A6411DEB} = {5DC26A60-8775-4076-A94D-1BDC36B0A828}
+		{39CF3D2D-98A3-4D47-A45D-03DAE2D24C87} = {5DC26A60-8775-4076-A94D-1BDC36B0A828}
 	EndGlobalSection
 	GlobalSection(ExtensibilityGlobals) = postSolution
 		SolutionGuid = {6D84DD44-76E1-4131-9E5E-075E384BFEE6}
