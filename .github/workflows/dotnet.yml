@@ -1,0 +1,29 @@
+name: .NET
+
+on:
+  push:
+    branches: [ develop ]
+  pull_request:
+    branches: [ develop ]
+
+jobs:
+  build:
+
+    runs-on: ubuntu-latest
+
+    steps:
+    - uses: actions/checkout@v2
+    - name: Setup .NET
+      uses: actions/setup-dotnet@v1
+      with:
+        dotnet-version: 5.0.x
+    - name: Restore dependencies
+      run: ./build.sh --target=Restore-NuGet-Packages
+    - name: Before Build
+      run: ./build.sh --target=Sonar-Begin
+    - name: Build
+      run: ./build.sh --target=Build
+    - name: Test
+      run: ./build.sh --target=Test
+    - name: After Test
+      run: ./build.sh --target=Sonar-End
