@@ -96,17 +96,13 @@ namespace TestContainers.Core.Containers
                 Tag = tag,
             };
 
-            var images = await this._dockerClient.Images.ListImagesAsync(new ImagesListParameters { MatchName = DockerImageName });
-
-            if (!images.Any())
+            try
             {
-                await this._dockerClient.Images.CreateImageAsync(imagesCreateParameters, new AuthConfig
-                {
-                   Username = "gusohal",
-                   Password = "(t[$-r-w::5;",
-                   ServerAddress = "https://index.docker.io/v1/"
-
-                }, progress, CancellationToken.None);
+                await this._dockerClient.Images.InspectImageAsync(DockerImageName, CancellationToken.None);
+            }
+            catch(DockerImageNotFoundException ex)
+            {
+                await this._dockerClient.Images.CreateImageAsync(imagesCreateParameters, null, progress, CancellationToken.None);
             }
 
             var createContainersParams = ApplyConfiguration();
