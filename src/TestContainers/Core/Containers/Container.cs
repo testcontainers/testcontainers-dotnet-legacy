@@ -100,7 +100,13 @@ namespace TestContainers.Core.Containers
 
             if (!images.Any())
             {
-                await this._dockerClient.Images.CreateImageAsync(imagesCreateParameters, null, progress, CancellationToken.None);
+                await this._dockerClient.Images.CreateImageAsync(imagesCreateParameters, new AuthConfig
+                {
+                   Username = "gusohal",
+                   Password = "(t[$-r-w::5;",
+                   ServerAddress = "https://index.docker.io/v1/"
+
+                }, progress, CancellationToken.None);
             }
 
             var createContainersParams = ApplyConfiguration();
@@ -108,7 +114,7 @@ namespace TestContainers.Core.Containers
 
             return containerCreated.ID;
         }
-            
+
         CreateContainerParameters ApplyConfiguration()
         {
             var exposedPorts = ExposedPorts?.ToList() ?? new List<int>();
