@@ -16,7 +16,7 @@ namespace TestContainers.Tests.ContainerTests
         public string ConnectionString => Container.ConnectionString;
         RedisContainer Container { get; }
 
-        bool RunningInCI { get; } = Environment.GetEnvironmentVariable("APPVEYOR") != null && EnvironmentHelper.IsWindows();
+        bool RunningInCI { get; } = Environment.GetEnvironmentVariable("CI") != null;
 
         string BaseDirectory => RunningInCI ? "X:/host/RedisConfigs" : AppContext.BaseDirectory;
 

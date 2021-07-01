@@ -108,7 +108,7 @@ namespace TestContainers.Core.Containers
 
             return containerCreated.ID;
         }
-
+            
         CreateContainerParameters ApplyConfiguration()
         {
             var exposedPorts = ExposedPorts?.ToList() ?? new List<int>();
