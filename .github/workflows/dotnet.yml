@@ -1,0 +1,41 @@
+name: .NET
+
+on:
+  push:
+    branches: [ develop ]
+  pull_request:
+    branches: [ develop ]
+
+jobs:
+  build:
+
+    runs-on: ubuntu-latest
+
+    steps:
+    - uses: actions/checkout@v2.2.0
+      with:
+        fetch-depth: 0
+    - name: Setup dotnet
+      uses: actions/setup-dotnet@v1
+      with:
+        dotnet-version: 3.1.x
+
+    - name: Install dependencies
+      run: dotnet restore
+
+    - name: Sonarqube Begin
+      run:  |
+        dotnet tool install --global dotnet-sonarscanner
+        dotnet sonarscanner begin /o:${{ secrets.SONARQUBE_ORGANIZATION }} /k:${{ secrets.SONARQUBE_KEY }} /d:sonar.login=${{ secrets.SONARQUBE_TOKEN }} /s:$GITHUB_WORKSPACE/SonarQube.Analysis.xml
+
+    - name: Build
+      run: dotnet build --configuration Release --no-restore --output ./output
+
+    - name: Test
+      run: dotnet test --no-restore --verbosity normal --settings coverlet.runsettings --logger:trx
+    
+    - name: Sonarqube End
+      run: dotnet sonarscanner end /d:sonar.login="${{ secrets.SONARQUBE_TOKEN }}"
+      env:
+        GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+    
