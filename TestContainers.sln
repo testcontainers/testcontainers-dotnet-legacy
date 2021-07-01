@@ -1,6 +1,6 @@
 Microsoft Visual Studio Solution File, Format Version 12.00
-# Visual Studio 15
-VisualStudioVersion = 15.0.28307.645
+# Visual Studio Version 17
+VisualStudioVersion = 17.0.31423.177
 MinimumVisualStudioVersion = 10.0.40219.1
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "src", "src", "{BB91417F-1345-4FAD-9D56-7B11DF593084}"
 EndProject
@@ -9,6 +9,13 @@ EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "TestContainers", "src\TestContainers\TestContainers.csproj", "{4D05E9EF-78BF-48A6-9CF6-D4F6AEBE2C7A}"
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "TestContainers.Tests", "test\TestContainers.Tests\TestContainers.Tests.csproj", "{9C954639-D343-4E02-A5C8-B3A466CE2F70}"
+EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Solution Items", "Solution Items", "{A755F2E9-2190-43D5-83E4-24B200229AC0}"
+	ProjectSection(SolutionItems) = preProject
+		coverlet.runsettings = coverlet.runsettings
+		.github\workflows\dotnet.yml = .github\workflows\dotnet.yml
+		SonarQube.Analysis.xml = SonarQube.Analysis.xml
+	EndProjectSection
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution

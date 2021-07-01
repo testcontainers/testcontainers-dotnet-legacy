@@ -7,7 +7,7 @@ namespace TestContainers.Core.Containers
 {
     public class RabbitMQContainer : Container
     {
-        public const string IMAGE = "rabbitmq:3.7-alpine";
+        public const string IMAGE = "rabbitmq:3.8.18-alpine";
         public const int Port = 5672;
         public const int DefaultRequestedHeartbeatInSec = 60;
 
