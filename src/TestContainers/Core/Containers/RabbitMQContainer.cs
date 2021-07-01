@@ -26,8 +26,7 @@ namespace TestContainers.Core.Containers
                 VirtualHost = VirtualHost,
                 UserName = UserName,
                 Password = Password,
-                Protocol = Protocols.DefaultProtocol,
-                RequestedHeartbeat = DefaultRequestedHeartbeatInSec
+                RequestedHeartbeat = TimeSpan.FromSeconds(DefaultRequestedHeartbeatInSec)
             });
 
         protected override async Task WaitUntilContainerStarted()

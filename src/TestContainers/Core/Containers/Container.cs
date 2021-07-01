@@ -100,7 +100,7 @@ namespace TestContainers.Core.Containers
 
             if (!images.Any())
             {
-                await this._dockerClient.Images.CreateImageAsync(imagesCreateParameters, new AuthConfig(), progress, CancellationToken.None);
+                await this._dockerClient.Images.CreateImageAsync(imagesCreateParameters, null, progress, CancellationToken.None);
             }
 
             var createContainersParams = ApplyConfiguration();
@@ -187,9 +187,9 @@ namespace TestContainers.Core.Containers
                 Cmd = command,
             };
 
-            var response = await _dockerClient.Containers.ExecCreateContainerAsync(_containerId, containerExecCreateParams);
+            var response = await _dockerClient.Exec.ExecCreateContainerAsync(_containerId, containerExecCreateParams);
 
-            await _dockerClient.Containers.StartContainerExecAsync(response.ID);
+            await _dockerClient.Exec.StartContainerExecAsync(response.ID);
         }
 
         public string GetDockerHostIpAddress()
