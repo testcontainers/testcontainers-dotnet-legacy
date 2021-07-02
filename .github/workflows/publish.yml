@@ -17,6 +17,6 @@ jobs:
       run: dotnet pack --configuration Release /p:Version=${VERSION} --output .
 
     - name: Push
-      run: dotnet nuget push TestContainers.${VERSION}.nupkg --source ${NUGET_PRERELEASE_SOURCE} --api-key ${NUGET_PRERELEASE_APIKEY}
+      run: dotnet nuget push TestContainers.${VERSION}.nupkg --source ${{ secrets.NUGET_PRERELEASE_SOURCE }} --api-key ${{ secrets.NUGET_PRERELEASE_APIKEY }}
       env:
         GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
