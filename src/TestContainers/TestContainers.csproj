@@ -9,6 +9,11 @@
     <RepositoryType>git</RepositoryType>
     <RepositoryUrl>https://github.com/testcontainers/testcontainers-dotnet</RepositoryUrl>
   </PropertyGroup>
+
+  <PropertyGroup>
+    <GenerateAssemblyInfo>False</GenerateAssemblyInfo>
+    <Deterministic>False</Deterministic>
+  </PropertyGroup>
   
   <ItemGroup>
     <PackageReference Include="Docker.Dotnet" Version="3.125.4" />
