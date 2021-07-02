@@ -43,12 +43,14 @@ namespace TestContainers.Core.Containers
 
             if (started)
             {
+#pragma warning disable CS0618 // Type or member is obsolete
                 using (var logs = await _dockerClient.Containers.GetContainerLogsAsync(_containerId,
                     new ContainerLogsParameters
                     {
                         ShowStderr = true,
                         ShowStdout = true,
                     }, default(CancellationToken)))
+#pragma warning restore CS0618 // Type or member is obsolete
                 {
                     using (var reader = new StreamReader(logs, Utf8EncodingWithoutBom))
                     {
@@ -100,7 +102,7 @@ namespace TestContainers.Core.Containers
             {
                 await this._dockerClient.Images.InspectImageAsync(DockerImageName, CancellationToken.None);
             }
-            catch(DockerImageNotFoundException ex)
+            catch(DockerImageNotFoundException)
             {
                 await this._dockerClient.Images.CreateImageAsync(imagesCreateParameters, null, progress, CancellationToken.None);
             }

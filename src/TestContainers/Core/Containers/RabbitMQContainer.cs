@@ -42,18 +42,13 @@ namespace TestContainers.Core.Containers
                 .ExecuteAndCaptureAsync(() =>
                {
                    Connection = ConnectionFactory.CreateConnection();
-                   if (!Connection.IsOpen)
-                   {
-                       throw new Exception("Connection not open");
-                   }
-
                    return Task.CompletedTask;
                });
 
             if (result.Outcome == OutcomeType.Failure)
             {
                 Connection.Dispose();
-                throw new Exception(result.FinalException.Message);
+                throw result.FinalException;
             }
         }
     }
