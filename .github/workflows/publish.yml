@@ -9,10 +9,13 @@ jobs:
     steps:
     - name: Checkout
       uses: actions/checkout@v2.2.0
+
     - name: Set VERSION variable from tag
       run: echo "VERSION=${GITHUB_REF/refs\/tags\/v/}" >> $GITHUB_ENV
+
     - name: Pack
       run: dotnet pack --configuration Release /p:Version=${VERSION} --output .
+
     - name: Push
       run: dotnet nuget push TestContainers.${VERSION}.nupkg --source ${NUGET_PRERELEASE_SOURCE} --api-key ${NUGET_PRERELEASE_APIKEY}
       env:
