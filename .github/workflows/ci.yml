@@ -1,14 +1,15 @@
-name: .NET
+name: CI
 
 on:
-  push:
-    branches: [ develop ]
   pull_request:
-    branches: [ develop ]
+    branches: [ main ]
+
+  push:
+    branches: [ main ]
 
 jobs:
   build:
-
+    name: build & test
     runs-on: ubuntu-latest
 
     steps:
@@ -29,7 +30,7 @@ jobs:
         dotnet sonarscanner begin /o:${{ secrets.SONARQUBE_ORGANIZATION }} /k:${{ secrets.SONARQUBE_KEY }} /d:sonar.login=${{ secrets.SONARQUBE_TOKEN }} /s:$GITHUB_WORKSPACE/SonarQube.Analysis.xml
 
     - name: Build
-      run: dotnet build --configuration Release --no-restore --output ./output
+      run: dotnet build --configuration Release --no-restore
 
     - name: Test
       run: dotnet test --no-restore --verbosity normal --settings coverlet.runsettings --logger:trx
@@ -38,4 +39,5 @@ jobs:
       run: dotnet sonarscanner end /d:sonar.login="${{ secrets.SONARQUBE_TOKEN }}"
       env:
         GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+
     
