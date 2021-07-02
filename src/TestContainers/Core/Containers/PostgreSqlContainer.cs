@@ -9,7 +9,7 @@ namespace TestContainers.Core.Containers
     public sealed class PostgreSqlContainer : DatabaseContainer
     {
         public const string IMAGE = "postgres";
-        public const string DEFAULT_TAG = "9.6.8";
+        public const string DEFAULT_TAG = "13.3-alpine";
         public const int POSTGRESQL_PORT = 5432;
 
         public override string DatabaseName => base.DatabaseName ?? _databaseName;
@@ -50,7 +50,7 @@ namespace TestContainers.Core.Containers
             if (result.Outcome == OutcomeType.Failure)
             {
                 connection.Dispose();
-                throw new Exception(result.FinalException.Message, result.FinalException);
+                throw result.FinalException;
             }
 
         }

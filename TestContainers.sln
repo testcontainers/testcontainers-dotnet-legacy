@@ -1,6 +1,6 @@
 Microsoft Visual Studio Solution File, Format Version 12.00
-# Visual Studio 15
-VisualStudioVersion = 15.0.28307.645
+# Visual Studio Version 17
+VisualStudioVersion = 17.0.31423.177
 MinimumVisualStudioVersion = 10.0.40219.1
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "src", "src", "{BB91417F-1345-4FAD-9D56-7B11DF593084}"
 EndProject
@@ -9,6 +9,20 @@ EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "TestContainers", "src\TestContainers\TestContainers.csproj", "{4D05E9EF-78BF-48A6-9CF6-D4F6AEBE2C7A}"
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "TestContainers.Tests", "test\TestContainers.Tests\TestContainers.Tests.csproj", "{9C954639-D343-4E02-A5C8-B3A466CE2F70}"
+EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Solution Items", "Solution Items", "{A755F2E9-2190-43D5-83E4-24B200229AC0}"
+EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = ".github", ".github", "{8B15174D-526B-410D-BC0D-6D1A73F7486E}"
+	ProjectSection(SolutionItems) = preProject
+		.github\workflows\ci.yml = .github\workflows\ci.yml
+		.github\workflows\publish.yml = .github\workflows\publish.yml
+	EndProjectSection
+EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "workflows", "workflows", "{BD76D744-5B1C-4504-9C17-8302D710EC6A}"
+	ProjectSection(SolutionItems) = preProject
+		.github\workflows\ci.yml = .github\workflows\ci.yml
+		.github\workflows\publish.yml = .github\workflows\publish.yml
+	EndProjectSection
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -31,6 +45,8 @@ Global
 	GlobalSection(NestedProjects) = preSolution
 		{4D05E9EF-78BF-48A6-9CF6-D4F6AEBE2C7A} = {BB91417F-1345-4FAD-9D56-7B11DF593084}
 		{9C954639-D343-4E02-A5C8-B3A466CE2F70} = {5DC26A60-8775-4076-A94D-1BDC36B0A828}
+		{8B15174D-526B-410D-BC0D-6D1A73F7486E} = {A755F2E9-2190-43D5-83E4-24B200229AC0}
+		{BD76D744-5B1C-4504-9C17-8302D710EC6A} = {8B15174D-526B-410D-BC0D-6D1A73F7486E}
 	EndGlobalSection
 	GlobalSection(ExtensibilityGlobals) = postSolution
 		SolutionGuid = {6D84DD44-76E1-4131-9E5E-075E384BFEE6}

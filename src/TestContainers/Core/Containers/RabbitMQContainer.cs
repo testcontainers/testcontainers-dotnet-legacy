@@ -7,7 +7,7 @@ namespace TestContainers.Core.Containers
 {
     public class RabbitMQContainer : Container
     {
-        public const string IMAGE = "rabbitmq:3.7-alpine";
+        public const string IMAGE = "rabbitmq:3.8.18-alpine";
         public const int Port = 5672;
         public const int DefaultRequestedHeartbeatInSec = 60;
 
@@ -26,8 +26,7 @@ namespace TestContainers.Core.Containers
                 VirtualHost = VirtualHost,
                 UserName = UserName,
                 Password = Password,
-                Protocol = Protocols.DefaultProtocol,
-                RequestedHeartbeat = DefaultRequestedHeartbeatInSec
+                RequestedHeartbeat = TimeSpan.FromSeconds(DefaultRequestedHeartbeatInSec)
             });
 
         protected override async Task WaitUntilContainerStarted()
@@ -43,18 +42,13 @@ namespace TestContainers.Core.Containers
                 .ExecuteAndCaptureAsync(() =>
                {
                    Connection = ConnectionFactory.CreateConnection();
-                   if (!Connection.IsOpen)
-                   {
-                       throw new Exception("Connection not open");
-                   }
-
                    return Task.CompletedTask;
                });
 
             if (result.Outcome == OutcomeType.Failure)
             {
                 Connection.Dispose();
-                throw new Exception(result.FinalException.Message);
+                throw result.FinalException;
             }
         }
     }

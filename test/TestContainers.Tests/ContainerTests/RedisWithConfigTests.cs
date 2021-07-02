@@ -14,18 +14,14 @@ namespace TestContainers.Tests.ContainerTests
     public class RedisWithConfigFixture : IAsyncLifetime
     {
         public string ConnectionString => Container.ConnectionString;
-        RedisContainer Container { get; }
-
-        bool RunningInCI { get; } = Environment.GetEnvironmentVariable("APPVEYOR") != null && EnvironmentHelper.IsWindows();
-
-        string BaseDirectory => RunningInCI ? "X:/host/RedisConfigs" : AppContext.BaseDirectory;
+        private RedisContainer Container { get; }
 
         public RedisWithConfigFixture() =>
                 Container = new GenericContainerBuilder<RedisContainer>()
                 .Begin()
                 .WithImage("redis:4.0.8")
                 .WithExposedPorts(RedisContainer.Port)
-                .WithMountPoints(($"{BaseDirectory}/master-6379.conf", "/usr/local/etc/redis/redis.conf", "bind"))
+                .WithMountPoints(($"{AppContext.BaseDirectory}/master-6379.conf", "/usr/local/etc/redis/redis.conf", "bind"))
                 .WithCmd("/usr/local/etc/redis/redis.conf")
                 .Build();
 
